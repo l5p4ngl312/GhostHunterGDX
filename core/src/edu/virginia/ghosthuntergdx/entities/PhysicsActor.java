@@ -7,12 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.TextureManager;
 
-public class PhysicsEntity extends Entity{
+public class PhysicsActor extends Actor{
 
 	
 	private Sprite sprite;
@@ -23,40 +24,39 @@ public class PhysicsEntity extends Entity{
 	//private String currentAtlasKey = new String("0001");
 	public Vector2 maxVelocity = new Vector2(Float.MAX_VALUE,Float.MAX_VALUE);
 	
-	public PhysicsEntity(Vector2 position, Texture t) {
-		super(position);
+	public PhysicsActor(Vector2 position, Texture t) {
+		super();
 		sprite = new Sprite(t);
-		scale = new Vector2(1f,1f);
-		sprite.setSize(scale.x*Consts.BOX_TO_WORLD, scale.y*Consts.BOX_TO_WORLD);
+		setWidth(t.getWidth()/Consts.PIXEL_TO_METER);
+		setHeight(t.getHeight()/Consts.PIXEL_TO_METER);
+		setOrigin(getWidth()/2,getHeight()/2);
+		setPosition(position.x,position.y);
+		sprite.setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(position.x, position.y);
+		sprite.setPosition(position.x*Consts.BOX_TO_WORLD, position.y*Consts.BOX_TO_WORLD);
 		
 		FixtureDef mDef = new FixtureDef();
 		mBody = Physics.createBoxBody(BodyType.DynamicBody, mDef, sprite);
+		
 	}
 
 
 	@Override
-	public void update() {
-		
-		position = mBody.getPosition().scl(Consts.BOX_TO_WORLD);
+	public void act(float delta) {
+		super.act(delta);
+		setPosition(mBody.getPosition().x,mBody.getPosition().y);
 		
 	}
 
 	@Override
-	public void render(SpriteBatch batch) {
-		sprite.setPosition(position.x,position.y);
+	public void draw(Batch batch,float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		sprite.setPosition(getX()*Consts.BOX_TO_WORLD,getY()*Consts.BOX_TO_WORLD);
 		sprite.setRotation(rot);
-		sprite.draw(batch);
+		sprite.draw(batch, parentAlpha);
 		
 	}
 
-
-	@Override
-	public void dispose() {
-		
-	}
-	
 	public Body getBody()
 	{
 		return mBody;

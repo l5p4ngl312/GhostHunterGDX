@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.*;
 import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.TextureManager;
 
-public class Player extends PhysicsEntity{
+public class Player extends PhysicsActor{
 
 	Vector2 moveTarget = new Vector2(0,0);
 	public float moveSpeed = 3f;
@@ -22,10 +22,10 @@ public class Player extends PhysicsEntity{
 	}
 	
 	@Override
-	public void update()
+	public void act(float delta)
 	{
-		super.update();
-		Vector2 moveDir = moveTarget.sub(position);
+		super.act(delta);
+		Vector2 moveDir = moveTarget.sub(new Vector2(getX(),getY()));
 		//Gdx.app.debug("POS", position.toString());
 		moveDir.nor();
 		if(mBody.getLinearVelocity().len() < maxVelocity.len() )
@@ -47,7 +47,7 @@ public class Player extends PhysicsEntity{
 	public void setMoveTarget(Vector2 target)
 	{
 		moveTarget = target;
-		Gdx.app.debug("TARGET", moveTarget.toString());
+		//Gdx.app.debug("TARGET", moveTarget.toString());
 	}
 
 }
