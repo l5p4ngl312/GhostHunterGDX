@@ -8,7 +8,8 @@ public class GhostHunterGame extends Game {
 	//Test edit
 	@Override
 	public void create () {
-		setScreen(new Splash());
+		TextureManager.LoadTextures();
+		setScreen(new SPGame(this));
 	}
 
 }
