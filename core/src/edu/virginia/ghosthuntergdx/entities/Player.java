@@ -9,7 +9,7 @@ import edu.virginia.ghosthuntergdx.TextureManager;
 
 public class Player extends PhysicsActor{
 
-	Vector2 moveTarget = new Vector2(0,0);
+	Vector2 moveDir = new Vector2(0,0);
 	public float moveSpeed = 3f;
 	public float rotSpeed = 1f;
 	
@@ -25,9 +25,7 @@ public class Player extends PhysicsActor{
 	public void act(float delta)
 	{
 		super.act(delta);
-		Vector2 moveDir = moveTarget.sub(new Vector2(getX(),getY()));
-		//Gdx.app.debug("POS", position.toString());
-		moveDir.nor();
+
 		if(mBody.getLinearVelocity().len() < maxVelocity.len() )
 		{
 			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
@@ -39,15 +37,12 @@ public class Player extends PhysicsActor{
 
 		rot = targetRot;
 		}
-		
-		moveTarget = mBody.getPosition().scl(Consts.BOX_TO_WORLD);
 	}
 	
 	
-	public void setMoveTarget(Vector2 target)
+	public void setMoveDir(Vector2 target)
 	{
-		moveTarget = target;
-		//Gdx.app.debug("TARGET", moveTarget.toString());
+		moveDir = target;
 	}
 
 }
