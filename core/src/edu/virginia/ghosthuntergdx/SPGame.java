@@ -50,6 +50,7 @@ public class SPGame implements Screen{
 				
         
         player.setMoveDir(new Vector2(mPad.getKnobPercentX(),mPad.getKnobPercentY()));
+        player.setAttackDir(new Vector2(aPad.getKnobPercentX(),aPad.getKnobPercentY()));
 		level.act(delta);
 		 
 		level.draw();
@@ -89,7 +90,7 @@ public class SPGame implements Screen{
 		
 		mPad = new Touchpad(10,mStyle);
 		mPad.setBounds(Gdx.graphics.getWidth()-(250+Gdx.graphics.getWidth()/15), Gdx.graphics.getHeight()/15, 250, 250);
-		mPad.setZIndex(100);
+		mPad.setZIndex(500);
 		
 		aSkin = new Skin();
 		aSkin.add("aBack",TextureManager.aBack);
@@ -101,7 +102,9 @@ public class SPGame implements Screen{
 		
 		aPad = new Touchpad(10, aStyle);
 		aPad.setBounds(Gdx.graphics.getWidth()/15, Gdx.graphics.getHeight()/15, 175, 175);
-		aPad.setZIndex(100);
+		aPad.setZIndex(500);
+		
+		player.setZIndex(10);
 		
 		level = new Stage();
 		Gdx.input.setInputProcessor(level);
