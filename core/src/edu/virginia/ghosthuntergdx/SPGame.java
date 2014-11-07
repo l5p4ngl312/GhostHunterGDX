@@ -65,6 +65,10 @@ public class SPGame implements Screen{
 	TouchpadStyle mStyle;
 	Skin mSkin;
 	
+	Touchpad aPad;
+	TouchpadStyle aStyle;
+	Skin aSkin;
+	
 	@Override
 	public void show() {
 		world = new World(new Vector2(0,0),true);
@@ -85,11 +89,25 @@ public class SPGame implements Screen{
 		
 		mPad = new Touchpad(10,mStyle);
 		mPad.setBounds(Gdx.graphics.getWidth()-(250+Gdx.graphics.getWidth()/15), Gdx.graphics.getHeight()/15, 250, 250);
+		mPad.setZIndex(100);
+		
+		aSkin = new Skin();
+		aSkin.add("aBack",TextureManager.aBack);
+		aSkin.add("aKnob",TextureManager.aKnob);
+		
+		aStyle = new TouchpadStyle();
+		aStyle.knob = aSkin.getDrawable("aKnob");
+		aStyle.background = aSkin.getDrawable("aBack");
+		
+		aPad = new Touchpad(10, aStyle);
+		aPad.setBounds(Gdx.graphics.getWidth()/15, Gdx.graphics.getHeight()/15, 175, 175);
+		aPad.setZIndex(100);
 		
 		level = new Stage();
 		Gdx.input.setInputProcessor(level);
 		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),camera));
 		level.addActor(mPad);
+		level.addActor(aPad);
 		level.addActor(player);
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);

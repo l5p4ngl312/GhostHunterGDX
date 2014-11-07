@@ -26,17 +26,17 @@ public class PhysicsActor extends Actor{
 	
 	public PhysicsActor(Vector2 position, Texture t) {
 		super();
-		sprite = new Sprite(t);
+		setSprite(new Sprite(t));
 		setWidth(t.getWidth()/Consts.PIXEL_TO_METER);
 		setHeight(t.getHeight()/Consts.PIXEL_TO_METER);
 		setOrigin(getWidth()/2,getHeight()/2);
 		setPosition(position.x,position.y);
-		sprite.setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(position.x*Consts.BOX_TO_WORLD, position.y*Consts.BOX_TO_WORLD);
+		getSprite().setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
+		getSprite().setOrigin(getSprite().getWidth()/2, getSprite().getHeight()/2);
+		getSprite().setPosition(position.x*Consts.BOX_TO_WORLD, position.y*Consts.BOX_TO_WORLD);
 		
 		FixtureDef mDef = new FixtureDef();
-		mBody = Physics.createBoxBody(BodyType.DynamicBody, mDef, sprite);
+		mBody = Physics.createBoxBody(BodyType.DynamicBody, mDef, getSprite());
 		
 	}
 
@@ -51,15 +51,25 @@ public class PhysicsActor extends Actor{
 	@Override
 	public void draw(Batch batch,float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		sprite.setPosition(getX()*Consts.BOX_TO_WORLD,getY()*Consts.BOX_TO_WORLD);
-		sprite.setRotation(rot);
-		sprite.draw(batch, parentAlpha);
+		getSprite().setPosition(getX()*Consts.BOX_TO_WORLD,getY()*Consts.BOX_TO_WORLD);
+		getSprite().setRotation(rot);
+		getSprite().draw(batch, parentAlpha);
 		
 	}
 
 	public Body getBody()
 	{
 		return mBody;
+	}
+
+
+	public Sprite getSprite() {
+		return sprite;
+	}
+
+
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 
 

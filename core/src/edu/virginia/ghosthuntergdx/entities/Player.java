@@ -10,6 +10,7 @@ import edu.virginia.ghosthuntergdx.TextureManager;
 public class Player extends PhysicsActor{
 
 	Vector2 moveDir = new Vector2(0,0);
+	Vector2 attackDir = new Vector2(0,0);
 	public float moveSpeed = 3f;
 	public float rotSpeed = 1f;
 	
@@ -31,18 +32,26 @@ public class Player extends PhysicsActor{
 			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
 		}
 		
-		if(moveDir.len() > 0)
+		float targetRot = getSprite().getRotation();
+		if(moveDir.len() > 0 && attackDir.equals(Vector2.Zero))
 		{
-		float targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees;
+			targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees;
 
-		rot = targetRot;
+		}else if(!attackDir.equals(Vector2.Zero)){
+			targetRot = (float) Math.atan2(attackDir.y,attackDir.x)*MathUtils.radiansToDegrees;
 		}
+		rot = targetRot;
 	}
 	
 	
 	public void setMoveDir(Vector2 target)
 	{
 		moveDir = target;
+	}
+	
+	public void setAttackDir(Vector2 target)
+	{
+		attackDir = target;
 	}
 
 }
