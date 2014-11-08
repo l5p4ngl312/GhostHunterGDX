@@ -38,8 +38,8 @@ public class Splash implements Screen {
 
 	@Override
 	public void show() {
-		splashImage.setX(400);
-		splashImage.setY(640);
+		splashImage.setX(Gdx.graphics.getWidth()/2);
+		splashImage.setY(Gdx.graphics.getHeight()/2);
 		stage.addActor(splashImage);
 
 	}
