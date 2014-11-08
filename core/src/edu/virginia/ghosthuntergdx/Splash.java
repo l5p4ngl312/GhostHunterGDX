@@ -38,8 +38,8 @@ public class Splash implements Screen {
 
 	@Override
 	public void show() {
-		// splashImage.setX(5); //I don't know what the parameter should be
-		// splashImage.setY(5); //same as above
+		splashImage.setX(400);
+		splashImage.setY(640);
 		stage.addActor(splashImage);
 
 	}
