@@ -49,12 +49,17 @@ public class SPGame implements Screen{
 	
 	Box2DDebugRenderer debugger;
 	
-	public SPGame(GhostHunterGame game)
+	int difficultyLevel = 1;
+	int playerProgress = 1;
+	
+	public SPGame(GhostHunterGame game, int difficultyLevel, int playerProgress)
 	{
 		this.game = game;
+		this.difficultyLevel = difficultyLevel;
+		this.playerProgress = playerProgress;
 	}
 	
-	boolean debugPhysics = false;
+	boolean debugPhysics = true;
 	@Override
 	public void render(float delta) {
 		//Step through the Box2D physics simulation
@@ -107,12 +112,8 @@ public class SPGame implements Screen{
 	}
 
 	Touchpad mPad;
-	TouchpadStyle mStyle;
-	Skin mSkin;
 	
 	Touchpad aPad;
-	TouchpadStyle aStyle;
-	Skin aSkin;
 	
 	int currentMap = 0;
 	@Override
@@ -164,11 +165,11 @@ public class SPGame implements Screen{
 		player = new Player(startPos);
 		
 		//Create the movement stick on the right side of the screen
-		mSkin = new Skin();
+		Skin mSkin = new Skin();
 		mSkin.add("mBack", TextureManager.mBack);
 		mSkin.add("mKnob", TextureManager.mKnob);
 		
-		mStyle = new TouchpadStyle();
+		TouchpadStyle mStyle = new TouchpadStyle();
 		mStyle.knob = mSkin.getDrawable("mKnob");
 		mStyle.background = mSkin.getDrawable("mBack");
 		
@@ -176,11 +177,11 @@ public class SPGame implements Screen{
 		mPad.setBounds(Gdx.graphics.getWidth()-(250+Gdx.graphics.getWidth()/15), Gdx.graphics.getHeight()/15, 250, 250);
 		
 		//Create the attack stick on the right side of the screen
-		aSkin = new Skin();
+		Skin aSkin = new Skin();
 		aSkin.add("aBack",TextureManager.aBack);
 		aSkin.add("aKnob",TextureManager.aKnob);
 		
-		aStyle = new TouchpadStyle();
+		TouchpadStyle aStyle = new TouchpadStyle();
 		aStyle.knob = aSkin.getDrawable("aKnob");
 		aStyle.background = aSkin.getDrawable("aBack");
 		
@@ -199,6 +200,9 @@ public class SPGame implements Screen{
 		
 		//Add the player to the entity group
 		entities.addActor(player);
+		
+		LevelDirector director = new LevelDirector(difficultyLevel,playerProgress,map);
+		level.addActor(director);
 		
 		//Create a stage for hud elements
 		HUDstage = new Stage();
@@ -241,6 +245,8 @@ public class SPGame implements Screen{
 		level.dispose();
 		HUDstage.dispose();
 		debugger.dispose();
+		mapRenderer.dispose();
+		
 	}
 
 	public static World getPhysicsWorld() {
