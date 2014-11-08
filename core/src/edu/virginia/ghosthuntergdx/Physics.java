@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class Physics {
 
+	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
 
 	    float pRotation = 0;
@@ -39,6 +40,7 @@ public class Physics {
 	    return boxBody;
 	}
 	
+	//Creates a circular physics body based on a sprite
 	public static Body createCircleBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
 
 	    float pRotation = 0;
@@ -62,9 +64,9 @@ public class Physics {
 	    return circleBody;
 	}
 	
-	   // The pixels per tile. If your tiles are 16x16, this is set to 16f
- private static float ppt = 128f;
+ private static float ppt = Consts.BOX_TO_WORLD;
 
+ //Builds bodies from a map
  public static Array<Body> buildShapes(Map map,World world,String layer) {
      MapObjects objects = map.getLayers().get(layer).getObjects();
 

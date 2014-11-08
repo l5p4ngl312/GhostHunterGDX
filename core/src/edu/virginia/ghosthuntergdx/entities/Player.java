@@ -28,7 +28,11 @@ public class Player extends PhysicsActor{
 	public void act(float delta)
 	{
 		super.act(delta);
-
+		movePlayer(delta);
+	}
+	
+	private void movePlayer(float delta)
+	{
 		//If player is attacking, slow his movement speed
 		if(!attackDir.equals(Vector2.Zero))
 		{
@@ -37,11 +41,10 @@ public class Player extends PhysicsActor{
 			moveSpeed = baseMoveSpeed;
 		}
 		
-		if(mBody.getLinearVelocity().len() < maxVelocity.len() )
-		{
-			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
-		}
+		//Set the players velocity to the direction of the move stick times the player's speed
+		mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
 		
+		//Set the players target rotation based on either his move direction or attack stick direction
 		float targetRot = getSprite().getRotation();
 		if(moveDir.len() > 0 && attackDir.equals(Vector2.Zero))
 		{
@@ -51,6 +54,16 @@ public class Player extends PhysicsActor{
 			targetRot = (float) Math.atan2(attackDir.y,attackDir.x)*MathUtils.radiansToDegrees;
 		}
 		
+		//Rotate the player towards his target rotation along the shortest path
+		if(targetRot > 360)
+			targetRot-=360;
+		if(rot > 360)
+			rot-=360;
+		
+		if(targetRot < 0)
+			targetRot+=360;
+		if(rot < 0)
+			rot+=360;
 		
 		if(Math.abs(targetRot - rot) > 180)
 		{

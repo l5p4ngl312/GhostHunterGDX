@@ -54,39 +54,46 @@ public class SPGame implements Screen{
 		this.game = game;
 	}
 	
-	int playerMovePointer = -1;
-	boolean playerMoving = false;
 	boolean debugPhysics = false;
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
+		//Step through the Box2D physics simulation
 		world.step(1/45f, 6, 2);
 		
+		//Clear the screen
         Gdx.gl.glClearColor(0.2f,0.2f,0.2f, delta);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         
+        //Center the main camera on the player's sprite and update it
         camera.position.set(player.getSprite().getX(), player.getSprite().getY(), 0);
         level.getCamera().update();
 				
-        
+        //Expand the view matrix for the map renderer so that nothing pops in visibly
         float x = camera.position.x - camera.viewportWidth * camera.zoom;
         float y = camera.position.y - camera.viewportHeight * camera.zoom;
 
         float width = camera.viewportWidth * camera.zoom * 2;
         float height = camera.viewportHeight * camera.zoom * 2;
 
+        //Render the map
         mapRenderer.setView(camera.combined, x, y, width, height);
         mapRenderer.render();
         
+        //Set the player's move and attack direction based on input from the virtual joysticks
         player.setMoveDir(new Vector2(mPad.getKnobPercentX(),mPad.getKnobPercentY()));
         player.setAttackDir(new Vector2(aPad.getKnobPercentX(),aPad.getKnobPercentY()));
+        
+        //Update all the objects in the level
 		level.act(delta);
 		 
+		//Draw the level
 		level.draw();
 		
+		//Draw the Box2D debug information if the flag is true
 		if(debugPhysics)
 			debugger.render(world, camera.combined.scale(Consts.BOX_TO_WORLD, Consts.BOX_TO_WORLD, 0));
 		
+		//Update the HUD camera, HUD elements, and draw the HUD
         HUDstage.getCamera().update();
         HUDstage.act(delta);
         HUDstage.draw();	
@@ -94,6 +101,7 @@ public class SPGame implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
+		//Update all viewports when the screen is resized
 		level.getViewport().update(width, height,true);
 		HUDstage.getViewport().update(width, height,true);
 	}
@@ -109,38 +117,53 @@ public class SPGame implements Screen{
 	int currentMap = 0;
 	@Override
 	public void show() {
+		//Set logcat to display gdx debug messages
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		
+		//Create a box2D physics world with no gravity (it is a top down game)
 		world = new World(new Vector2(0,0),true);
-		//camera = new OrthographicCamera(Gdx.graphics.getWidth()/Consts.BOX_TO_WORLD,Gdx.graphics.getHeight()/Consts.BOX_TO_WORLD);
+		
+		//Create a new camera with a viewport spanning the pixel dimensions of the device's screen
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		//Make Y = 0 the bottom of the screen
 		camera.setToOrtho(false);
 		camera.update();
 		
+		//Make a similar camera that only displays HUD elements
 		HUDcamera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		HUDcamera.setToOrtho(false);
 		HUDcamera.update();
 		
-		String path = "data/map"+currentMap+".tmx";
-		
-		map = new TmxMapLoader().load(path);
+		//Load the current map's tmx file and create a renderer for it
+		map = new TmxMapLoader().load("data/map"+currentMap+".tmx");
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		
-		Physics.buildShapes(map,world,"WallCollisionLines");
+		//Build box2D collision bodies based on the map's Collision object layer
+		Physics.buildShapes(map,world,"Collision");
 		
+		//Set the player's default start position
 		Vector2 startPos = playerStartPos;
+		
+		//Try to find an object layer called PlayerSpawn
 		MapLayer spawnLayer = map.getLayers().get("PlayerSpawn");
 		if(spawnLayer != null)
 		{
 			for(MapObject o : spawnLayer.getObjects())
 			{
+				//If there is an ellipse object in this object layer, spawn the player at its center
 				if(o instanceof EllipseMapObject)
 				{
 					EllipseMapObject c = (EllipseMapObject)o;
 					startPos = new Vector2(c.getEllipse().x/Consts.BOX_TO_WORLD,c.getEllipse().y/Consts.BOX_TO_WORLD);
+					break;
 				}
 			}
 		}
+		
+		//Create a new player object a the spawn position
 		player = new Player(startPos);
 		
+		//Create the movement stick on the right side of the screen
 		mSkin = new Skin();
 		mSkin.add("mBack", TextureManager.mBack);
 		mSkin.add("mKnob", TextureManager.mKnob);
@@ -152,6 +175,7 @@ public class SPGame implements Screen{
 		mPad = new Touchpad(10,mStyle);
 		mPad.setBounds(Gdx.graphics.getWidth()-(250+Gdx.graphics.getWidth()/15), Gdx.graphics.getHeight()/15, 250, 250);
 		
+		//Create the attack stick on the right side of the screen
 		aSkin = new Skin();
 		aSkin.add("aBack",TextureManager.aBack);
 		aSkin.add("aKnob",TextureManager.aKnob);
@@ -163,24 +187,32 @@ public class SPGame implements Screen{
 		aPad = new Touchpad(10, aStyle);
 		aPad.setBounds(Gdx.graphics.getWidth()/15, Gdx.graphics.getHeight()/15, 175, 175);
 		
+		//Create a group that all moving entities will be put in
 		Group entities = new Group();
 		
+		//Create the stage for objects actually in the level
 		level = new Stage();
 		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),camera));
+		
+		//Add the entity group to this tage
 		level.addActor(entities);
 		
+		//Add the player to the entity group
+		entities.addActor(player);
+		
+		//Create a stage for hud elements
 		HUDstage = new Stage();
+		//Set libGDX to check for input from the virtual sticks
 		Gdx.input.setInputProcessor(HUDstage);
 		
+		//Add the virtual sticks to the HUDstage and set its viewport
 		HUDstage.addActor(mPad);
 		HUDstage.addActor(aPad);
 		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),HUDcamera));
 		
-		entities.addActor(player);
-		
+		//Create a box2D debug renderer for physics debugging
 		debugger = new Box2DDebugRenderer( true, true, true, true,true,true);
 		
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		
 	}
 
@@ -204,7 +236,11 @@ public class SPGame implements Screen{
 
 	@Override
 	public void dispose() {
-		
+		world.dispose();
+		map.dispose();
+		level.dispose();
+		HUDstage.dispose();
+		debugger.dispose();
 	}
 
 	public static World getPhysicsWorld() {
