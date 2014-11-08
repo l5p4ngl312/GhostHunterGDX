@@ -8,15 +8,20 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.javafx.webkit.theme.Renderer;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import edu.virginia.ghosthuntergdx.entities.*;
@@ -28,8 +33,16 @@ public class SPGame implements Screen{
 	
 	Vector2 playerStartPos = new Vector2(10,5);
 	OrthographicCamera camera;
+	OrthographicCamera HUDcamera;
+	
 	Player player;
 	Stage level;
+	Stage HUDstage;
+	
+	TiledMap map;
+	OrthogonalTiledMapRenderer mapRenderer;
+	
+	Box2DDebugRenderer debugger;
 	
 	public SPGame(GhostHunterGame game)
 	{
@@ -38,28 +51,46 @@ public class SPGame implements Screen{
 	
 	int playerMovePointer = -1;
 	boolean playerMoving = false;
+	boolean debugPhysics = false;
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		world.step(1/45f, 6, 2);
 		
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0.2f,0.2f,0.2f, delta);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         
+        camera.position.set(player.getSprite().getX(), player.getSprite().getY(), 0);
         level.getCamera().update();
 				
+        
+        float x = camera.position.x - camera.viewportWidth * camera.zoom;
+        float y = camera.position.y - camera.viewportHeight * camera.zoom;
+
+        float width = camera.viewportWidth * camera.zoom * 2;
+        float height = camera.viewportHeight * camera.zoom * 2;
+
+        mapRenderer.setView(camera.combined, x, y, width, height);
+        mapRenderer.render();
         
         player.setMoveDir(new Vector2(mPad.getKnobPercentX(),mPad.getKnobPercentY()));
         player.setAttackDir(new Vector2(aPad.getKnobPercentX(),aPad.getKnobPercentY()));
 		level.act(delta);
 		 
 		level.draw();
-				
+		
+		if(debugPhysics)
+			debugger.render(world, camera.combined.scale(Consts.BOX_TO_WORLD, Consts.BOX_TO_WORLD, 0));
+		
+        HUDstage.getCamera().update();
+        HUDstage.act(delta);
+        HUDstage.draw();	
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		level.getViewport().update(width, height,true);
+		HUDstage.getViewport().update(width, height,true);
 	}
 
 	Touchpad mPad;
@@ -70,14 +101,26 @@ public class SPGame implements Screen{
 	TouchpadStyle aStyle;
 	Skin aSkin;
 	
+	int currentMap = 0;
 	@Override
 	public void show() {
 		world = new World(new Vector2(0,0),true);
-		
 		//camera = new OrthographicCamera(Gdx.graphics.getWidth()/Consts.BOX_TO_WORLD,Gdx.graphics.getHeight()/Consts.BOX_TO_WORLD);
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		camera.setToOrtho(false);
 		camera.update();
+		
+		HUDcamera = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		HUDcamera.setToOrtho(false);
+		HUDcamera.update();
+		
+		String path = "data/map0.tmx";
+		Gdx.app.debug("PATH", path);
+		
+		map = new TmxMapLoader().load(path);
+		mapRenderer = new OrthogonalTiledMapRenderer(map);
+		
+		Physics.buildShapes(map,world,"WallCollisionLines");
 		player = new Player(playerStartPos);
 		
 		mSkin = new Skin();
@@ -90,7 +133,6 @@ public class SPGame implements Screen{
 		
 		mPad = new Touchpad(10,mStyle);
 		mPad.setBounds(Gdx.graphics.getWidth()-(250+Gdx.graphics.getWidth()/15), Gdx.graphics.getHeight()/15, 250, 250);
-		mPad.setZIndex(500);
 		
 		aSkin = new Skin();
 		aSkin.add("aBack",TextureManager.aBack);
@@ -102,16 +144,23 @@ public class SPGame implements Screen{
 		
 		aPad = new Touchpad(10, aStyle);
 		aPad.setBounds(Gdx.graphics.getWidth()/15, Gdx.graphics.getHeight()/15, 175, 175);
-		aPad.setZIndex(500);
 		
-		player.setZIndex(10);
+		Group entities = new Group();
 		
 		level = new Stage();
-		Gdx.input.setInputProcessor(level);
 		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),camera));
-		level.addActor(mPad);
-		level.addActor(aPad);
-		level.addActor(player);
+		level.addActor(entities);
+		
+		HUDstage = new Stage();
+		Gdx.input.setInputProcessor(HUDstage);
+		
+		HUDstage.addActor(mPad);
+		HUDstage.addActor(aPad);
+		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight(),HUDcamera));
+		
+		entities.addActor(player);
+		
+		debugger = new Box2DDebugRenderer( true, true, true, true,true,true);
 		
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		

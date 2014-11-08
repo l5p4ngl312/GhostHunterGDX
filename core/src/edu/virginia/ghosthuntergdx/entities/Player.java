@@ -11,8 +11,10 @@ public class Player extends PhysicsActor{
 
 	Vector2 moveDir = new Vector2(0,0);
 	Vector2 attackDir = new Vector2(0,0);
-	public float moveSpeed = 3f;
-	public float rotSpeed = 1f;
+	
+	public final float baseMoveSpeed = 3f;
+	public float moveSpeed = baseMoveSpeed;
+	public float rotSpeed = 900f;
 	
 	public Player(Vector2 position) {
 		super(position, TextureManager.player);
@@ -27,6 +29,14 @@ public class Player extends PhysicsActor{
 	{
 		super.act(delta);
 
+		//If player is attacking, slow his movement speed
+		if(!attackDir.equals(Vector2.Zero))
+		{
+			moveSpeed = baseMoveSpeed/1.5f;
+		}else{
+			moveSpeed = baseMoveSpeed;
+		}
+		
 		if(mBody.getLinearVelocity().len() < maxVelocity.len() )
 		{
 			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
@@ -40,7 +50,30 @@ public class Player extends PhysicsActor{
 		}else if(!attackDir.equals(Vector2.Zero)){
 			targetRot = (float) Math.atan2(attackDir.y,attackDir.x)*MathUtils.radiansToDegrees;
 		}
-		rot = targetRot;
+		
+		
+		if(Math.abs(targetRot - rot) > 180)
+		{
+			if(rot < targetRot)
+				rot+=360;
+			else
+				targetRot+=360;
+		}
+		
+		if(Math.abs(targetRot - rot) > 0)
+		{
+			if(rot < targetRot)
+			{
+				rot+=rotSpeed*delta;
+				if(rot > targetRot)
+					rot = targetRot;
+			}else
+			{
+				rot-=rotSpeed*delta;
+				if(rot < targetRot)
+					rot = targetRot;
+			}
+		}
 	}
 	
 	
