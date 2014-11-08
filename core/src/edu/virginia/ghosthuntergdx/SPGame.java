@@ -8,6 +8,11 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -114,14 +119,27 @@ public class SPGame implements Screen{
 		HUDcamera.setToOrtho(false);
 		HUDcamera.update();
 		
-		String path = "data/map0.tmx";
-		Gdx.app.debug("PATH", path);
+		String path = "data/map"+currentMap+".tmx";
 		
 		map = new TmxMapLoader().load(path);
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		
 		Physics.buildShapes(map,world,"WallCollisionLines");
-		player = new Player(playerStartPos);
+		
+		Vector2 startPos = playerStartPos;
+		MapLayer spawnLayer = map.getLayers().get("PlayerSpawn");
+		if(spawnLayer != null)
+		{
+			for(MapObject o : spawnLayer.getObjects())
+			{
+				if(o instanceof EllipseMapObject)
+				{
+					EllipseMapObject c = (EllipseMapObject)o;
+					startPos = new Vector2(c.getEllipse().x/Consts.BOX_TO_WORLD,c.getEllipse().y/Consts.BOX_TO_WORLD);
+				}
+			}
+		}
+		player = new Player(startPos);
 		
 		mSkin = new Skin();
 		mSkin.add("mBack", TextureManager.mBack);

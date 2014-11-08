@@ -22,4 +22,9 @@
   <object x="0" y="2404" width="2796" height="84"/>
   <object x="0" y="88" width="84" height="2312"/>
  </objectgroup>
+ <objectgroup name="PlayerSpawn">
+  <object x="1355.16" y="1047.76" width="127.273" height="106.061">
+   <ellipse/>
+  </object>
+ </objectgroup>
 </map>
