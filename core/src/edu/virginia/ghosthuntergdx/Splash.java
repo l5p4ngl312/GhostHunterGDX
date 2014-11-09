@@ -63,7 +63,7 @@ public class Splash implements Screen {
 		
 		LabelStyle style = new LabelStyle(font, Color.WHITE);
 		
-		str1 = "CREATED BY ANOTHONY BATTRES, ALEXANDER MAZZA, DAVID RUBIN, LANE SPANGLER";
+		str1 = "CREATED BY ANTHONY BATRES, ALEXANDER MAZZA, DAVID RUBIN, LANE SPANGLER";
 		header = new Label(str1, style);
 		header.setX((Gdx.graphics.getWidth() / 2) - header.getWidth() / 2);
 		header.setY(3 * (Gdx.graphics.getHeight()) / 4);
