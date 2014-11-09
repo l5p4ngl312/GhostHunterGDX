@@ -92,6 +92,7 @@ public class MainMenu implements Screen{
 		buttonExit.pad(20);
 		buttonPlay = new TextButton("Play", textButtonStyle);
 		buttonPlay.pad(20);
+		
 		buttonPlay.addListener(new InputListener() {
 			
 			@Override
@@ -127,10 +128,11 @@ public class MainMenu implements Screen{
 		table.add(heading);
 		table.row();
 		
-		table.add(buttonPlay);
-		table.add(buttonExit);
+		table.add(buttonPlay).fill();
 		table.row();
-		table.add(buttonSettings);
+		table.add(buttonExit).fill();
+		table.row();
+		table.add(buttonSettings).fill();
 		table.debug();
 		stage.addActor(table);
 		
