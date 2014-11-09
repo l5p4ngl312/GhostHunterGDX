@@ -99,7 +99,7 @@ public class MainMenu implements Screen{
 					Actor fromActor) {
 				
 				super.enter(event, x, y, pointer, fromActor);
-				game.setScreen(new SPGame(1, 1, game));
+				game.setScreen(new SPGame(game, 1, 1));
 			}
 			
 		});
