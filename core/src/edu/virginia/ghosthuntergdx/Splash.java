@@ -5,12 +5,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+
 
 public class Splash implements Screen {
 
@@ -20,11 +19,11 @@ public class Splash implements Screen {
 	private Stage stage = new Stage();
 	private GhostHunterGame game;
 	private float time;
-	private SpriteBatch names;
 	private BitmapFont font;
 	private CharSequence str1;
-	private SpriteBatch course;
 	private CharSequence str2;
+	private Label header;
+	private Label footer;
 
 	public Splash(GhostHunterGame g) {
 		this.game = g;
@@ -60,23 +59,21 @@ public class Splash implements Screen {
 		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
 				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
 		font.setColor(255, 255, 255, 1);
-		font.setScale(3);
-
-		// shows names
+		font.setScale(1);
+		
+		LabelStyle style = new LabelStyle(font, Color.WHITE);
+		
 		str1 = "CREATED BY ANOTHONY BATTRES, ALEXANDER MAZZA, DAVID RUBIN, LANE SPANGLER";
-		names = new SpriteBatch();
-		names.begin();
-		font.draw(names, str1, Gdx.graphics.getWidth() / 2,
-				3 * (Gdx.graphics.getHeight()) / 4);
-		names.end();
-
-		// shows class info
+		header = new Label(str1, style);
+		header.setX((Gdx.graphics.getWidth() / 2) - header.getWidth() / 2);
+		header.setY(3 * (Gdx.graphics.getHeight()) / 4);
+		stage.addActor(header);
+		
 		str2 = "UNIVERSITY OF VIRGINIA, CS 2110, FALL 2014";
-		course = new SpriteBatch();
-		course.begin();
-		font.draw(course, str2, Gdx.graphics.getWidth() / 2,
-				Gdx.graphics.getHeight() / 4);
-		course.end();
+		footer = new Label(str2, style);
+		footer.setX((Gdx.graphics.getWidth() / 2) - footer.getWidth() / 2);
+		footer.setY(2*(Gdx.graphics.getHeight() )/ 9);
+		stage.addActor(footer);
 
 	}
 
@@ -100,7 +97,6 @@ public class Splash implements Screen {
 	public void dispose() {
 		texture.dispose();
 		stage.dispose();
-		names.dispose();
 
 	}
 
