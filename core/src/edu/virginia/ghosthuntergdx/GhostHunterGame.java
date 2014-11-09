@@ -9,7 +9,7 @@ public class GhostHunterGame extends Game {
 	@Override
 	public void create () {
 		TextureManager.LoadTextures();
-		setScreen(new SPGame(this,1,1));
+		setScreen(new Splash(this));
 	}
 
 }
