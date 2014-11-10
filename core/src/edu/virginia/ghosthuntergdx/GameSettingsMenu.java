@@ -33,6 +33,7 @@ public class GameSettingsMenu implements Screen {
 	public GameSettingsMenu(SPGame spGame){
 		this.diff = spGame.difficultyLevel;
 		this.prog = spGame.playerProgress;
+		this.game = spGame.game;
 	}
 
 	@Override
