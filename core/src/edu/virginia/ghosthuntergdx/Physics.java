@@ -11,8 +11,24 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
-public class Physics {
 
+public class Physics {
+	
+	   public final static short OBSTACLE = 1; // 1 - everything without a mask
+	   public final static short PLAYER = 1 << 1;
+	   public final static short PICKUP = 1 << 3;
+	   public final static short LIGHT = 1 << 4;
+	   public final static short SENSOR = 1 << 5;
+	   public final static short BODY_PART = 1 << 6;
+
+	   public final static short LIGHT_GROUP = 1;
+	   public final static short NO_GROUP = 0;
+	   // masks
+	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP;
+	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR;
+	   public final static short MASK_PICKUP = PICKUP | PLAYER | OBSTACLE;
+	   public final static short MASK_SENSOR = PLAYER;
+	   public final static short MASK_BODY_PART = OBSTACLE;
 	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
 
@@ -99,7 +115,14 @@ public class Physics {
          BodyDef bd = new BodyDef();
          bd.type = BodyType.StaticBody;
          Body body = world.createBody(bd);
-         body.createFixture(shape, 1);
+         FixtureDef fDef = new FixtureDef();
+         fDef.shape=shape;
+         fDef.density = 1;
+         fDef.filter.categoryBits = OBSTACLE;
+         fDef.filter.groupIndex = 0;
+         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP;
+         body.createFixture(fDef);
+   
 
          bodies.add(body);
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.*;
 
 import edu.virginia.ghosthuntergdx.Consts;
+import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.TextureManager;
 
 public class Player extends PhysicsActor{
@@ -17,11 +18,11 @@ public class Player extends PhysicsActor{
 	public float rotSpeed = 900f;
 	
 	public Player(Vector2 position) {
-		super(position, TextureManager.player);
+		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER);
 		maxVelocity = new Vector2(5,5);
 	}
 	public Player(Vector2 position,Texture t) {
-		super(position, t);
+		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER);
 	}
 	
 	@Override

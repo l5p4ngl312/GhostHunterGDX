@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import box2dLight.Light;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -31,7 +35,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.javafx.webkit.theme.Renderer;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import edu.virginia.ghosthuntergdx.entities.*;
@@ -65,6 +68,12 @@ public class SPGame implements Screen {
 	Skin skin;
 	TextureAtlas atlas;
 
+	RayHandler rayHandler;
+	public static final int raysPerLight = 128;
+	public static final float lightDistance = 16f;
+	
+	PointLight playerLight;
+	
 	public SPGame(GhostHunterGame game, int difficultyLevel, int playerProgress) {
 		this.game = game;
 		this.difficultyLevel = difficultyLevel;
@@ -110,6 +119,8 @@ public class SPGame implements Screen {
 		// Draw the level
 		level.draw();
 
+		rayHandler.setCombinedMatrix(camera.combined.scale(Consts.BOX_TO_WORLD,Consts.BOX_TO_WORLD,0));
+		rayHandler.updateAndRender();
 		// Draw the Box2D debug information if the flag is true
 		if (debugPhysics)
 			debugger.render(world, camera.combined.scale(Consts.BOX_TO_WORLD,
@@ -246,8 +257,19 @@ public class SPGame implements Screen {
 		// Create a box2D debug renderer for physics debugging
 		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
 
+		//Lighting
+		RayHandler.setGammaCorrection(true);
+		RayHandler.useDiffuseLight(true);
+		
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(new Color(0.1f,0.1f,0.1f,0.5f));
+		rayHandler.setBlurNum(3);
+		
+		playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.8f), 7, 5, 10);
+		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
+		playerLight.attachToBody(player.getBody(), player.getWidth()/2, player.getHeight()/2);
+		
 		// show settings button
-		Gdx.input.setInputProcessor(HUDstage);
 
 		atlas = new TextureAtlas("ui/button.pack");
 		skin = new Skin(atlas);
