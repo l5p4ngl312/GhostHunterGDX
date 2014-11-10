@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import box2dLight.DirectionalLight;
+import box2dLight.Light;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,7 +37,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.javafx.webkit.theme.Renderer;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import edu.virginia.ghosthuntergdx.entities.*;
@@ -57,13 +62,21 @@ public class SPGame implements Screen {
 	int difficultyLevel = 1;
 	int playerProgress = 1;
 	boolean debugPhysics = true;
-
+	
+	RayHandler rayHandler;
+	Group entities;
 	// for settings button:
 	TextButton buttonOptions;
 	TextButtonStyle textButtonStyle;
 	BitmapFont font;
 	Skin skin;
 	TextureAtlas atlas;
+	
+	ArrayList<Light> lights = new ArrayList<Light>();
+	PointLight playerLight;
+	static final int playerLightRays = 128;
+	static final int torchLightRays = 128;
+	static final float lightDistance = 16f;
 
 	public SPGame(GhostHunterGame game, int difficultyLevel, int playerProgress) {
 		this.game = game;
@@ -71,15 +84,34 @@ public class SPGame implements Screen {
 		this.playerProgress = playerProgress;
 	}
 
-	@Override
-	public void render(float delta) {
+	float accumulator; //Variable used for fixed physics timestep
+	float dt;
+	
+	void updating(float delta)
+	{
 		// Step through the Box2D physics simulation
-		world.step(1 / 45f, 6, 2);
+		world.step(1/60f, 10, 8);
+		
+		//rayHandler.update();
+		
+		// Set the player's move and attack direction based on input from the
+		// virtual joysticks
+		player.setMoveDir(new Vector2(mPad.getKnobPercentX(), mPad
+				.getKnobPercentY()));
+		player.setAttackDir(new Vector2(aPad.getKnobPercentX(), aPad
+				.getKnobPercentY()));
 
+		// Update all the objects in the level
+		level.act(delta);
+		HUDstage.act(delta);
+	}
+	
+	void rendering(float delta)
+	{
 		// Clear the screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-
+		
 		// Center the main camera on the player's sprite and update it
 		camera.position.set(player.getSprite().getX(), player.getSprite()
 				.getY(), 0);
@@ -96,30 +128,21 @@ public class SPGame implements Screen {
 		// Render the map
 		mapRenderer.setView(camera.combined, x, y, width, height);
 		mapRenderer.render();
-
-		// Set the player's move and attack direction based on input from the
-		// virtual joysticks
-		player.setMoveDir(new Vector2(mPad.getKnobPercentX(), mPad
-				.getKnobPercentY()));
-		player.setAttackDir(new Vector2(aPad.getKnobPercentX(), aPad
-				.getKnobPercentY()));
-
-		// Update all the objects in the level
-		level.act(delta);
-
+		
 		// Draw the level
 		level.draw();
-
+		//Box2D lighting stuff
+		rayHandler.setCombinedMatrix(camera.combined.scale(Consts.BOX_TO_WORLD,	Consts.BOX_TO_WORLD, 0));
+		rayHandler.updateAndRender();
+		
 		// Draw the Box2D debug information if the flag is true
 		if (debugPhysics)
 			debugger.render(world, camera.combined.scale(Consts.BOX_TO_WORLD,
 					Consts.BOX_TO_WORLD, 0));
 
-		// Update the HUD camera, HUD elements, and draw the HUD
+		// Update the HUD camera and draw the HUD
 		HUDstage.getCamera().update();
-		HUDstage.act(delta);
 		HUDstage.draw();
-
 	}
 
 	@Override
@@ -135,11 +158,13 @@ public class SPGame implements Screen {
 
 	int currentMap = 0;
 
+	OrthographicCamera lightCamera;
 	@Override
 	public void show() {
 		// Set logcat to display gdx debug messages
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
+		dt = 0.0133f;	// logic updates approx. @ 75 hz
+		
 		// Create a box2D physics world with no gravity (it is a top down game)
 		world = new World(new Vector2(0, 0), true);
 
@@ -147,6 +172,7 @@ public class SPGame implements Screen {
 		// the device's screen
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
+		
 		// Make Y = 0 the bottom of the screen
 		camera.setToOrtho(false);
 		camera.update();
@@ -165,6 +191,40 @@ public class SPGame implements Screen {
 		// layer
 		Physics.buildShapes(map, world, "Collision");
 
+		// Create a group that all moving entities will be put in
+		entities = new Group();
+
+		// Create the stage for objects actually in the level
+		level = new Stage();
+		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), camera));
+
+		// Add the entity group to this stage
+		level.addActor(entities);
+
+		LevelDirector director = new LevelDirector(difficultyLevel,
+				playerProgress, map);
+		level.addActor(director);
+
+		// Create a stage for hud elements
+		HUDstage = new Stage();
+
+		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), HUDcamera));
+		
+		// Set libGDX to check for input from the virtual sticks
+		Gdx.input.setInputProcessor(HUDstage);
+
+		// Create a box2D debug renderer for physics debugging
+		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
+		
+		initPlayer();
+		initLights();
+		initUI();
+	}
+	
+	void initPlayer()
+	{
 		// Set the player's default start position
 		Vector2 startPos = playerStartPos;
 
@@ -186,7 +246,25 @@ public class SPGame implements Screen {
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
-
+		entities.addActor(player);
+	}
+	
+	void initLights() {
+		//Set up Box2D lighting
+		RayHandler.setGammaCorrection(true);
+		RayHandler.useDiffuseLight(true);
+		
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(new Color(0.1f,0.1f,0.1f,0.5f));
+		rayHandler.setBlurNum(3);
+		//Create a light on the player
+		playerLight = new PointLight(rayHandler,playerLightRays,new Color(1,1,1,1),lightDistance,0,0);
+		playerLight.attachToBody(player.getBody(), player.getWidth()/2, player.getHeight()/2);
+		//Load lights from map
+	}
+	
+	void initUI()
+	{
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
 		mSkin.add("mBack", TextureManager.mBack);
@@ -213,42 +291,12 @@ public class SPGame implements Screen {
 		aPad = new Touchpad(10, aStyle);
 		aPad.setBounds(Gdx.graphics.getWidth() / 15,
 				Gdx.graphics.getHeight() / 15, 175, 175);
-
-		// Create a group that all moving entities will be put in
-		Group entities = new Group();
-
-		// Create the stage for objects actually in the level
-		level = new Stage();
-		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight(), camera));
-
-		// Add the entity group to this stage
-		level.addActor(entities);
-
-		// Add the player to the entity group
-		entities.addActor(player);
-
-		LevelDirector director = new LevelDirector(difficultyLevel,
-				playerProgress, map);
-		level.addActor(director);
-
-		// Create a stage for hud elements
-		HUDstage = new Stage();
-		// Set libGDX to check for input from the virtual sticks
-		Gdx.input.setInputProcessor(HUDstage);
-
+		
 		// Add the virtual sticks to the HUDstage and set its viewport
 		HUDstage.addActor(mPad);
 		HUDstage.addActor(aPad);
-		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight(), HUDcamera));
-
-		// Create a box2D debug renderer for physics debugging
-		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
-
+		
 		// show settings button
-		Gdx.input.setInputProcessor(HUDstage);
-
 		atlas = new TextureAtlas("ui/button.pack");
 		skin = new Skin(atlas);
 
@@ -281,9 +329,8 @@ public class SPGame implements Screen {
 		buttonOptions.setX(Gdx.graphics.getWidth() - buttonOptions.getWidth() - 30);
 		buttonOptions.setY(Gdx.graphics.getHeight() - buttonOptions.getHeight() - 30);
 		HUDstage.addActor(buttonOptions);
-
 	}
-
+	
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
@@ -317,5 +364,12 @@ public class SPGame implements Screen {
 		// TODO Auto-generated method stub
 		return world;
 	}
-
+	
+	@Override
+	public void render(float delta) {
+		
+		updating(delta);
+		rendering(delta);
+	}
+	
 }
