@@ -23,7 +23,7 @@ public class DifficultyScreen implements Screen {
 	private TextureAtlas atlas;
 	private Skin skin;
 	private Table table;
-	private TextButton buttonEasy, buttonNormal, buttonHard;
+	private TextButton buttonEasy, buttonMedium, buttonHard;
 	private BitmapFont font;
 	private Label heading;
 	private TextButtonStyle textButtonStyle;
@@ -62,6 +62,7 @@ public class DifficultyScreen implements Screen {
 		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
 				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
 		font.setColor(255, 255, 255, 1);
+		font.setScale(2);
 
 		// creating buttons
 		textButtonStyle = new TextButtonStyle();
@@ -83,10 +84,10 @@ public class DifficultyScreen implements Screen {
 			}
 
 		});
-		buttonEasy.pad(20);
+		buttonEasy.pad(40);
 
-		buttonNormal = new TextButton("NORMAL", textButtonStyle);
-		buttonNormal.addListener(new InputListener() {
+		buttonMedium = new TextButton("MEDIUM", textButtonStyle);
+		buttonMedium.addListener(new InputListener() {
 
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
@@ -97,7 +98,7 @@ public class DifficultyScreen implements Screen {
 
 			}
 		});
-		buttonNormal.pad(20);
+		buttonMedium.pad(40);
 
 		buttonHard = new TextButton("HARD", textButtonStyle);
 		buttonHard.addListener(new InputListener() {
@@ -111,18 +112,19 @@ public class DifficultyScreen implements Screen {
 
 			}
 		});
-		buttonHard.pad(20);
+		buttonHard.pad(40);
 
 		// creates heading
 		LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
 		heading = new Label("DIFFICULTY", headingStyle);
+		heading.setFontScale(4);
 
 		// puts stuff together
 		table.add(heading);
 		table.row();
 		table.add(buttonEasy);
 		table.row();
-		table.add(buttonNormal);
+		table.add(buttonMedium);
 		table.row();
 		table.add(buttonHard);
 		table.debug();

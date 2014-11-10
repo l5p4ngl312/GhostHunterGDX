@@ -29,8 +29,8 @@ public class GameSettingsMenu implements Screen {
 	private int diff;
 	private int prog;
 	private GhostHunterGame game;
-	
-	public GameSettingsMenu(SPGame spGame){
+
+	public GameSettingsMenu(SPGame spGame) {
 		this.diff = spGame.difficultyLevel;
 		this.prog = spGame.playerProgress;
 		this.game = spGame.game;
@@ -103,8 +103,9 @@ public class GameSettingsMenu implements Screen {
 		});
 		buttonHome.pad(40);
 
-		//i don't know how to literally resume, so for now this button starts
-		//a new spgame screen with the same game, difficulty, and progress as was taken in initially
+		// i don't know how to literally resume, so for now this button starts
+		// a new spgame screen with the same game, difficulty, and progress as
+		// was taken in initially
 		buttonResume = new TextButton("RESUME", textButtonStyle);
 		buttonResume.addListener(new InputListener() {
 
