@@ -263,17 +263,17 @@ public class SPGame implements Screen {
 
 		//Lighting
 		RayHandler.setGammaCorrection(true);
-		RayHandler.useDiffuseLight(true);
+		RayHandler.useDiffuseLight(false);
 		
 		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(new Color(0.1f,0.1f,0.1f,0.5f));
-		rayHandler.setBlurNum(3);
+		rayHandler.setAmbientLight(new Color(0f,0f,0f,0.4f));
+		rayHandler.setBlurNum(1);
 		
 		//playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 7, 5, 10);
-		playerLight = new ConeLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 12, 0, 0,player.rot,32.5f);
+		playerLight = new ConeLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 12, 0, 0,player.rot,30f);
 		playerLight.setStaticLight(false);
-		playerLight.setSoft(false);
-		//playerLight.setSoftnessLength(1.5f);
+		playerLight.setSoft(true);
+		playerLight.setSoftnessLength(2f);
 		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
 		//playerLight.attachToBody(player.getBody(), 0, 0);
 		
