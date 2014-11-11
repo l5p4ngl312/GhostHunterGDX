@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import box2dLight.ConeLight;
 import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -72,7 +73,7 @@ public class SPGame implements Screen {
 	public static final int raysPerLight = 128;
 	public static final float lightDistance = 16f;
 	
-	PointLight playerLight;
+	ConeLight playerLight;
 	
 	public SPGame(GhostHunterGame game, int difficultyLevel, int playerProgress) {
 		this.game = game;
@@ -116,6 +117,9 @@ public class SPGame implements Screen {
 		// Update all the objects in the level
 		level.act(delta);
 
+		playerLight.setPosition(player.getX(),player.getY());
+		Gdx.app.debug("ROT",player.rot+"");
+		playerLight.setDirection(player.rot);
 		// Draw the level
 		level.draw();
 
@@ -265,12 +269,13 @@ public class SPGame implements Screen {
 		rayHandler.setAmbientLight(new Color(0.1f,0.1f,0.1f,0.5f));
 		rayHandler.setBlurNum(3);
 		
-		
-		playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 7, 5, 10);
-		playerLight.setSoft(true);
-		playerLight.setSoftnessLength(0.5f);
+		//playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 7, 5, 10);
+		playerLight = new ConeLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 12, 0, 0,player.rot,32.5f);
+		playerLight.setStaticLight(false);
+		playerLight.setSoft(false);
+		//playerLight.setSoftnessLength(1.5f);
 		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
-		playerLight.attachToBody(player.getBody(), 0, 0);
+		//playerLight.attachToBody(player.getBody(), 0, 0);
 		
 		// show settings button
 
@@ -291,14 +296,12 @@ public class SPGame implements Screen {
 
 		buttonOptions = new TextButton("OPTIONS", textButtonStyle);
 		buttonOptions.addListener(new InputListener() {
-
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
-				game.setScreen(new GameSettingsMenu(new SPGame(game,
-						difficultyLevel, playerProgress)));
+				//game.setScreen(new GameSettingsMenu(new ));
 			}
 		});
 		buttonOptions.pad(20);
