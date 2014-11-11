@@ -25,7 +25,7 @@ public class Physics {
 	   public final static short NO_GROUP = 0;
 	   // masks
 	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP;
-	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR;
+	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER;
 	   public final static short MASK_PICKUP = PICKUP | PLAYER | OBSTACLE;
 	   public final static short MASK_SENSOR = PLAYER;
 	   public final static short MASK_BODY_PART = OBSTACLE;
@@ -119,7 +119,7 @@ public class Physics {
          fDef.shape=shape;
          fDef.density = 1;
          fDef.filter.categoryBits = OBSTACLE;
-         fDef.filter.groupIndex = 0;
+         fDef.filter.groupIndex = 1;
          fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP;
          body.createFixture(fDef);
    

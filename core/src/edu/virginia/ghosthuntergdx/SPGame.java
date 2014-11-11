@@ -265,9 +265,12 @@ public class SPGame implements Screen {
 		rayHandler.setAmbientLight(new Color(0.1f,0.1f,0.1f,0.5f));
 		rayHandler.setBlurNum(3);
 		
-		playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.8f), 7, 5, 10);
+		
+		playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 7, 5, 10);
+		playerLight.setSoft(true);
+		playerLight.setSoftnessLength(0.5f);
 		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
-		playerLight.attachToBody(player.getBody(), player.getWidth()/2, player.getHeight()/2);
+		playerLight.attachToBody(player.getBody(), 0, 0);
 		
 		// show settings button
 
