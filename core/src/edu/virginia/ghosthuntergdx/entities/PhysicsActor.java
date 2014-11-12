@@ -18,7 +18,6 @@ public class PhysicsActor extends Actor{
 
 	
 	private Sprite sprite;
-	private TextureAtlas textureAtlas;
 	protected Body mBody;
 	public float rot = 0;
 	//private int animFrame = 1;
@@ -31,20 +30,19 @@ public class PhysicsActor extends Actor{
 	   public short groupIndex = 0;
 	   
 	   
-	public PhysicsActor(Vector2 position, Texture t) {
+	public PhysicsActor(Vector2 position, TextureRegion t) {
 		super();
 		setSprite(new Sprite(t));
-		
 		//Set the objects size to the texture size divided by a conversion factor
-		setWidth(t.getWidth()/Consts.PIXEL_TO_METER);
-		setHeight(t.getHeight()/Consts.PIXEL_TO_METER);
+		setWidth(t.getRegionWidth()/Consts.PIXEL_TO_METER);
+		setHeight(t.getRegionHeight()/Consts.PIXEL_TO_METER);
 		setOrigin(getWidth()/2,getHeight()/2);
 		
 		setPosition(position.x,position.y);
 		
 		//Set the sprite's size to the objects size converted to screen coordinates
 		getSprite().setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
-		getSprite().setOriginCenter();
+		getSprite().setOrigin(getWidth()*Consts.BOX_TO_WORLD/2,getHeight()*Consts.BOX_TO_WORLD/2);
 		getSprite().setPosition(position.x*Consts.BOX_TO_WORLD, position.y*Consts.BOX_TO_WORLD);
 		
 		//Create a physics body based on the sprite
@@ -55,7 +53,7 @@ public class PhysicsActor extends Actor{
 		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite(),false);
 		
 	}
-	public PhysicsActor(Vector2 position, Texture t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight,boolean fixedRot) {
+	public PhysicsActor(Vector2 position, TextureRegion t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight,boolean fixedRot) {
 		super();
 		setSprite(new Sprite(t));
 		

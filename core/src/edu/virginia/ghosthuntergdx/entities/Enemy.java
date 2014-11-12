@@ -1,22 +1,22 @@
 package edu.virginia.ghosthuntergdx.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Enemies extends PhysicsActor{
+public class Enemy extends PhysicsActor{
 
 	
 	Vector2 position;
-	Texture enemyTexture;
 	Rectangle bounds;
 	Player player;
 	double health;
 	float speed = 2f;
 	
 	
-	public Enemies(Vector2 position, Texture t, Player player) {
-		super(position, t);
+	public Enemy(Vector2 position, Texture t, Player player) {
+		super(position, new TextureRegion(t));
 		this.position = position;
 		this.player = player;
 	}

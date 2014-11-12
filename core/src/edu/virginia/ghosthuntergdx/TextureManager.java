@@ -1,11 +1,15 @@
 package edu.virginia.ghosthuntergdx;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import edu.virginia.ghosthuntergdx.entities.Player;
 
 public class TextureManager {
 
-	public static Texture player;
+	public static TextureAtlas player;
 	public static Texture mKnob;
 	public static Texture mBack;
 	public static Texture aKnob;
@@ -17,7 +21,9 @@ public class TextureManager {
 	
 	public static void LoadTextures()
 	{
-		player = new Texture(Gdx.files.internal("data/playerHead.png"));
+		player = new TextureAtlas(Gdx.files.internal("data/playerAtlas.pack"));
+		Player.idleFists = player.findRegion("playerHead");
+		Player.holdingPistol = player.findRegion("BobWithPistol");
 		mKnob = new Texture(Gdx.files.internal("data/mKnob.png"));
 		mBack = new Texture(Gdx.files.internal("data/mBack.png"));
 		aKnob = new Texture(Gdx.files.internal("data/aKnob.png"));

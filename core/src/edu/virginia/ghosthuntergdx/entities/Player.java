@@ -3,6 +3,7 @@ package edu.virginia.ghosthuntergdx.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -26,23 +27,27 @@ public class Player extends PhysicsActor{
 	public float moveSpeed = baseMoveSpeed;
 	public float rotSpeed = 900f;
 	
+	public static TextureRegion holdingPistol;
+	public static TextureRegion idleFists;
+	
 	public Player(Vector2 position) {
-		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight(),true);
+		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
+		
 		//Set the sprite's size to the objects size converted to screen coordinates
-		getSprite().setSize(TextureManager.player.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, TextureManager.player.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setSize(idleFists.getRegionWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, idleFists.getRegionHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
 		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
 		maxVelocity = new Vector2(5,5);
 		spriteOffset = new Vector2(-width/4,0);
 	}
-	public Player(Vector2 position,Texture t) {
-		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight(),true);
+	public Player(Vector2 position,TextureRegion t) {
+		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
 		//Set the sprite's size to the objects size converted to screen coordinates
-		getSprite().setSize(t.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, t.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setSize(t.getRegionWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, idleFists.getRegionHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
 		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
 		maxVelocity = new Vector2(5,5);
 		spriteOffset = new Vector2(-width/4,0);
 	}
-	float width = TextureManager.player.getWidth()/Consts.PIXEL_TO_METER/2;
+	float width = idleFists.getRegionWidth()/Consts.PIXEL_TO_METER/2;
 
 	@Override
 	public void act(float delta)
