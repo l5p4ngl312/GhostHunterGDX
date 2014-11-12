@@ -23,6 +23,9 @@ public class TextureManager {
 		aKnob = new Texture(Gdx.files.internal("data/aKnob.png"));
 		aBack = new Texture(Gdx.files.internal("data/aBack.png"));
 //		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
+//		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
+//		ghost = new Texture(Gdx.files.internal("data/ghost.png"));
+
 				
 	}
 	
@@ -33,5 +36,8 @@ public class TextureManager {
 		mBack.dispose();
 		aKnob.dispose();
 		aBack.dispose();
+//		vampire.dispose();
+//		ghost.dispose();
+//		warewolf.dispose();
 	}
 }
