@@ -18,11 +18,11 @@ public class Player extends PhysicsActor{
 	public float rotSpeed = 900f;
 	
 	public Player(Vector2 position) {
-		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER);
+		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight());
 		maxVelocity = new Vector2(5,5);
 	}
 	public Player(Vector2 position,Texture t) {
-		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER);
+		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight());
 	}
 	
 	@Override

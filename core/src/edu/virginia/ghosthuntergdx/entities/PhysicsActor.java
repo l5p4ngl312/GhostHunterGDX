@@ -28,6 +28,8 @@ public class PhysicsActor extends Actor{
 	   public short maskBit = Physics.OBSTACLE | Physics.LIGHT | Physics.PLAYER | Physics.PICKUP;
 	   
 	   public short groupIndex = 0;
+	   
+	   
 	public PhysicsActor(Vector2 position, Texture t) {
 		super();
 		setSprite(new Sprite(t));
@@ -52,29 +54,28 @@ public class PhysicsActor extends Actor{
 		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite());
 		
 	}
-	public PhysicsActor(Vector2 position, Texture t, short categoryBit, short i, short maskBit) {
+	public PhysicsActor(Vector2 position, Texture t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight) {
 		super();
 		setSprite(new Sprite(t));
 		
 		//Set the objects size to the texture size divided by a conversion factor
-		setWidth(t.getWidth()/Consts.PIXEL_TO_METER);
-		setHeight(t.getHeight()/Consts.PIXEL_TO_METER);
+		setWidth(bodyWidth/Consts.PIXEL_TO_METER);
+		setHeight(bodyHeight/Consts.PIXEL_TO_METER);
 		setOrigin(getWidth()/2,getHeight()/2);
 		
 		setPosition(position.x,position.y);
 		
-		//Set the sprite's size to the objects size converted to screen coordinates
 		getSprite().setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
-		getSprite().setOriginCenter();
 		getSprite().setPosition(position.x*Consts.BOX_TO_WORLD, position.y*Consts.BOX_TO_WORLD);
-		
 		//Create a physics body based on the sprite
 		FixtureDef mDef = new FixtureDef();
 		mDef.filter.categoryBits = categoryBit;
 		mDef.filter.groupIndex = i;
 		mDef.filter.maskBits = maskBit;
 		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite());
-		
+		//Set the sprite's size to the objects size converted to screen coordinates
+		getSprite().setSize(t.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, t.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setOrigin(sprite.getWidth()/4,sprite.getHeight()/2);
 	}
 
 	@Override
