@@ -76,6 +76,8 @@ public class MainMenu implements Screen{
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = black;
+		textButtonStyle.font.scale(Gdx.graphics.getDensity());
+		
 		
 		buttonExit = new TextButton("EXIT", textButtonStyle);
 		buttonExit.addListener(new InputListener() {
@@ -91,6 +93,7 @@ public class MainMenu implements Screen{
 		});
 		buttonExit.pad(20);
 		buttonPlay = new TextButton("Play", textButtonStyle);
+		
 		buttonPlay.pad(20);
 		
 		buttonPlay.addListener(new InputListener() {
@@ -122,7 +125,7 @@ public class MainMenu implements Screen{
 		LabelStyle headingStyle = new LabelStyle(white, Color.WHITE);
 		
 		heading = new Label("Welcome To Ghost Hunter", headingStyle);
-		heading.setFontScale(3);
+		heading.setFontScale(Gdx.graphics.getDensity()*4);
 		
 		//putting stuff together
 		table.add(heading);

@@ -21,13 +21,9 @@ public class Enemies extends PhysicsActor{
 		this.player = player;
 	}
 	
-	public void update(){
+	public void act(float delta){
+		super.act(delta);
 		
-		Vector2 playerPos = player.mBody.getPosition();
-		Vector2 dir = playerPos.sub(mBody.getPosition());
-		dir.nor();
-		
-		mBody.setLinearVelocity(dir.scl(speed));
 		
 	}
 	
