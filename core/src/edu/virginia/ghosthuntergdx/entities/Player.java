@@ -2,10 +2,19 @@ package edu.virginia.ghosthuntergdx.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
 import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.Physics;
+import edu.virginia.ghosthuntergdx.SPGame;
 import edu.virginia.ghosthuntergdx.TextureManager;
 
 public class Player extends PhysicsActor{
@@ -18,20 +27,30 @@ public class Player extends PhysicsActor{
 	public float rotSpeed = 900f;
 	
 	public Player(Vector2 position) {
-		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight());
+		super(position, TextureManager.player,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight(),true);
+		//Set the sprite's size to the objects size converted to screen coordinates
+		getSprite().setSize(TextureManager.player.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, TextureManager.player.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
 		maxVelocity = new Vector2(5,5);
+		spriteOffset = new Vector2(-width/4,0);
 	}
 	public Player(Vector2 position,Texture t) {
-		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight());
+		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,TextureManager.player.getWidth()/2,TextureManager.player.getHeight(),true);
+		//Set the sprite's size to the objects size converted to screen coordinates
+		getSprite().setSize(t.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, t.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
+		maxVelocity = new Vector2(5,5);
+		spriteOffset = new Vector2(-width/4,0);
 	}
-	
+	float width = TextureManager.player.getWidth()/Consts.PIXEL_TO_METER/2;
+
 	@Override
 	public void act(float delta)
 	{
 		super.act(delta);
 		movePlayer(delta);
 	}
-	
+
 	private void movePlayer(float delta)
 	{
 		//If player is attacking, slow his movement speed
@@ -54,7 +73,6 @@ public class Player extends PhysicsActor{
 		}else if(!attackDir.equals(Vector2.Zero)){
 			targetRot = (float) Math.atan2(attackDir.y,attackDir.x)*MathUtils.radiansToDegrees;
 		}
-		
 		//Rotate the player towards his target rotation along the shortest path
 		if(targetRot > 360)
 			targetRot-=360;
@@ -88,6 +106,21 @@ public class Player extends PhysicsActor{
 					rot = targetRot;
 			}
 		}
+
+		//Rotate body about sprite origin
+		float aimedAngle = rot*MathUtils.degRad;
+		while(aimedAngle < -MathUtils.PI) aimedAngle += MathUtils.PI*2;
+		while(aimedAngle > MathUtils.PI) aimedAngle -= MathUtils.PI*2;
+		
+		mBody.setAwake(true);
+		Vector2 beforeWorldPos = new Vector2(mBody.getWorldPoint(new Vector2(-width/4,0)));
+		Gdx.app.debug("BEFORE", beforeWorldPos.toString());
+		mBody.setTransform(mBody.getPosition(), aimedAngle);
+		Vector2 afterWorldPos = new Vector2(mBody.getWorldPoint(new Vector2(-width/4,0)));
+		Gdx.app.debug("AFTER", afterWorldPos.toString());
+		mBody.setTransform(mBody.getPosition().add(beforeWorldPos.sub(afterWorldPos)), aimedAngle);
+		
+		
 	}
 	
 	

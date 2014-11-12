@@ -3,6 +3,7 @@ package edu.virginia.ghosthuntergdx.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -51,10 +52,10 @@ public class PhysicsActor extends Actor{
 		mDef.filter.categoryBits = categoryBit;
 		mDef.filter.groupIndex = groupIndex;
 		mDef.filter.maskBits = maskBit;
-		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite());
+		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite(),false);
 		
 	}
-	public PhysicsActor(Vector2 position, Texture t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight) {
+	public PhysicsActor(Vector2 position, Texture t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight,boolean fixedRot) {
 		super();
 		setSprite(new Sprite(t));
 		
@@ -72,24 +73,22 @@ public class PhysicsActor extends Actor{
 		mDef.filter.categoryBits = categoryBit;
 		mDef.filter.groupIndex = i;
 		mDef.filter.maskBits = maskBit;
-		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite());
-		//Set the sprite's size to the objects size converted to screen coordinates
-		getSprite().setSize(t.getWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, t.getHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
-		getSprite().setOrigin(sprite.getWidth()/4,sprite.getHeight()/2);
+		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite(),true);
 	}
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		//Set the actor's position to the physics body's position
-		setPosition(mBody.getPosition().x,mBody.getPosition().y);
+		Vector2 pos = mBody.getWorldPoint(spriteOffset);
+		setPosition(pos.x,pos.y);
 		
 	}
-
+	public Vector2 spriteOffset = Vector2.Zero;
 	@Override
 	public void draw(Batch batch,float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		getSprite().setPosition(getX()*Consts.BOX_TO_WORLD-getWidth()/2*Consts.BOX_TO_WORLD,getY()*Consts.BOX_TO_WORLD-getHeight()/2*Consts.BOX_TO_WORLD);
+		getSprite().setPosition(getX()*Consts.BOX_TO_WORLD-getSprite().getOriginX()+spriteOffset.x,getY()*Consts.BOX_TO_WORLD-getSprite().getOriginY()+spriteOffset.y);
 		getSprite().setRotation(rot);
 		getSprite().draw(batch, parentAlpha);
 		
@@ -110,7 +109,10 @@ public class PhysicsActor extends Actor{
 		this.sprite = sprite;
 	}
 
-
+	public Vector2 getForwardVector()
+	{
+		return new Vector2(MathUtils.cosDeg(rot),MathUtils.sinDeg(rot));
+	}
 	
 
 }

@@ -81,6 +81,8 @@ public class SPGame implements Screen {
 		this.playerProgress = playerProgress;
 	}
 
+	public static final float camLerp = 0.2f;
+	public static final float camForwardOffset = 150f;
 	@Override
 	public void render(float delta) {
 		// Step through the Box2D physics simulation
@@ -91,8 +93,9 @@ public class SPGame implements Screen {
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
 		// Center the main camera on the player's sprite and update it
-		camera.position.set(player.getSprite().getX(), player.getSprite()
-				.getY(), 0);
+		Vector2 offsetVector = player.getForwardVector().scl(camForwardOffset);
+		camera.position.lerp(new Vector3(player.getSprite().getX()+offsetVector.x, player.getSprite()
+				.getY()+offsetVector.y,camera.position.z), camLerp);
 		level.getCamera().update();
 
 		// Expand the view matrix for the map renderer so that nothing pops in
@@ -117,8 +120,7 @@ public class SPGame implements Screen {
 		// Update all the objects in the level
 		level.act(delta);
 
-		playerLight.setPosition(player.getX(),player.getY());
-		Gdx.app.debug("ROT",player.rot+"");
+		playerLight.setPosition(player.getX()+player.getForwardVector().x/4,player.getY()+player.getForwardVector().y/4);
 		playerLight.setDirection(player.rot);
 		// Draw the level
 		level.draw();

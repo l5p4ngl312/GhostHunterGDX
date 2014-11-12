@@ -57,23 +57,24 @@ public class Physics {
 	}
 	
 	//Creates a circular physics body based on a sprite
-	public static Body createCircleBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
+	public static Body createCircleBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite,boolean fixedRot ) {
 
 	    float pRotation = 0;
-	    float pWidth = pSprite.getWidth();
-	    float pHeight = pSprite.getHeight();
+	    float pWidth = pSprite.getWidth()/ Consts.BOX_TO_WORLD;
+	    float pHeight = pSprite.getHeight()/ Consts.BOX_TO_WORLD;
 
 	    final BodyDef circleBodyDef = new BodyDef();
 	    circleBodyDef.type = pBodyType;
+	    circleBodyDef.fixedRotation = true;
 
 	    circleBodyDef.position.x = pSprite.getX() / Consts.BOX_TO_WORLD;
 	    circleBodyDef.position.y = pSprite.getY() / Consts.BOX_TO_WORLD;
-
+	    
 	    final CircleShape shape = new CircleShape();
-	    shape.setRadius(pWidth/2/Consts.BOX_TO_WORLD);
+	    shape.setRadius(pWidth/2);
 
-	    pFixtureDef.shape = shape;        
-
+	    pFixtureDef.shape = shape;  
+	    pFixtureDef.density = 1;
 	    final Body circleBody = SPGame.getPhysicsWorld().createBody(circleBodyDef);
 	    circleBody.createFixture(pFixtureDef);
 	    
