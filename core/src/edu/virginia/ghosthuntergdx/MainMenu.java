@@ -22,7 +22,7 @@ public class MainMenu implements Screen{
 	private Skin skin; //done
 	private Table table; //done
 	private TextButton buttonPlay, buttonExit, buttonSettings; //done
-	private BitmapFont white, black; //done
+	private BitmapFont white, black, chillerFont; //done
 	private Label heading;
 	
 	GhostHunterGame game;
@@ -67,6 +67,7 @@ public class MainMenu implements Screen{
 		//creating fonts
 		white = new BitmapFont(Gdx.files.internal("Font/white.fnt"), false);
 		black = new BitmapFont(Gdx.files.internal("Font/black.fnt"), false);
+		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
 		
 		
 		//creating buttons
@@ -75,8 +76,8 @@ public class MainMenu implements Screen{
 		textButtonStyle.down = skin.getDrawable("button.down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
-		textButtonStyle.font = black;
-		textButtonStyle.font.scale(Gdx.graphics.getDensity());
+		textButtonStyle.font = chillerFont;
+		
 		
 		
 		buttonExit = new TextButton("EXIT", textButtonStyle);
@@ -122,7 +123,7 @@ public class MainMenu implements Screen{
 		});
 		
 		//created heading
-		LabelStyle headingStyle = new LabelStyle(white, Color.WHITE);
+		LabelStyle headingStyle = new LabelStyle(chillerFont, Color.WHITE);
 		
 		heading = new Label("Welcome To Ghost Hunter", headingStyle);
 		heading.setFontScale(Gdx.graphics.getDensity()*4);

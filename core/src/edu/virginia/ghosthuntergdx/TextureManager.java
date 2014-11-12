@@ -10,6 +10,10 @@ public class TextureManager {
 	public static Texture mBack;
 	public static Texture aKnob;
 	public static Texture aBack;
+//	public static Texture vampire;
+//	public static Texture warewolf;
+//	public static Texture ghost;
+//	
 	
 	public static void LoadTextures()
 	{
@@ -18,6 +22,8 @@ public class TextureManager {
 		mBack = new Texture(Gdx.files.internal("data/mBack.png"));
 		aKnob = new Texture(Gdx.files.internal("data/aKnob.png"));
 		aBack = new Texture(Gdx.files.internal("data/aBack.png"));
+//		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
+				
 	}
 	
 	public static void DisposeTextures()
