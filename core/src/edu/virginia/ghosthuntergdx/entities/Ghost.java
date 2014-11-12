@@ -9,14 +9,23 @@ public class Ghost extends Enemies {
 		super(position, t, player);
 		
 	}
-	
-	
+	 public void die(){
+		 if (health <= 0){
+			 this.remove();
+		 }
+	 }
+		
 	@Override 
 	public void act(float delta){
 		super.act(delta);
-		update(delta);
+		Vector2 playerPos = player.mBody.getPosition();
+		Vector2 dir = playerPos.sub(mBody.getPosition());
+		dir.nor();
+		
+		mBody.setLinearVelocity(dir.scl(speed));
 	}
+}
 	
 	
 
-}
+
