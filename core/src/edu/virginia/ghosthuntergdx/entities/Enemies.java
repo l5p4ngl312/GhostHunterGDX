@@ -12,7 +12,7 @@ public class Enemies extends PhysicsActor{
 	Rectangle bounds;
 	Player player;
 	double health;
-	
+	float speed = 2f;
 	
 	
 	public Enemies(Vector2 position, Texture t, Player player) {
@@ -23,19 +23,11 @@ public class Enemies extends PhysicsActor{
 	
 	public void update(){
 		
-	
-		if(player.mBody.getPosition().x > position.x){
-		position.x++;
-	}
-		else{
-		position.x--;
-	}	
-		if(player.mBody.getPosition().y < position.y){
-		position.y++;
-	}
-		else{
-		position.y--;
-		}
+		Vector2 playerPos = player.mBody.getPosition();
+		Vector2 dir = playerPos.sub(mBody.getPosition());
+		dir.nor();
+		
+		mBody.setLinearVelocity(dir.scl(speed));
 		
 	}
 	
