@@ -9,5 +9,14 @@ public class Ghost extends Enemies {
 		super(position, t, player);
 		
 	}
+	
+	
+	@Override 
+	public void act(float delta){
+		super.act(delta);
+		update(delta);
+	}
+	
+	
 
 }
