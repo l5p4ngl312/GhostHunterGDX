@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import edu.virginia.ghosthuntergdx.entities.*;
+import edu.virginia.ghosthuntergdx.items.Pistol;
 
 public class SPGame implements Screen {
 
@@ -51,7 +52,7 @@ public class SPGame implements Screen {
 
 	Player player;
 	Stage level;
-	Stage HUDstage;
+	static Stage HUDstage;
 
 	TiledMap map;
 	OrthogonalTiledMapRenderer mapRenderer;
@@ -60,7 +61,7 @@ public class SPGame implements Screen {
 
 	int difficultyLevel = 1;
 	int playerProgress = 1;
-	boolean debugPhysics = true;
+	boolean debugPhysics = false;
 
 	// for settings button:
 	TextButton buttonOptions;
@@ -69,7 +70,7 @@ public class SPGame implements Screen {
 	Skin skin;
 	TextureAtlas atlas;
 
-	RayHandler rayHandler;
+	static RayHandler rayHandler;
 	public static final int raysPerLight = 128;
 	public static final float lightDistance = 16f;
 	
@@ -82,12 +83,12 @@ public class SPGame implements Screen {
 	}
 
 	public static final float camLerp = 0.2f;
-	public static final float camForwardOffset = 150f;
+	public static final float camForwardOffset = 115f;
 	@Override
 	public void render(float delta) {
 		// Step through the Box2D physics simulation
 		world.step(1 / 45f, 6, 2);
-
+		destroyBodies();
 		// Clear the screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -119,14 +120,17 @@ public class SPGame implements Screen {
 
 		// Update all the objects in the level
 		level.act(delta);
-
-		playerLight.setPosition(player.getX()+player.getForwardVector().x/4,player.getY()+player.getForwardVector().y/4);
-		playerLight.setDirection(player.rot);
 		// Draw the level
 		level.draw();
-
+		
+		if(!debugPhysics)
+		{
+		playerLight.setPosition(player.getX()+player.getForwardVector().x/4,player.getY()+player.getForwardVector().y/4);
+		playerLight.setDirection(player.rot);
+		
 		rayHandler.setCombinedMatrix(camera.combined.scale(Consts.BOX_TO_WORLD,Consts.BOX_TO_WORLD,0));
 		rayHandler.updateAndRender();
+		}
 		// Draw the Box2D debug information if the flag is true
 		if (debugPhysics)
 			debugger.render(world, camera.combined.scale(Consts.BOX_TO_WORLD,
@@ -159,7 +163,7 @@ public class SPGame implements Screen {
 
 		// Create a box2D physics world with no gravity (it is a top down game)
 		world = new World(new Vector2(0, 0), true);
-
+		world.setContactListener(new CollisionListener());
 		// Create a new camera with a viewport spanning the pixel dimensions of
 		// the device's screen
 		camera = new OrthographicCamera(Gdx.graphics.getWidth(),
@@ -264,6 +268,8 @@ public class SPGame implements Screen {
 		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
 
 		//Lighting
+		if(!debugPhysics)
+		{
 		RayHandler.setGammaCorrection(true);
 		RayHandler.useDiffuseLight(false);
 		
@@ -277,6 +283,7 @@ public class SPGame implements Screen {
 		playerLight.setSoft(true);
 		playerLight.setSoftnessLength(2f);
 		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
+		}
 		//playerLight.attachToBody(player.getBody(), 0, 0);
 		
 		// show settings button
@@ -308,10 +315,13 @@ public class SPGame implements Screen {
 		});
 		buttonOptions.pad(20);
 
-		buttonOptions.setX(Gdx.graphics.getWidth() - buttonOptions.getWidth() - 30);
-		buttonOptions.setY(Gdx.graphics.getHeight() - buttonOptions.getHeight() - 30);
+		buttonOptions.setX(30);
+		buttonOptions.setY(Gdx.graphics.getHeight()-buttonOptions.getHeight());
 		HUDstage.addActor(buttonOptions);
 
+		
+		Pistol testPistol = new Pistol(new Vector2(10,5));
+		level.addActor(testPistol);
 	}
 
 	@Override
@@ -340,12 +350,40 @@ public class SPGame implements Screen {
 		HUDstage.dispose();
 		debugger.dispose();
 		mapRenderer.dispose();
+		rayHandler.dispose();
 
 	}
 
 	public static World getPhysicsWorld() {
 		// TODO Auto-generated method stub
 		return world;
+	}
+	public static RayHandler getRayHandler() {
+		// TODO Auto-generated method stub
+		return rayHandler;
+	}
+	
+	public static ArrayList<Body> bodiesToDestroy = new ArrayList<Body>();
+	public static void destroyBody(Body b)
+	{
+		bodiesToDestroy.add(b);
+	}
+	
+	private static void destroyBodies()
+	{
+		for(Body b : bodiesToDestroy)
+		{
+			if(b != null)
+			{
+			world.destroyBody(b);
+			}
+		}
+		bodiesToDestroy.clear();
+	}
+	
+	public static Stage getHUDStage()
+	{
+		return HUDstage;
 	}
 
 }

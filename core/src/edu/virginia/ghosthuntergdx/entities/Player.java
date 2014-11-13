@@ -2,7 +2,9 @@ package edu.virginia.ghosthuntergdx.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -12,11 +14,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.badlogic.gdx.utils.Array;
 
 import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.SPGame;
 import edu.virginia.ghosthuntergdx.TextureManager;
+import edu.virginia.ghosthuntergdx.items.Item;
+import edu.virginia.ghosthuntergdx.items.Weapon;
 
 public class Player extends PhysicsActor{
 
@@ -27,9 +32,14 @@ public class Player extends PhysicsActor{
 	public float moveSpeed = baseMoveSpeed;
 	public float rotSpeed = 900f;
 	
-	public static TextureRegion holdingPistol;
 	public static TextureRegion idleFists;
 	
+	public Item primaryItem;
+	public Item secondaryItem;
+	
+	private Animation attackAnim;
+	private float animSpeed;
+	private float animTime = 1000f;
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
 		
@@ -54,8 +64,9 @@ public class Player extends PhysicsActor{
 	{
 		super.act(delta);
 		movePlayer(delta);
+		attackLogic(delta);
 	}
-
+	private float targetRot = rot;
 	private void movePlayer(float delta)
 	{
 		//If player is attacking, slow his movement speed
@@ -70,7 +81,7 @@ public class Player extends PhysicsActor{
 		mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
 		
 		//Set the players target rotation based on either his move direction or attack stick direction
-		float targetRot = getSprite().getRotation();
+		targetRot = getSprite().getRotation();
 		if(moveDir.len() > 0 && attackDir.equals(Vector2.Zero))
 		{
 			targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees;
@@ -119,15 +130,45 @@ public class Player extends PhysicsActor{
 		
 		mBody.setAwake(true);
 		Vector2 beforeWorldPos = new Vector2(mBody.getWorldPoint(new Vector2(-width/4,0)));
-		Gdx.app.debug("BEFORE", beforeWorldPos.toString());
 		mBody.setTransform(mBody.getPosition(), aimedAngle);
 		Vector2 afterWorldPos = new Vector2(mBody.getWorldPoint(new Vector2(-width/4,0)));
-		Gdx.app.debug("AFTER", afterWorldPos.toString());
 		mBody.setTransform(mBody.getPosition().add(beforeWorldPos.sub(afterWorldPos)), aimedAngle);
 		
 		
 	}
 	
+	private void attackLogic(float delta)
+	{
+		if(attackAnim != null)
+		{
+			animTime += delta;
+			getSprite().setRegion(attackAnim.getKeyFrame(animTime,false));
+		}
+		
+		if(!attackDir.equals(Vector2.Zero) && rot == targetRot)
+		{
+			if(primaryItem instanceof Weapon)
+			{
+				Weapon primWeapon = (Weapon)primaryItem;
+				primWeapon.fire(attackDir,this);
+			}
+		}
+	}
+	
+	public void setIdleFrame(int idleFrame)
+	{
+		getSprite().setRegion(TextureManager.player.getRegions().get(idleFrame));
+	}
+	
+	public void setAttackAnim(Animation a, float s)
+	{
+		attackAnim = a;
+		animSpeed = s;
+	}
+	public void setAnimTime(float t)
+	{
+		animTime = t;
+	}
 	
 	public void setMoveDir(Vector2 target)
 	{

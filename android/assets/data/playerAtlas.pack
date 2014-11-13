@@ -3,16 +3,23 @@ playerAtlas.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BobWithPistol
+0
   rotate: false
   xy: 1, 1
   size: 100, 50
   orig: 100, 50
   offset: 0, 0
   index: -1
-playerHead
+1
   rotate: false
   xy: 103, 1
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 205, 1
   size: 100, 50
   orig: 100, 50
   offset: 0, 0

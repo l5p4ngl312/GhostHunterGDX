@@ -51,6 +51,7 @@ public class PhysicsActor extends Actor{
 		mDef.filter.groupIndex = groupIndex;
 		mDef.filter.maskBits = maskBit;
 		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite(),false);
+		mBody.setUserData(this);
 		
 	}
 	public PhysicsActor(Vector2 position, TextureRegion t, short categoryBit, short i, short maskBit,float bodyWidth,float bodyHeight,boolean fixedRot) {
@@ -72,6 +73,7 @@ public class PhysicsActor extends Actor{
 		mDef.filter.groupIndex = i;
 		mDef.filter.maskBits = maskBit;
 		mBody = Physics.createCircleBody(BodyType.DynamicBody, mDef, getSprite(),true);
+		mBody.setUserData(this);
 	}
 
 	@Override
