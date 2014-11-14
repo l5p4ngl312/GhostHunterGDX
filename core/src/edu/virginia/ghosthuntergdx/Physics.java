@@ -11,6 +11,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
+import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.screens.SPGame;
+
 
 public class Physics {
 	
@@ -19,16 +22,17 @@ public class Physics {
 	   public final static short PICKUP = 1 << 3;
 	   public final static short LIGHT = 1 << 4;
 	   public final static short SENSOR = 1 << 5;
-	   public final static short BODY_PART = 1 << 6;
-
+	   public final static short ENEMY = 1 << 6;
+	   public final static short GROUND = 1 << 7;
+	   
 	   public final static short LIGHT_GROUP = 1;
 	   public final static short NO_GROUP = 0;
 	   // masks
 	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP;
 	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER;
-	   public final static short MASK_PICKUP = PICKUP | PLAYER | OBSTACLE;
+	   public final static short MASK_PICKUP =  OBSTACLE;
 	   public final static short MASK_SENSOR = PLAYER;
-	   public final static short MASK_BODY_PART = OBSTACLE;
+	   public final static short MASK_ENEMY = OBSTACLE | PLAYER | SENSOR;
 	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
 
@@ -53,6 +57,7 @@ public class Physics {
 	    final Body boxBody = SPGame.getPhysicsWorld().createBody(boxBodyDef);
 	    boxBody.createFixture(pFixtureDef);
 	    
+	    
 	    return boxBody;
 	}
 	
@@ -65,7 +70,7 @@ public class Physics {
 
 	    final BodyDef circleBodyDef = new BodyDef();
 	    circleBodyDef.type = pBodyType;
-	    circleBodyDef.fixedRotation = true;
+	    circleBodyDef.fixedRotation = fixedRot;
 
 	    circleBodyDef.position.x = pSprite.getX() / Consts.BOX_TO_WORLD;
 	    circleBodyDef.position.y = pSprite.getY() / Consts.BOX_TO_WORLD;
@@ -77,6 +82,33 @@ public class Physics {
 	    pFixtureDef.density = 1;
 	    final Body circleBody = SPGame.getPhysicsWorld().createBody(circleBodyDef);
 	    circleBody.createFixture(pFixtureDef);
+	    
+	    return circleBody;
+	}
+	public static Body createCircleBody( final BodyType pBodyType, final FixtureDef pFixtureDef,final FixtureDef sensorDef, Sprite pSprite,boolean fixedRot ) {
+
+	    float pRotation = 0;
+	    float pWidth = pSprite.getWidth()/ Consts.BOX_TO_WORLD;
+	    float pHeight = pSprite.getHeight()/ Consts.BOX_TO_WORLD;
+
+	    final BodyDef circleBodyDef = new BodyDef();
+	    circleBodyDef.type = pBodyType;
+	    circleBodyDef.fixedRotation = fixedRot;
+
+	    circleBodyDef.position.x = pSprite.getX() / Consts.BOX_TO_WORLD;
+	    circleBodyDef.position.y = pSprite.getY() / Consts.BOX_TO_WORLD;
+	    
+	    CircleShape shape = new CircleShape();
+	    CircleShape shape2 = new CircleShape();
+	    shape2.setRadius(pWidth/4);
+	    pFixtureDef.shape = shape2;
+	    pFixtureDef.density = 1;
+	    shape.setRadius(pWidth/2);
+	    sensorDef.shape = shape;
+	    sensorDef.density = 1;
+	    final Body circleBody = SPGame.getPhysicsWorld().createBody(circleBodyDef);
+	    circleBody.createFixture(pFixtureDef);
+	    circleBody.createFixture(sensorDef);
 	    
 	    return circleBody;
 	}
@@ -121,7 +153,7 @@ public class Physics {
          fDef.density = 1;
          fDef.filter.categoryBits = OBSTACLE;
          fDef.filter.groupIndex = 1;
-         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP;
+         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP | ENEMY;
          body.createFixture(fDef);
    
 
@@ -132,7 +164,7 @@ public class Physics {
      return bodies;
  }
 
- private static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
+ public static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
      Rectangle rectangle = rectangleObject.getRectangle();
      PolygonShape polygon = new PolygonShape();
      Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / ppt,

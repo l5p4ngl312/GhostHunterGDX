@@ -10,9 +10,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.Physics;
-import edu.virginia.ghosthuntergdx.TextureManager;
+import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.TextureManager;
 
 public class PhysicsActor extends Actor{
 
@@ -24,8 +24,8 @@ public class PhysicsActor extends Actor{
 	//private String currentAtlasKey = new String("0001");
 	public Vector2 maxVelocity = new Vector2(Float.MAX_VALUE,Float.MAX_VALUE);
 	   
-	   public short categoryBit = Physics.OBSTACLE;
-	   public short maskBit = Physics.OBSTACLE | Physics.LIGHT | Physics.PLAYER | Physics.PICKUP;
+	   public short categoryBit = Physics.ENEMY;
+	   public short maskBit = Physics.MASK_ENEMY;
 	   
 	   public short groupIndex = 0;
 	   

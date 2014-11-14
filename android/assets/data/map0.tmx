@@ -28,4 +28,7 @@
    <ellipse/>
   </object>
  </objectgroup>
+ <objectgroup name="Ground" opacity="0.9">
+  <object x="6.06061" y="0" width="2887.88" height="2500"/>
+ </objectgroup>
 </map>

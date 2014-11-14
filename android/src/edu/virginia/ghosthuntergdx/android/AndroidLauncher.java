@@ -4,7 +4,8 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import edu.virginia.ghosthuntergdx.GhostHunterGame;
+
+import edu.virginia.ghosthuntergdx.screens.GhostHunterGame;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

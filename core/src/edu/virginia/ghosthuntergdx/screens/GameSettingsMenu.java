@@ -1,4 +1,5 @@
-package edu.virginia.ghosthuntergdx;
+package edu.virginia.ghosthuntergdx.screens;
+
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,157 +16,149 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public class MainMenu implements Screen{
 
-	private Stage stage; //done
-	private TextureAtlas atlas; //done
-	private Skin skin; //done
-	private Table table; //done
-	private TextButton buttonPlay, buttonExit, buttonSettings; //done
-	private BitmapFont white, black, chillerFont; //done
+public class GameSettingsMenu implements Screen {
+
+	private Stage stage;
+	private TextureAtlas atlas;
+	private Skin skin;
+	private Table table;
+	private TextButton buttonDifficulty, buttonHome, buttonResume;
+	private BitmapFont font;
 	private Label heading;
-	
-	GhostHunterGame game;
-	
-	public MainMenu(GhostHunterGame ghostHunterGame) {
-		this.game = ghostHunterGame;
-}
+	private TextButtonStyle textButtonStyle;
+	private int diff;
+	private int prog;
+	private GhostHunterGame game;
+
+	public GameSettingsMenu(SPGame spGame) {
+		this.diff = spGame.difficultyLevel;
+		this.prog = spGame.playerProgress;
+		this.game = spGame.game;
+	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		
-		stage.act(delta);
-		
+		stage.act();
 		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 	}
 
-	
-	
 	@Override
 	public void show() {
-		
-		
+
 		stage = new Stage();
-		
 		Gdx.input.setInputProcessor(stage);
-		
+
 		atlas = new TextureAtlas("ui/button.pack");
 		skin = new Skin(atlas);
-		
+
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		
-		//creating fonts
-		white = new BitmapFont(Gdx.files.internal("Font/white.fnt"), false);
-		black = new BitmapFont(Gdx.files.internal("Font/black.fnt"), false);
-		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
-		
-		
-		//creating buttons
-		TextButtonStyle textButtonStyle = new TextButtonStyle();
+
+		// creating font
+		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
+				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
+		font.setColor(255, 255, 255, 1);
+		font.setScale(2);
+
+		// creating buttons
+		textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.getDrawable("button.up");
 		textButtonStyle.down = skin.getDrawable("button.down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
-		textButtonStyle.font = chillerFont;
-		
-		
-		
-		buttonExit = new TextButton("EXIT", textButtonStyle);
-		buttonExit.addListener(new InputListener() {
-			
+		textButtonStyle.font = font;
+
+		buttonDifficulty = new TextButton("DIFFICULTY", textButtonStyle);
+		buttonDifficulty.addListener(new InputListener() {
+
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
 					Actor fromActor) {
-				
+
 				super.enter(event, x, y, pointer, fromActor);
-				Gdx.app.exit();
+				game.setScreen(new DifficultyScreen(game));
 			}
-			
+
 		});
-		buttonExit.pad(20);
-		buttonPlay = new TextButton("Play", textButtonStyle);
-		
-		buttonPlay.pad(20);
-		
-		buttonPlay.addListener(new InputListener() {
-			
+		buttonDifficulty.pad(40);
+
+		buttonHome = new TextButton("HOME", textButtonStyle);
+		buttonHome.addListener(new InputListener() {
+
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
 					Actor fromActor) {
-				
+
 				super.enter(event, x, y, pointer, fromActor);
-				game.setScreen(new SPGame(game, 1, 1));
+				game.setScreen(new MainMenu(game));
 			}
-			
+
 		});
-		buttonSettings = new TextButton("Settings", textButtonStyle);
-		buttonSettings.pad(20);
-		buttonSettings.addListener(new InputListener() {
-			
+		buttonHome.pad(40);
+
+		// i don't know how to literally resume, so for now this button starts
+		// a new spgame screen with the same game, difficulty, and progress as
+		// was taken in initially
+		buttonResume = new TextButton("RESUME", textButtonStyle);
+		buttonResume.addListener(new InputListener() {
+
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
 					Actor fromActor) {
-				
+
 				super.enter(event, x, y, pointer, fromActor);
-				game.setScreen(new MainSettingsMenu(game));
+				game.setScreen(new SPGame(game, diff, prog));
+
 			}
-			
+
 		});
-		
-		//created heading
-		LabelStyle headingStyle = new LabelStyle(chillerFont, Color.WHITE);
-		
-		heading = new Label("Welcome To Ghost Hunter", headingStyle);
-		heading.setFontScale(Gdx.graphics.getDensity()*4);
-		
-		//putting stuff together
+		buttonResume.pad(40);
+
+		// creates heading
+		LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
+
+		heading = new Label("OPTIONS", headingStyle);
+		heading.setFontScale(4);
+
+		// puts stuff together
 		table.add(heading);
 		table.row();
-		
-		table.add(buttonPlay).fill();
+		table.add(buttonDifficulty).fill();
 		table.row();
-		table.add(buttonExit).fill();
+		table.add(buttonHome).fill();
 		table.row();
-		table.add(buttonSettings).fill();
+		table.add(buttonResume).fill();
 		table.debug();
 		stage.addActor(table);
-		
-		
-		
-		
-		
-		
+
 	}
 
 	@Override
 	public void hide() {
-		
+
 	}
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
 
 	@Override
 	public void dispose() {
-		
+
 	}
-	
-	
+
 }

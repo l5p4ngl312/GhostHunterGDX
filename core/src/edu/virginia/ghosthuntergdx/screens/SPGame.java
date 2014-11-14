@@ -1,4 +1,4 @@
-package edu.virginia.ghosthuntergdx;
+package edu.virginia.ghosthuntergdx.screens;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +21,13 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -38,6 +40,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
+import edu.virginia.ghosthuntergdx.CollisionListener;
+import edu.virginia.ghosthuntergdx.GameInputListener;
+import edu.virginia.ghosthuntergdx.LevelDirector;
+import edu.virginia.ghosthuntergdx.Physics;
+import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.entities.*;
 import edu.virginia.ghosthuntergdx.items.Pistol;
 
@@ -48,20 +56,26 @@ public class SPGame implements Screen {
 
 	Vector2 playerStartPos = new Vector2(10, 5);
 	OrthographicCamera camera;
-	OrthographicCamera HUDcamera;
+	static OrthographicCamera HUDcamera;
 
-	Player player;
-	Stage level;
+	static Player player;
+	static Stage level;
 	static Stage HUDstage;
 
+	static Group pickUpGroup;
+	static Group entityGroup;
+	
 	TiledMap map;
 	OrthogonalTiledMapRenderer mapRenderer;
+	
+	GameInputListener input;
 
 	Box2DDebugRenderer debugger;
 
 	int difficultyLevel = 1;
 	int playerProgress = 1;
-	boolean debugPhysics = false;
+	
+	public static boolean debugPhysics = false;
 
 	// for settings button:
 	TextButton buttonOptions;
@@ -84,10 +98,18 @@ public class SPGame implements Screen {
 
 	public static final float camLerp = 0.2f;
 	public static final float camForwardOffset = 115f;
+	
+	public static boolean screenShake = false;
+	public static final float screenShakeMaxMagnitude = 28.5f;
+	
+	private static Body groundBody;
+	
 	@Override
 	public void render(float delta) {
 		// Step through the Box2D physics simulation
 		world.step(1 / 45f, 6, 2);
+		activateBodies();
+		deactivateBodies();
 		destroyBodies();
 		// Clear the screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
@@ -95,6 +117,11 @@ public class SPGame implements Screen {
 
 		// Center the main camera on the player's sprite and update it
 		Vector2 offsetVector = player.getForwardVector().scl(camForwardOffset);
+		if(screenShake)
+		{
+			offsetVector.set(offsetVector.x+(float)Math.random()*2*screenShakeMaxMagnitude-screenShakeMaxMagnitude,offsetVector.y+(float)Math.random()*2*screenShakeMaxMagnitude-screenShakeMaxMagnitude);
+		}
+		
 		camera.position.lerp(new Vector3(player.getSprite().getX()+offsetVector.x, player.getSprite()
 				.getY()+offsetVector.y,camera.position.z), camLerp);
 		level.getCamera().update();
@@ -204,6 +231,27 @@ public class SPGame implements Screen {
 				}
 			}
 		}
+		
+		MapLayer groundLayer = map.getLayers().get("Ground");
+		for (MapObject o : groundLayer.getObjects()) {
+			if(o instanceof RectangleMapObject)
+			{
+				RectangleMapObject r = (RectangleMapObject)o;
+				Shape shape = Physics.getRectangle(r);
+				BodyDef bd = new BodyDef();
+		        bd.type = BodyType.StaticBody;
+		        Body body = world.createBody(bd);
+		        FixtureDef fDef = new FixtureDef();
+		        fDef.shape=shape;
+		        fDef.density = 1;
+		        fDef.filter.categoryBits = Physics.GROUND;
+		        fDef.filter.groupIndex = Physics.NO_GROUP;
+		        fDef.filter.maskBits = Physics.NO_GROUP;
+		        fDef.isSensor = true;
+		        body.createFixture(fDef);
+		        groundBody = body;
+			}
+		}
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
@@ -236,7 +284,9 @@ public class SPGame implements Screen {
 				Gdx.graphics.getHeight() / 15, 175, 175);
 
 		// Create a group that all moving entities will be put in
-		Group entities = new Group();
+		entityGroup = new Group();
+		//Create item pickup group
+		pickUpGroup = new Group();
 
 		// Create the stage for objects actually in the level
 		level = new Stage();
@@ -244,10 +294,11 @@ public class SPGame implements Screen {
 				Gdx.graphics.getHeight(), camera));
 
 		// Add the entity group to this stage
-		level.addActor(entities);
+		level.addActor(pickUpGroup);
+		level.addActor(entityGroup);
 
 		// Add the player to the entity group
-		entities.addActor(player);
+		entityGroup.addActor(player);
 
 		LevelDirector director = new LevelDirector(difficultyLevel,
 				playerProgress, map);
@@ -255,12 +306,17 @@ public class SPGame implements Screen {
 
 		// Create a stage for hud elements
 		HUDstage = new Stage();
-		// Set libGDX to check for input from the virtual sticks
-		Gdx.input.setInputProcessor(HUDstage);
+		// Set libGDX to check for input from the virtual sticks and game listener
+		InputMultiplexer multiInput = new InputMultiplexer();
+		input = new GameInputListener();
+		multiInput.addProcessor(HUDstage);
+		multiInput.addProcessor(input);
+		Gdx.input.setInputProcessor(multiInput);
 
 		// Add the virtual sticks to the HUDstage and set its viewport
 		HUDstage.addActor(mPad);
 		HUDstage.addActor(aPad);
+		HUDstage.addActor(input);
 		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), HUDcamera));
 
@@ -321,7 +377,7 @@ public class SPGame implements Screen {
 
 		
 		Pistol testPistol = new Pistol(new Vector2(10,5));
-		level.addActor(testPistol);
+		pickUpGroup.addActor(testPistol);
 	}
 
 	@Override
@@ -364,6 +420,8 @@ public class SPGame implements Screen {
 	}
 	
 	public static ArrayList<Body> bodiesToDestroy = new ArrayList<Body>();
+	public static ArrayList<Body> bodiesToDeactivate = new ArrayList<Body>();
+	public static ArrayList<Body> bodiesToActivate = new ArrayList<Body>();
 	public static void destroyBody(Body b)
 	{
 		bodiesToDestroy.add(b);
@@ -381,9 +439,52 @@ public class SPGame implements Screen {
 		bodiesToDestroy.clear();
 	}
 	
+	private static void deactivateBodies()
+	{
+		for(Body b : bodiesToDeactivate)
+		{
+			if(b != null)
+			{
+			b.setActive(false);
+			}
+		}
+		bodiesToDeactivate.clear();
+	}
+	private static void activateBodies()
+	{
+		for(Body b : bodiesToActivate)
+		{
+			if(b != null)
+			{
+			b.setActive(true);
+			}
+		}
+		bodiesToActivate.clear();
+	}
+	
+	
 	public static Stage getHUDStage()
 	{
 		return HUDstage;
 	}
-
+	public static OrthographicCamera getHUDCamera()
+	{
+		return HUDcamera;
+	}
+	public static Stage getLevelStage()
+	{
+		return level;
+	}
+	public static Group getPickUpGroup()
+	{
+		return pickUpGroup;
+	}
+	public static Player getPlayer()
+	{
+		return player;
+	}
+	public static Body getGround()
+	{
+		return groundBody;
+	}
 }

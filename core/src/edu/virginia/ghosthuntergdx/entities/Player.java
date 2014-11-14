@@ -1,5 +1,7 @@
 package edu.virginia.ghosthuntergdx.entities;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,12 +18,12 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.utils.Array;
 
-import edu.virginia.ghosthuntergdx.Consts;
 import edu.virginia.ghosthuntergdx.Physics;
-import edu.virginia.ghosthuntergdx.SPGame;
-import edu.virginia.ghosthuntergdx.TextureManager;
+import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Item;
 import edu.virginia.ghosthuntergdx.items.Weapon;
+import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 public class Player extends PhysicsActor{
 
@@ -33,9 +35,11 @@ public class Player extends PhysicsActor{
 	public float rotSpeed = 900f;
 	
 	public static TextureRegion idleFists;
+	public static final int idleFrame = 2;
 	
 	public Item primaryItem;
 	public Item secondaryItem;
+	public ArrayList<Item> Inventory = new ArrayList<Item>();
 	
 	private Animation attackAnim;
 	private float animSpeed;
@@ -139,7 +143,7 @@ public class Player extends PhysicsActor{
 	
 	private void attackLogic(float delta)
 	{
-		if(attackAnim != null)
+		if(attackAnim != null && primaryItem != null)
 		{
 			animTime += delta;
 			getSprite().setRegion(attackAnim.getKeyFrame(animTime,false));

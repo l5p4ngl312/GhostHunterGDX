@@ -1,4 +1,4 @@
-package edu.virginia.ghosthuntergdx;
+package edu.virginia.ghosthuntergdx.assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader;

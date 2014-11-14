@@ -1,4 +1,4 @@
-package edu.virginia.ghosthuntergdx;
+package edu.virginia.ghosthuntergdx.assets;
 
 public class Consts {
 

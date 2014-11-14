@@ -1,4 +1,4 @@
-package edu.virginia.ghosthuntergdx;
+package edu.virginia.ghosthuntergdx.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
@@ -16,24 +16,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 
-public class GameSettingsMenu implements Screen {
+
+public class MainSettingsMenu implements Screen {
 
 	private Stage stage;
 	private TextureAtlas atlas;
 	private Skin skin;
 	private Table table;
-	private TextButton buttonDifficulty, buttonHome, buttonResume;
+	private TextButton buttonDifficulty, buttonHome, buttonPlay;
 	private BitmapFont font;
 	private Label heading;
 	private TextButtonStyle textButtonStyle;
-	private int diff;
-	private int prog;
-	private GhostHunterGame game;
 
-	public GameSettingsMenu(SPGame spGame) {
-		this.diff = spGame.difficultyLevel;
-		this.prog = spGame.playerProgress;
-		this.game = spGame.game;
+	GhostHunterGame game;
+
+	public MainSettingsMenu(GhostHunterGame ghostHunterGame) {
+		this.game = ghostHunterGame;
 	}
 
 	@Override
@@ -103,28 +101,25 @@ public class GameSettingsMenu implements Screen {
 		});
 		buttonHome.pad(40);
 
-		// i don't know how to literally resume, so for now this button starts
-		// a new spgame screen with the same game, difficulty, and progress as
-		// was taken in initially
-		buttonResume = new TextButton("RESUME", textButtonStyle);
-		buttonResume.addListener(new InputListener() {
+		buttonPlay = new TextButton("PLAY", textButtonStyle);
+		buttonPlay.addListener(new InputListener() {
 
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer,
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
-				game.setScreen(new SPGame(game, diff, prog));
+				game.setScreen(new SPGame(game, 1, 1));
 
 			}
 
 		});
-		buttonResume.pad(40);
+		buttonPlay.pad(40);
 
 		// creates heading
 		LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
 
-		heading = new Label("OPTIONS", headingStyle);
+		heading = new Label("SETTINGS", headingStyle);
 		heading.setFontScale(4);
 
 		// puts stuff together
@@ -134,7 +129,7 @@ public class GameSettingsMenu implements Screen {
 		table.row();
 		table.add(buttonHome).fill();
 		table.row();
-		table.add(buttonResume).fill();
+		table.add(buttonPlay).fill();
 		table.debug();
 		stage.addActor(table);
 

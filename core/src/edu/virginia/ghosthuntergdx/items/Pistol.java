@@ -9,8 +9,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import edu.virginia.ghosthuntergdx.SPGame;
 import edu.virginia.ghosthuntergdx.entities.Player;
+import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 public class Pistol extends Weapon{
 
@@ -21,7 +21,7 @@ public class Pistol extends Weapon{
 	private static final float lightOffset = 1.5f;
 	
 	private static final float maxLightLifeTime = 0.075f;
-	
+	private static final float shakeTime = 0.15f;
 	public Pistol(Vector2 worldPos)
 	{
 		super(price,ammoType.PISTOL,0,fireAnimFrames,index);
@@ -37,11 +37,16 @@ public class Pistol extends Weapon{
 		super.fire(attackDir,p);
 		if(this.fired)
 		{
-			pistolFlash = new PointLight(SPGame.getRayHandler(),SPGame.raysPerLight,new Color(1.0f,1.0f,0.0f,0.5f), 2.25f,p.getX()+p.getForwardVector().scl(lightOffset).x,p.getY()+p.getForwardVector().scl(lightOffset).y);
-			pistolFlash.setStaticLight(true);
-			pistolFlash.setSoft(true);
-			pistolFlash.setSoftnessLength(0.75f);
+			if(!SPGame.debugPhysics)
+			{
+				pistolFlash = new PointLight(SPGame.getRayHandler(),SPGame.raysPerLight,new Color(1.0f,1.0f,0.0f,0.5f), 2.25f,p.getX()+p.getForwardVector().scl(lightOffset).x,p.getY()+p.getForwardVector().scl(lightOffset).y);
+				pistolFlash.setStaticLight(true);
+				pistolFlash.setSoft(true);
+				pistolFlash.setSoftnessLength(0.75f);
+			}
+			
 			lightLifeTime = 0;
+			SPGame.screenShake = true;
 			flashing = true;
 		}
 	}
@@ -51,14 +56,21 @@ public class Pistol extends Weapon{
 	public void act(float dt)
 	{
 		super.act(dt);
-		if(flashing)
-		{
 			lightLifeTime += dt;
-			if(lightLifeTime > maxLightLifeTime)
+			if(flashing)
 			{
-				pistolFlash.remove();
+				if(lightLifeTime > maxLightLifeTime)
+				{
+					if(!SPGame.debugPhysics)
+					{
+						pistolFlash.remove();
+					}
 				flashing = false;
+				}
 			}
-		}
+			if(lightLifeTime > shakeTime && SPGame.screenShake)
+			{
+			SPGame.screenShake = false;
+			}
 	}
 }

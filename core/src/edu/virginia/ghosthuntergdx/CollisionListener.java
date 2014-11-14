@@ -41,15 +41,18 @@ public class CollisionListener implements ContactListener{
 			}
 			if(i != null && p != null)
 			{
-				if(p.primaryItem == null)
+				if(i.dropDisabled > i.dropDisableTime)
 				{
-					p.primaryItem = i;
-					i.OnPickedUp(p);
+					if(p.primaryItem == null)
+					{
+						p.primaryItem = i;
+						i.OnPickedUp(p);
 					
-				}else if(p.secondaryItem == null)
-				{
-					p.secondaryItem = i;
-					i.OnPickedUp(p);
+					}else if(p.secondaryItem == null)
+					{
+						p.secondaryItem = i;
+						i.OnPickedUp(p);
+					}
 				}
 			}
 		}
