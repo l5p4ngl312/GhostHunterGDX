@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.entities.Player;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
@@ -21,9 +22,9 @@ public class Pistol extends Weapon{
 	private static final float lightOffset = 1.5f;
 	
 	private static final float maxLightLifeTime = 0.075f;
-	private static final float shakeTime = 0.15f;
+	private static final float shakeTime = 0.2f;
 	
-	private static final float recoilVelocity = 3f;
+	private static final float recoilVelocity = 0.9f;
 	
 	public Pistol(Vector2 worldPos)
 	{
@@ -41,9 +42,10 @@ public class Pistol extends Weapon{
 		if(this.fired)
 		{
 			p.getBody().setLinearVelocity(p.getBody().getLinearVelocity().sub(p.getForwardVector().scl(recoilVelocity)));
+			SoundManager.pistolShot.play(0.8f);
 			if(!SPGame.debugPhysics)
 			{
-				pistolFlash = new PointLight(SPGame.getRayHandler(),SPGame.raysPerLight,new Color(1.0f,1.0f,0.0f,0.5f), 2.25f,p.getX()+p.getForwardVector().scl(lightOffset).x,p.getY()+p.getForwardVector().scl(lightOffset).y);
+				pistolFlash = new PointLight(SPGame.getRayHandler(),SPGame.raysPerLight,new Color(1.0f,1.0f,0.0f,0.3f), 1.75f,p.getX()+p.getForwardVector().scl(lightOffset).x,p.getY()+p.getForwardVector().scl(lightOffset).y);
 				pistolFlash.setStaticLight(true);
 				pistolFlash.setSoft(true);
 				pistolFlash.setSoftnessLength(0.75f);

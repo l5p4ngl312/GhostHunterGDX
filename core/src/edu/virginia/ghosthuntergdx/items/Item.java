@@ -22,6 +22,7 @@ import edu.virginia.ghosthuntergdx.GameInputListener;
 import edu.virginia.ghosthuntergdx.GameInputListener.TouchInfo;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.entities.Player;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
@@ -128,6 +129,7 @@ public abstract class Item extends Actor{
 		SPGame.bodiesToDeactivate.add(pickUpBody);
 		SPGame.getHUDStage().addActor(this);
 		OnSlotSwap(p);
+		SoundManager.pickup.play(0.4f);
 	}
 	
 	public void OnSlotSwap(Player p)
@@ -183,6 +185,7 @@ public abstract class Item extends Actor{
 		float spin = 7.5f;
 		pickUpBody.setAngularVelocity((float)Math.random()*spin*2-spin);
 		dropDisabled=0;
+		SoundManager.drop.play(0.4f);
 	}
 }
 

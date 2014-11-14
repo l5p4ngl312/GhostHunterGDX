@@ -45,6 +45,7 @@ public class TextureManager {
 	public static void DisposeTextures()
 	{
 		player.dispose();
+		items.dispose();
 		mKnob.dispose();
 		mBack.dispose();
 		aKnob.dispose();

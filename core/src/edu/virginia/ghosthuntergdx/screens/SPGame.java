@@ -45,6 +45,7 @@ import edu.virginia.ghosthuntergdx.GameInputListener;
 import edu.virginia.ghosthuntergdx.LevelDirector;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.entities.*;
 import edu.virginia.ghosthuntergdx.items.Pistol;
@@ -100,7 +101,7 @@ public class SPGame implements Screen {
 	public static final float camForwardOffset = 115f;
 	
 	public static boolean screenShake = false;
-	public static final float screenShakeMaxMagnitude = 32.5f;
+	public static final float screenShakeMaxMagnitude = 65f;
 	
 	private static Body groundBody;
 	
@@ -188,6 +189,8 @@ public class SPGame implements Screen {
 		// Set logcat to display gdx debug messages
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
+		TextureManager.LoadTextures();
+		SoundManager.LoadSounds();
 		// Create a box2D physics world with no gravity (it is a top down game)
 		world = new World(new Vector2(0, 0), true);
 		world.setContactListener(new CollisionListener());
@@ -407,6 +410,8 @@ public class SPGame implements Screen {
 		debugger.dispose();
 		mapRenderer.dispose();
 		rayHandler.dispose();
+		TextureManager.DisposeTextures();
+		SoundManager.DisposeSounds();
 
 	}
 

@@ -10,7 +10,6 @@ public class GhostHunterGame extends Game {
 	//Test edit
 	@Override
 	public void create () {
-		TextureManager.LoadTextures();
 		setScreen(new Splash(this));
 	}
 

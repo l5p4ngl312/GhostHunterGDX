@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Item;
 import edu.virginia.ghosthuntergdx.items.Weapon;
@@ -46,6 +47,8 @@ public class Player extends PhysicsActor{
 	private float animTime = 1000f;
 	
 	private float linearDamping = 5.0f;
+	
+	private long stepSoundID;
 	
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
@@ -76,20 +79,33 @@ public class Player extends PhysicsActor{
 		attackLogic(delta);
 	}
 	private float targetRot = rot;
+	
+	private float TIME_BETWEEN_STEPS = 0.75f/baseMoveSpeed;
+	private float timeToNextStep = 0;
 	private void movePlayer(float delta)
 	{
 		//If player is attacking, slow his movement speed
 		if(!attackDir.equals(Vector2.Zero))
 		{
-			moveSpeed = baseMoveSpeed/1.5f;
+			moveSpeed = baseMoveSpeed/2.5f;
+			
 		}else{
 			moveSpeed = baseMoveSpeed;
 		}
-		
+		TIME_BETWEEN_STEPS = 0.7f/moveSpeed;
 		//Set the players velocity to the direction of the move stick times the player's speed
 		if(!moveDir.equals(moveDir.Zero))
 		{
 			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
+			
+			timeToNextStep-=delta;
+			if(timeToNextStep <= 0)
+			{
+			stepSoundID = SoundManager.footstep.play(0.1f);
+			timeToNextStep = TIME_BETWEEN_STEPS;
+			}
+		}else{
+			timeToNextStep = 0.1f;
 		}
 		
 		//Set the players target rotation based on either his move direction or attack stick direction
@@ -145,8 +161,6 @@ public class Player extends PhysicsActor{
 		mBody.setTransform(mBody.getPosition(), aimedAngle);
 		Vector2 afterWorldPos = new Vector2(mBody.getWorldPoint(new Vector2(-width/4,0)));
 		mBody.setTransform(mBody.getPosition().add(beforeWorldPos.sub(afterWorldPos)), aimedAngle);
-		
-		
 	}
 	
 	private void attackLogic(float delta)
