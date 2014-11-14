@@ -22,6 +22,9 @@ public class Pistol extends Weapon{
 	
 	private static final float maxLightLifeTime = 0.075f;
 	private static final float shakeTime = 0.15f;
+	
+	private static final float recoilVelocity = 3f;
+	
 	public Pistol(Vector2 worldPos)
 	{
 		super(price,ammoType.PISTOL,0,fireAnimFrames,index);
@@ -37,6 +40,7 @@ public class Pistol extends Weapon{
 		super.fire(attackDir,p);
 		if(this.fired)
 		{
+			p.getBody().setLinearVelocity(p.getBody().getLinearVelocity().sub(p.getForwardVector().scl(recoilVelocity)));
 			if(!SPGame.debugPhysics)
 			{
 				pistolFlash = new PointLight(SPGame.getRayHandler(),SPGame.raysPerLight,new Color(1.0f,1.0f,0.0f,0.5f), 2.25f,p.getX()+p.getForwardVector().scl(lightOffset).x,p.getY()+p.getForwardVector().scl(lightOffset).y);

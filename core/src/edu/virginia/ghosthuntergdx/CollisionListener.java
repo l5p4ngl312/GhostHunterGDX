@@ -16,12 +16,19 @@ public class CollisionListener implements ContactListener{
 		public void beginContact(Contact contact) {
 			Body a = contact.getFixtureA().getBody();
 			Body b = contact.getFixtureB().getBody();
+			
+			if(a instanceof Collider)
+				((Collider)a).OnCollisionBegin(b);
+			
+			if(b instanceof Collider)
+				((Collider)b).OnCollisionBegin(a);
+			
 			pickUpCollision(a,b);
 		}
 		
 		private void pickUpCollision(Body a, Body b)
 		{
-
+			
 			if(a.getUserData() == null || b.getUserData() == null)
 				return;
 			
@@ -59,7 +66,14 @@ public class CollisionListener implements ContactListener{
 
 		@Override
 		public void endContact(Contact contact) {
-			// TODO Auto-generated method stub
+			Body a = contact.getFixtureA().getBody();
+			Body b = contact.getFixtureB().getBody();
+			
+			if(a instanceof Collider)
+				((Collider)a).OnCollisionEnd(b);
+			
+			if(b instanceof Collider)
+				((Collider)b).OnCollisionEnd(a);
 			
 		}
 

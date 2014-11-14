@@ -44,6 +44,9 @@ public class Player extends PhysicsActor{
 	private Animation attackAnim;
 	private float animSpeed;
 	private float animTime = 1000f;
+	
+	private float linearDamping = 5.0f;
+	
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
 		
@@ -52,6 +55,7 @@ public class Player extends PhysicsActor{
 		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
 		maxVelocity = new Vector2(5,5);
 		spriteOffset = new Vector2(-width/4,0);
+		mBody.setLinearDamping(linearDamping);
 	}
 	public Player(Vector2 position,TextureRegion t) {
 		super(position, t,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
@@ -60,6 +64,7 @@ public class Player extends PhysicsActor{
 		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
 		maxVelocity = new Vector2(5,5);
 		spriteOffset = new Vector2(-width/4,0);
+		mBody.setLinearDamping(linearDamping);
 	}
 	float width = idleFists.getRegionWidth()/Consts.PIXEL_TO_METER/2;
 
@@ -82,7 +87,10 @@ public class Player extends PhysicsActor{
 		}
 		
 		//Set the players velocity to the direction of the move stick times the player's speed
-		mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
+		if(!moveDir.equals(moveDir.Zero))
+		{
+			mBody.setLinearVelocity(moveDir.x*moveSpeed,moveDir.y*moveSpeed);
+		}
 		
 		//Set the players target rotation based on either his move direction or attack stick direction
 		targetRot = getSprite().getRotation();

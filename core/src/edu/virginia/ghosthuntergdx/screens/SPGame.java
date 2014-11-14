@@ -100,7 +100,7 @@ public class SPGame implements Screen {
 	public static final float camForwardOffset = 115f;
 	
 	public static boolean screenShake = false;
-	public static final float screenShakeMaxMagnitude = 28.5f;
+	public static final float screenShakeMaxMagnitude = 32.5f;
 	
 	private static Body groundBody;
 	
