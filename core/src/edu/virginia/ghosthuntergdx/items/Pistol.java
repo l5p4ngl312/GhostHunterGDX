@@ -20,18 +20,20 @@ public class Pistol extends Weapon{
 	private static final int[] fireAnimFrames = {1,0};
 	public static final int index = 0;
 	private static final float lightOffset = 1.5f;
+	private static final float bulletOffset = 1.15f;
 	
 	private static final float maxLightLifeTime = 0.075f;
 	private static final float shakeTime = 0.2f;
 	
-	private static final float recoilVelocity = 0.9f;
+	private float recoilVelocity = 0.9f;
+	private float bulletVelocity = 20f;
 	
 	public Pistol(Vector2 worldPos)
 	{
 		super(price,ammoType.PISTOL,0,fireAnimFrames,index);
 		fireAnimation.setFrameDuration(1/10f);
 		setPosition(worldPos.x,worldPos.y);
-		
+		cdTime = 0.75f;
 	}
 
 	PointLight pistolFlash;
@@ -50,7 +52,7 @@ public class Pistol extends Weapon{
 				pistolFlash.setSoft(true);
 				pistolFlash.setSoftnessLength(0.75f);
 			}
-			
+			Bullet shot = new Bullet(p.getBody().getPosition().add(attackDir.scl(bulletOffset)),attackDir.scl(bulletVelocity));
 			lightLifeTime = 0;
 			SPGame.screenShake = true;
 			flashing = true;
