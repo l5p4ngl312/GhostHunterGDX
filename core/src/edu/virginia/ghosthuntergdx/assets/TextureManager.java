@@ -18,6 +18,8 @@ public class TextureManager {
 	public static Texture aKnob;
 	public static Texture aBack;
 	public static TextureAtlas items;
+	public static Texture bullet;
+	public static Texture bulletImpact;
 //	public static Texture vampire;
 //	public static Texture warewolf;
 //	public static Texture ghost;
@@ -34,7 +36,8 @@ public class TextureManager {
 		mBack = new Texture(Gdx.files.internal("data/mBack.png"));
 		aKnob = new Texture(Gdx.files.internal("data/aKnob.png"));
 		aBack = new Texture(Gdx.files.internal("data/aBack.png"));
-		
+		bullet = new Texture(Gdx.files.internal("data/bullet.png"));
+		bulletImpact = new Texture(Gdx.files.internal("data/bulletImpact.png"));
 //		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
 //		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
 //		ghost = new Texture(Gdx.files.internal("data/ghost.png"));
@@ -50,6 +53,8 @@ public class TextureManager {
 		mBack.dispose();
 		aKnob.dispose();
 		aBack.dispose();
+		bullet.dispose();
+		bulletImpact.dispose();
 //		vampire.dispose();
 //		ghost.dispose();
 //		warewolf.dispose();

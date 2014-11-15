@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 import edu.virginia.ghosthuntergdx.entities.Player;
 import edu.virginia.ghosthuntergdx.items.Item;
+import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 public class CollisionListener implements ContactListener{
 
@@ -17,11 +18,21 @@ public class CollisionListener implements ContactListener{
 			Body a = contact.getFixtureA().getBody();
 			Body b = contact.getFixtureB().getBody();
 			
-			if(a instanceof Collider)
-				((Collider)a).OnCollisionBegin(b);
+			if(a.getUserData() != null && !SPGame.bodiesToDestroy.contains(a))
+			{
+				if(a.getUserData() instanceof Collider)
+				{
+				((Collider)a.getUserData()).OnCollisionBegin(b,contact);
+				}
+			}
 			
-			if(b instanceof Collider)
-				((Collider)b).OnCollisionBegin(a);
+			if(b.getUserData() != null && !SPGame.bodiesToDestroy.contains(b))
+			{
+				if(b.getUserData() instanceof Collider)
+				{
+				((Collider)b.getUserData()).OnCollisionBegin(a,contact);
+				}
+			}
 			
 			pickUpCollision(a,b);
 		}
@@ -69,11 +80,21 @@ public class CollisionListener implements ContactListener{
 			Body a = contact.getFixtureA().getBody();
 			Body b = contact.getFixtureB().getBody();
 			
-			if(a instanceof Collider)
-				((Collider)a).OnCollisionEnd(b);
+			if(a.getUserData() != null && !SPGame.bodiesToDestroy.contains(a))
+			{
+				if(a.getUserData() instanceof Collider)
+				{
+				((Collider)a.getUserData()).OnCollisionEnd(b,contact);
+				}
+			}
 			
-			if(b instanceof Collider)
-				((Collider)b).OnCollisionEnd(a);
+			if(b.getUserData() != null && !SPGame.bodiesToDestroy.contains(b))
+			{
+				if(b.getUserData() instanceof Collider)
+				{
+				((Collider)b.getUserData()).OnCollisionEnd(a,contact);
+				}
+			}
 			
 		}
 

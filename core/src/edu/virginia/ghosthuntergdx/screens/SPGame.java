@@ -65,6 +65,7 @@ public class SPGame implements Screen {
 
 	static Group pickUpGroup;
 	static Group entityGroup;
+	static Group projectileGroup;
 	
 	TiledMap map;
 	OrthogonalTiledMapRenderer mapRenderer;
@@ -290,7 +291,9 @@ public class SPGame implements Screen {
 		entityGroup = new Group();
 		//Create item pickup group
 		pickUpGroup = new Group();
-
+		//Create projectile group
+		projectileGroup = new Group();
+		
 		// Create the stage for objects actually in the level
 		level = new Stage();
 		level.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
@@ -298,6 +301,7 @@ public class SPGame implements Screen {
 
 		// Add the entity group to this stage
 		level.addActor(pickUpGroup);
+		level.addActor(projectileGroup);
 		level.addActor(entityGroup);
 
 		// Add the player to the entity group
@@ -483,6 +487,10 @@ public class SPGame implements Screen {
 	public static Group getPickUpGroup()
 	{
 		return pickUpGroup;
+	}
+	public static Group getProjectileGroup()
+	{
+		return projectileGroup;
 	}
 	public static Player getPlayer()
 	{

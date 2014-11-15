@@ -129,11 +129,11 @@ public abstract class Item extends Actor{
 		SPGame.bodiesToDeactivate.add(pickUpBody);
 		SPGame.getHUDStage().addActor(this);
 		OnSlotSwap(p);
-		SoundManager.pickup.play(0.4f);
 	}
 	
 	public void OnSlotSwap(Player p)
 	{
+		SoundManager.pickup.play(0.3f);
 		if(p.primaryItem == null)
 		{
 			p.setIdleFrame(p.idleFrame);

@@ -92,7 +92,7 @@ public class Player extends PhysicsActor{
 		}else{
 			moveSpeed = baseMoveSpeed;
 		}
-		TIME_BETWEEN_STEPS = 0.7f/moveSpeed;
+		TIME_BETWEEN_STEPS = 0.7f/(new Vector2(moveDir.x*moveSpeed,moveDir.y*moveSpeed)).len();
 		//Set the players velocity to the direction of the move stick times the player's speed
 		if(!moveDir.equals(moveDir.Zero))
 		{

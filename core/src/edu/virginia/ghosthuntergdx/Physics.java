@@ -31,10 +31,10 @@ public class Physics {
 	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP;
 	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER;
 	   public final static short MASK_PICKUP =  OBSTACLE;
-	   public final static short MASK_SENSOR = PLAYER;
+	   public final static short MASK_SENSOR = PLAYER | ENEMY | OBSTACLE;
 	   public final static short MASK_ENEMY = OBSTACLE | PLAYER | SENSOR;
 	//Creates a box physics body based on a sprite
-	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite ) {
+	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite, boolean bullet) {
 
 	    float pRotation = 0;
 	    float pWidth = pSprite.getWidth();
@@ -52,8 +52,8 @@ public class Physics {
 	    final float halfHeight = pHeight * 0.5f / Consts.BOX_TO_WORLD;
 	    boxPoly.setAsBox( halfWidth, halfHeight );  // set the anchor point to be the center of the sprite
 
-	    pFixtureDef.shape = boxPoly;        
-
+	    pFixtureDef.shape = boxPoly;       
+	    boxBodyDef.bullet = bullet;
 	    final Body boxBody = SPGame.getPhysicsWorld().createBody(boxBodyDef);
 	    boxBody.createFixture(pFixtureDef);
 	    
@@ -152,8 +152,8 @@ public class Physics {
          fDef.shape=shape;
          fDef.density = 1;
          fDef.filter.categoryBits = OBSTACLE;
-         fDef.filter.groupIndex = 1;
-         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP | ENEMY;
+         fDef.filter.groupIndex = 0;
+         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP | ENEMY | SENSOR;
          body.createFixture(fDef);
    
 
