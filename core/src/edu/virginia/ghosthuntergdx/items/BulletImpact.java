@@ -28,11 +28,11 @@ public class BulletImpact extends Actor{
 		impact = new Sprite(t);
 		setWidth(t.getWidth()/Consts.PIXEL_TO_METER);
 		setHeight(t.getHeight()/Consts.PIXEL_TO_METER);
-		setOrigin(getWidth()/2,getHeight()/2);
+		setOrigin(getWidth()/2,getHeight());
 		setPosition(pos.x,pos.y);
 		
 		impact.setSize(getWidth()*Consts.BOX_TO_WORLD, getHeight()*Consts.BOX_TO_WORLD);
-		impact.setOrigin(getWidth()*Consts.BOX_TO_WORLD/2,getHeight()*Consts.BOX_TO_WORLD/2);
+		impact.setOrigin(getWidth()*Consts.BOX_TO_WORLD/2,getHeight()*Consts.BOX_TO_WORLD);
 		impact.setPosition(pos.x*Consts.BOX_TO_WORLD, pos.y*Consts.BOX_TO_WORLD);
 		impact.setRotation(rot+90);
 	}

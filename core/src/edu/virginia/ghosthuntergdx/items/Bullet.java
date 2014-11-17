@@ -1,5 +1,6 @@
 package edu.virginia.ghosthuntergdx.items;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -94,6 +95,7 @@ public class Bullet extends Actor implements Collider{
 		kill = true;
 		SPGame.destroyBody(mBody);
 		SPGame.getProjectileGroup().addActor(new BulletImpact(c.getWorldManifold().getPoints()[0],(float)Math.atan2(-mBody.getLinearVelocity().y, -mBody.getLinearVelocity().x)*MathUtils.radDeg));
+		Gdx.app.debug("Collision",c.getWorldManifold().getPoints()[1].toString());
 	}
 
 	@Override
