@@ -1,39 +1,30 @@
 package edu.virginia.ghosthuntergdx.entities;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-/*
-public class Ghost extends Enemies {
+import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.TextureManager;
 
-	//TO Do
-	// add ghost sprite
-	// 
+public class Ghost extends Enemy {
+
+
+	private float linearDamping = 5.0f;
 	
-	public Ghost(Vector2 position, Texture t, Player player) {
-		super(position, TextureManager.GHOST, player);
+	public Ghost(Vector2 position, Player player) {
+		super(position, TextureManager.ghostR, player);
+		getSprite().setSize(TextureManager.ghostR.getRegionWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, TextureManager.ghostR.getRegionHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
+		getSprite().setOrigin(getSprite().getWidth()/4-getSprite().getWidth()/8,getSprite().getHeight()/2);
+		mBody.setLinearDamping(linearDamping);
 		
-	}
-	 public void die(){
-		 if (health <= 0){
-			 this.remove();
-		 }
-	 }
-		
-	@Override 
-	public void act(float delta){
-		super.act(delta);
-		
-		Vector2 playerPos = player.mBody.getPosition();
-		Vector2 dir = playerPos.sub(mBody.getPosition());
-		if(dir.len()<3){
-		dir.nor();
-		
-		mBody.setLinearVelocity(dir.scl(speed));
 		}
+	
+
+	public void act(float delta){
+	super.act(delta);
+	
+	
+	
 	}
-}*/
-	
-	
 
-
+}

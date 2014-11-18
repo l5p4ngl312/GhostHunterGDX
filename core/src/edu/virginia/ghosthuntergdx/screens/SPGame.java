@@ -58,12 +58,18 @@ public class SPGame implements Screen {
 	static World world;
 
 	Vector2 playerStartPos = new Vector2(10, 5);
+	// ghost and zombie testing start position
+	Vector2 zombieStartPos;
+	Vector2 ghostStartPos;
 	OrthographicCamera camera;
 	static OrthographicCamera HUDcamera;
 
 	static Player player;
 	static Stage level;
 	static Stage HUDstage;
+	// test ghost and zombie
+	static Zombie zombie;
+	static Ghost ghost;
 
 	static Group pickUpGroup;
 	static Group entityGroup;
@@ -218,6 +224,10 @@ public class SPGame implements Screen {
 
 		// Set the player's default start position
 		Vector2 startPos = playerStartPos;
+		
+		//test ghost and zombie start position
+		Vector2 gstartPos = ghostStartPos;
+		Vector2 zstartPos = zombieStartPos;
 
 		// Try to find an object layer called PlayerSpawn
 		MapLayer spawnLayer = map.getLayers().get("PlayerSpawn");
@@ -271,7 +281,12 @@ public class SPGame implements Screen {
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
-
+		//creating a test ghost and zombie
+		gstartPos = startPos.add(2, 2);
+		zstartPos = startPos.add(-2,-2);
+		zombie = new Zombie(gstartPos, player);
+		ghost = new Ghost(gstartPos, player);
+		
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
 		mSkin.add("mBack", TextureManager.mBack);
@@ -318,7 +333,10 @@ public class SPGame implements Screen {
 
 		// Add the player to the entity group
 		entityGroup.addActor(player);
-
+		//Adding test enemies
+		entityGroup.addActor(zombie);
+		entityGroup.addActor(ghost);
+		
 		LevelDirector director = new LevelDirector(difficultyLevel,
 				playerProgress, map);
 		level.addActor(director);
@@ -517,6 +535,10 @@ public class SPGame implements Screen {
 	public static Player getPlayer()
 	{
 		return player;
+	}
+	public static Zombie getGhost()
+	{
+		return zombie;
 	}
 	public static Body getGround()
 	{

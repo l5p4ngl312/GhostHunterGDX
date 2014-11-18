@@ -12,15 +12,20 @@ public class Enemy extends PhysicsActor{
 	Rectangle bounds;
 	Player player;
 	double health;
-	float speed = 2f;
+	float speed;
 	
 	
-	public Enemy(Vector2 position, Texture t, Player player) {
+	public Enemy(Vector2 position, TextureRegion t, Player player) {
 		super(position, new TextureRegion(t));
 		this.position = position;
 		this.player = player;
 	}
 	
+	
+
+	
+
+
 	public void act(float delta){
 		super.act(delta);
 		
