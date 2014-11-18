@@ -24,8 +24,8 @@ public class PhysicsActor extends Actor{
 	//private String currentAtlasKey = new String("0001");
 	public Vector2 maxVelocity = new Vector2(Float.MAX_VALUE,Float.MAX_VALUE);
 	   
-	   public short categoryBit = Physics.ENEMY;
-	   public short maskBit = Physics.MASK_ENEMY;
+	   public short categoryBit = Physics.ENEMYBODY;
+	   public short maskBit = Physics.MASK_ENEMYBODY;
 	   
 	   public short groupIndex = 0;
 	   
