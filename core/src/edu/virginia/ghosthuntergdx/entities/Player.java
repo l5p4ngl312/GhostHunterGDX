@@ -28,6 +28,7 @@ import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Item;
 import edu.virginia.ghosthuntergdx.items.Weapon;
+import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 public class Player extends PhysicsActor{
@@ -53,6 +54,8 @@ public class Player extends PhysicsActor{
 	private float linearDamping = 5.0f;
 	
 	private long stepSoundID;
+	
+	public int[] ammoCount = new int[3];
 	
 	
 	public Player(Vector2 position) {
@@ -209,6 +212,43 @@ public class Player extends PhysicsActor{
 	public void setAttackDir(Vector2 target)
 	{
 		attackDir = target;
+	}
+	
+	public int getAmmoCount(ammoType t)
+	{
+		if(t == ammoType.PISTOL)
+		{
+			return ammoCount[0];
+		}else if(t == ammoType.SHOTGUN)
+		{
+			return ammoCount[1];
+		}else if(t == ammoType.AR)
+		{
+			return ammoCount[2];
+		}else if(t == ammoType.BOMB)
+		{
+			return ammoCount[3];
+		}else
+		{
+			return -1;
+		}
+	}
+	
+	public void useAmmo(ammoType t, int count)
+	{
+		if(t == ammoType.PISTOL)
+		{
+			ammoCount[0]-=count;
+		}else if(t == ammoType.SHOTGUN)
+		{
+			ammoCount[1]-=count;
+		}else if(t == ammoType.AR)
+		{
+			ammoCount[2]-=count;
+		}else if(t == ammoType.BOMB)
+		{
+			ammoCount[3]-=count;
+		}
 	}
 
 }

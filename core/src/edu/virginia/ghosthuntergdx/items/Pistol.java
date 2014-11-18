@@ -28,12 +28,14 @@ public class Pistol extends Weapon{
 	private float recoilVelocity = 0.9f;
 	private float bulletVelocity = 20f;
 	
-	public Pistol(Vector2 worldPos)
+	public Pistol(Vector2 worldPos, int ammoInClip)
 	{
 		super(price,ammoType.PISTOL,index,fireAnimFrames,index);
 		fireAnimation.setFrameDuration(1/10f);
 		setPosition(worldPos.x,worldPos.y);
 		cdTime = 0.75f;
+		clipSize = 9;
+		this.ammoInClip = ammoInClip;
 	}
 
 	PointLight pistolFlash;

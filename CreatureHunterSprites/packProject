@@ -35,7 +35,7 @@ filename=
 input=itemSprites
 output=..\android\assets\data
 
-alias=true
+alias=false
 alphaThreshold=0
 debug=false
 duplicatePadding=true

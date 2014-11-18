@@ -49,8 +49,10 @@ import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.entities.*;
+import edu.virginia.ghosthuntergdx.items.Ammo;
 import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.items.Pistol;
+import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
 
 public class SPGame implements Screen {
 
@@ -111,6 +113,8 @@ public class SPGame implements Screen {
 	public static final float screenShakeMaxMagnitude = 65f;
 	
 	private static Body groundBody;
+	
+	private static GameUI ui;
 	
 	@Override
 	public void render(float delta) {
@@ -394,13 +398,15 @@ public class SPGame implements Screen {
 		buttonOptions.setY(Gdx.graphics.getHeight()-buttonOptions.getHeight());
 		HUDstage.addActor(buttonOptions);
 
-		GameUI ui = new GameUI();
+		ui = new GameUI();
 		HUDstage.addActor(ui);
 		
-		Pistol testPistol = new Pistol(new Vector2(10,5));
+		Pistol testPistol = new Pistol(new Vector2(10,5),9);
 		Flashlight testLight = new Flashlight(new Vector2(10,8f));
+		Ammo testAmmo = new Ammo(new Vector2(12,6.5f),ammoType.PISTOL);
 		pickUpGroup.addActor(testLight);
 		pickUpGroup.addActor(testPistol);
+		pickUpGroup.addActor(testAmmo);
 	}
 
 	@Override
@@ -442,6 +448,11 @@ public class SPGame implements Screen {
 	public static RayHandler getRayHandler() {
 		// TODO Auto-generated method stub
 		return rayHandler;
+	}
+	
+	public static GameUI getUI()
+	{
+		return ui;
 	}
 	
 	public static ArrayList<Body> bodiesToDestroy = new ArrayList<Body>();
