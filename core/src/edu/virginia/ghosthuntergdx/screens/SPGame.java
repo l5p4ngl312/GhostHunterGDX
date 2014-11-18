@@ -69,9 +69,6 @@ public class SPGame implements Screen {
 	static Player player;
 	static Stage level;
 	static Stage HUDstage;
-	// test ghost and zombie
-	static Zombie zombie;
-	static Ghost ghost;
 
 	static Group pickUpGroup;
 	static Group entityGroup;
@@ -288,8 +285,8 @@ public class SPGame implements Screen {
 		//creating a test ghost and zombie
 		gstartPos = startPos.add(2, 2);
 		zstartPos = startPos.add(-2,-2);
-		zombie = new Zombie(gstartPos, player);
-		ghost = new Ghost(gstartPos, player);
+		Zombie zombie = new Zombie(gstartPos, player);
+		Ghost ghost = new Ghost(gstartPos, player);
 		
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
@@ -547,10 +544,7 @@ public class SPGame implements Screen {
 	{
 		return player;
 	}
-	public static Zombie getGhost()
-	{
-		return zombie;
-	}
+
 	public static Body getGround()
 	{
 		return groundBody;

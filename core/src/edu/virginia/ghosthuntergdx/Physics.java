@@ -24,15 +24,17 @@ public class Physics {
 	   public final static short SENSOR = 1 << 5;
 	   public final static short ENEMY = 1 << 6;
 	   public final static short GROUND = 1 << 7;
+	   public final static short ENEMYSHADOW = 1 << 8;
 	   
 	   public final static short LIGHT_GROUP = 1;
 	   public final static short NO_GROUP = 0;
 	   // masks
-	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP;
+	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP | ENEMYSHADOW;
 	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER;
 	   public final static short MASK_PICKUP =  OBSTACLE;
 	   public final static short MASK_SENSOR = PLAYER | ENEMY | OBSTACLE;
 	   public final static short MASK_ENEMY = OBSTACLE | PLAYER | SENSOR;
+	   public final static short MASK_ENEMYSHADOW = LIGHT;
 	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite, boolean bullet) {
 
