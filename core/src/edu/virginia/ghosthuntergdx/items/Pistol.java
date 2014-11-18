@@ -30,7 +30,7 @@ public class Pistol extends Weapon{
 	
 	public Pistol(Vector2 worldPos)
 	{
-		super(price,ammoType.PISTOL,0,fireAnimFrames,index);
+		super(price,ammoType.PISTOL,index,fireAnimFrames,index);
 		fireAnimation.setFrameDuration(1/10f);
 		setPosition(worldPos.x,worldPos.y);
 		cdTime = 0.75f;

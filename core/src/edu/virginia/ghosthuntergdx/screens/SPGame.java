@@ -42,12 +42,14 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 import edu.virginia.ghosthuntergdx.CollisionListener;
 import edu.virginia.ghosthuntergdx.GameInputListener;
+import edu.virginia.ghosthuntergdx.GameUI;
 import edu.virginia.ghosthuntergdx.LevelDirector;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.entities.*;
+import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.items.Pistol;
 
 public class SPGame implements Screen {
@@ -90,8 +92,6 @@ public class SPGame implements Screen {
 	public static final int raysPerLight = 128;
 	public static final float lightDistance = 16f;
 	
-	ConeLight playerLight;
-	
 	public SPGame(GhostHunterGame game, int difficultyLevel, int playerProgress) {
 		this.game = game;
 		this.difficultyLevel = difficultyLevel;
@@ -112,6 +112,8 @@ public class SPGame implements Screen {
 		world.step(1 / 45f, 6, 2);
 		activateBodies();
 		deactivateBodies();
+		deactivateLights();
+		activateLights();
 		destroyBodies();
 		// Clear the screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
@@ -154,9 +156,6 @@ public class SPGame implements Screen {
 		
 		if(!debugPhysics)
 		{
-		playerLight.setPosition(player.getX()+player.getForwardVector().x/4,player.getY()+player.getForwardVector().y/4);
-		playerLight.setDirection(player.rot);
-		
 		rayHandler.setCombinedMatrix(camera.combined.scale(Consts.BOX_TO_WORLD,Consts.BOX_TO_WORLD,0));
 		rayHandler.updateAndRender();
 		}
@@ -256,6 +255,19 @@ public class SPGame implements Screen {
 		        groundBody = body;
 			}
 		}
+		
+		//Lighting
+		if(!debugPhysics)
+		{
+		RayHandler.setGammaCorrection(true);
+		RayHandler.useDiffuseLight(false);
+		
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(new Color(0f,0f,0f,0.4f));
+		rayHandler.setBlurNum(1);
+		
+		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
+		}
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
@@ -330,24 +342,6 @@ public class SPGame implements Screen {
 		// Create a box2D debug renderer for physics debugging
 		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
 
-		//Lighting
-		if(!debugPhysics)
-		{
-		RayHandler.setGammaCorrection(true);
-		RayHandler.useDiffuseLight(false);
-		
-		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(new Color(0f,0f,0f,0.4f));
-		rayHandler.setBlurNum(1);
-		
-		//playerLight = new PointLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 7, 5, 10);
-		playerLight = new ConeLight(rayHandler, raysPerLight, new Color(1,1,1,0.5f), 12, 0, 0,player.rot,30f);
-		playerLight.setStaticLight(false);
-		playerLight.setSoft(true);
-		playerLight.setSoftnessLength(2f);
-		Light.setContactFilter(Physics.LIGHT,Physics.LIGHT_GROUP,Physics.MASK_LIGHTS);
-		}
-		//playerLight.attachToBody(player.getBody(), 0, 0);
 		
 		// show settings button
 
@@ -382,8 +376,12 @@ public class SPGame implements Screen {
 		buttonOptions.setY(Gdx.graphics.getHeight()-buttonOptions.getHeight());
 		HUDstage.addActor(buttonOptions);
 
+		GameUI ui = new GameUI();
+		HUDstage.addActor(ui);
 		
 		Pistol testPistol = new Pistol(new Vector2(10,5));
+		Flashlight testLight = new Flashlight(new Vector2(10,8f));
+		pickUpGroup.addActor(testLight);
 		pickUpGroup.addActor(testPistol);
 	}
 
@@ -431,6 +429,8 @@ public class SPGame implements Screen {
 	public static ArrayList<Body> bodiesToDestroy = new ArrayList<Body>();
 	public static ArrayList<Body> bodiesToDeactivate = new ArrayList<Body>();
 	public static ArrayList<Body> bodiesToActivate = new ArrayList<Body>();
+	public static ArrayList<Light> lightsToActivate = new ArrayList<Light>();
+	public static ArrayList<Light> lightsToDeactivate = new ArrayList<Light>();	
 	public static void destroyBody(Body b)
 	{
 		bodiesToDestroy.add(b);
@@ -469,6 +469,28 @@ public class SPGame implements Screen {
 			}
 		}
 		bodiesToActivate.clear();
+	}
+	private static void deactivateLights()
+	{
+		for(Light b : lightsToDeactivate)
+		{
+			if(b != null)
+			{
+			b.setActive(false);
+			}
+		}
+		lightsToDeactivate.clear();
+	}
+	private static void activateLights()
+	{
+		for(Light b :lightsToActivate)
+		{
+			if(b != null)
+			{
+			b.setActive(true);
+			}
+		}
+		lightsToActivate.clear();
 	}
 	
 	

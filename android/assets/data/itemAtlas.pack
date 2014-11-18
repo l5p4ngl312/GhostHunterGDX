@@ -17,3 +17,17 @@ repeat: none
   orig: 79, 73
   offset: 0, 0
   index: -1
+2
+  rotate: false
+  xy: 163, 1
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 244, 1
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1

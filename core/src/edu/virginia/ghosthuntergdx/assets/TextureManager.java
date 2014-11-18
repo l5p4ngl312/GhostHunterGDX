@@ -20,6 +20,7 @@ public class TextureManager {
 	public static TextureAtlas items;
 	public static Texture bullet;
 	public static Texture bulletImpact;
+	public static Texture itemSlot;
 //	public static Texture vampire;
 //	public static Texture warewolf;
 //	public static Texture ghost;
@@ -38,6 +39,7 @@ public class TextureManager {
 		aBack = new Texture(Gdx.files.internal("data/aBack.png"));
 		bullet = new Texture(Gdx.files.internal("data/bullet.png"));
 		bulletImpact = new Texture(Gdx.files.internal("data/bulletImpact.png"));
+		itemSlot = new Texture(Gdx.files.internal("ui/itemSlot.png"));
 //		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
 //		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
 //		ghost = new Texture(Gdx.files.internal("data/ghost.png"));

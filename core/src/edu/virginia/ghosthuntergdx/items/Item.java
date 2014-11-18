@@ -157,7 +157,7 @@ public abstract class Item extends Actor{
 		{
 			if(p.secondaryItem.equals(this))
 			{
-				setPosition(Gdx.graphics.getWidth()-Gdx.graphics.getWidth()/30,Gdx.graphics.getHeight()-icon.getHeight()-20);
+				setPosition(Gdx.graphics.getWidth()-Gdx.graphics.getWidth()/30,Gdx.graphics.getHeight()-icon.getHeight()-35);
 				icon.setScale(secondaryIconScale);
 			}
 		}

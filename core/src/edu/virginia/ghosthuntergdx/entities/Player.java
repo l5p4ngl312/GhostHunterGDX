@@ -2,7 +2,11 @@ package edu.virginia.ghosthuntergdx.entities;
 
 import java.util.ArrayList;
 
+import box2dLight.ConeLight;
+import box2dLight.Light;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,6 +53,7 @@ public class Player extends PhysicsActor{
 	private float linearDamping = 5.0f;
 	
 	private long stepSoundID;
+	
 	
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);

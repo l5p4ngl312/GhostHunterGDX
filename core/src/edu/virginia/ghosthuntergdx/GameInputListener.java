@@ -43,6 +43,7 @@ public class GameInputListener extends Actor implements InputProcessor{
     public void act(float dt)
     {
     	super.act(dt);
+    	swapped = false;
     	if(aDown)
     	{
     		dropHoldTime += dt;
@@ -59,9 +60,10 @@ public class GameInputListener extends Actor implements InputProcessor{
     	}
     }
     
+    boolean swapped = false;
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(pointer < 5){
+        if(pointer < 5 && !swapped){
         	Vector3 touchLocation = new Vector3(screenX,screenY,0);
         	touchLocation = SPGame.getHUDCamera().unproject(touchLocation);
             touches.get(pointer).touchX = touchLocation.x;
@@ -73,6 +75,7 @@ public class GameInputListener extends Actor implements InputProcessor{
             	if(SPGame.getPlayer().primaryItem.icon.getBoundingRectangle().contains(new Vector2(touchLocation.x,touchLocation.y)))
             	{
             		swapPointerA = pointer;
+            		swapped = true;
             		aDown = true;
             	}
             }
@@ -81,6 +84,7 @@ public class GameInputListener extends Actor implements InputProcessor{
             	if(SPGame.getPlayer().secondaryItem.icon.getBoundingRectangle().contains(new Vector2(touchLocation.x,touchLocation.y)))
             	{
             		swapPointerB = pointer;
+            		swapped = true;
             	}
             }
         }
