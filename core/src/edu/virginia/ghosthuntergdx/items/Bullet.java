@@ -94,7 +94,10 @@ public class Bullet extends Actor implements Collider{
 	public void OnCollisionBegin(Body other,Contact c) {
 		kill = true;
 		SPGame.destroyBody(mBody);
+		if(other.getFixtureList().get(0).getFilterData().categoryBits == Physics.OBSTACLE)
+		{
 		SPGame.getProjectileGroup().addActor(new BulletImpact(c.getWorldManifold().getPoints()[0],(float)Math.atan2(-mBody.getLinearVelocity().y, -mBody.getLinearVelocity().x)*MathUtils.radDeg));
+		}
 		Gdx.app.debug("Collision",c.getWorldManifold().getPoints()[1].toString());
 	}
 

@@ -47,7 +47,7 @@ public class TextureManager {
 //		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
 		zombie = new Texture(Gdx.files.internal("data/zombie1.png"));
 		zombieR = new TextureRegion(zombie);
-		ghost = new Texture(Gdx.files.internal("data/zombie1.png"));
+		ghost = new Texture(Gdx.files.internal("data/ghost1.png"));
 		ghostR = new TextureRegion(ghost);
 
 		

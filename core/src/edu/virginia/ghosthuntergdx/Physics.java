@@ -25,16 +25,18 @@ public class Physics {
 	   public final static short ENEMYATTACK = 1 << 6;
 	   public final static short GROUND = 1 << 7;
 	   public final static short ENEMYBODY = 1 << 8;
+	   public final static short GHOST = 1 << 9;
 	   
 	   public final static short LIGHT_GROUP = 1;
 	   public final static short NO_GROUP = 0;
 	   // masks
 	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP | ENEMYBODY;
-	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER;
+	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER | ENEMYBODY | ENEMYATTACK;
 	   public final static short MASK_PICKUP =  OBSTACLE;
 	   public final static short MASK_SENSOR = PLAYER | ENEMYBODY | OBSTACLE;
 	   public final static short MASK_ENEMYATTACK =  PLAYER;
 	   public final static short MASK_ENEMYBODY = LIGHT | PLAYER | SENSOR | OBSTACLE;
+	   public final static short MASK_GHOST = OBSTACLE | SENSOR;
 	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite, boolean bullet) {
 
@@ -155,7 +157,7 @@ public class Physics {
          fDef.density = 1;
          fDef.filter.categoryBits = OBSTACLE;
          fDef.filter.groupIndex = 0;
-         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP | ENEMYBODY | SENSOR;
+         fDef.filter.maskBits = LIGHT | PLAYER | OBSTACLE | PICKUP | ENEMYBODY | SENSOR | GHOST;
          body.createFixture(fDef);
    
 
