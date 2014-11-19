@@ -29,8 +29,11 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
@@ -84,10 +87,18 @@ public class SPGame implements Screen {
 	int difficultyLevel = 1;
 	int playerProgress = 1;
 	
+	//for game settings menu
+	int gamestate = 0;
+	Stage settingsStage;
+	Table settingsTable;
+	TextureAtlas settingsAtlas;
+	Skin settingsSkin;
+	Label heading;
+	
 	public static boolean debugPhysics = false;
 
 	// for settings button:
-	TextButton buttonOptions;
+	TextButton buttonOptions, settingsButtonDifficulty, settingsButtonHome, settingsButtonResume;
 	TextButtonStyle textButtonStyle;
 	BitmapFont font;
 	Skin skin;
@@ -115,6 +126,7 @@ public class SPGame implements Screen {
 	
 	@Override
 	public void render(float delta) {
+		if(gamestate == 0){
 		// Step through the Box2D physics simulation
 		world.step(1 / 45f, 6, 2);
 		activateBodies();
@@ -177,7 +189,13 @@ public class SPGame implements Screen {
 		HUDstage.draw();
 
 	}
+		else{
+			settingsStage.act(delta);
+			settingsStage.draw();
+		}
+	}
 
+		
 	@Override
 	public void resize(int width, int height) {
 		// Update all viewports when the screen is resized
@@ -193,6 +211,8 @@ public class SPGame implements Screen {
 
 	@Override
 	public void show() {
+
+		
 		// Set logcat to display gdx debug messages
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
@@ -345,11 +365,13 @@ public class SPGame implements Screen {
 		// Create a stage for hud elements
 		HUDstage = new Stage();
 		// Set libGDX to check for input from the virtual sticks and game listener
-		InputMultiplexer multiInput = new InputMultiplexer();
+		final InputMultiplexer multiInput = new InputMultiplexer();
 		input = new GameInputListener();
 		multiInput.addProcessor(HUDstage);
 		multiInput.addProcessor(input);
 		Gdx.input.setInputProcessor(multiInput);
+
+		
 
 		// Add the virtual sticks to the HUDstage and set its viewport
 		HUDstage.addActor(mPad);
@@ -386,7 +408,8 @@ public class SPGame implements Screen {
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
-				//game.setScreen(new GameSettingsMenu(new ));
+				gamestate = 1;
+				Gdx.input.setInputProcessor(settingsStage);
 			}
 		});
 		buttonOptions.pad(20);
@@ -404,7 +427,81 @@ public class SPGame implements Screen {
 		pickUpGroup.addActor(testLight);
 		pickUpGroup.addActor(testPistol);
 		pickUpGroup.addActor(testAmmo);
-	}
+
+			settingsStage = new Stage();
+
+			settingsAtlas = new TextureAtlas("ui/button.pack");
+			settingsSkin = new Skin(settingsAtlas);
+
+			settingsTable = new Table(skin);
+			settingsTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+			settingsButtonDifficulty = new TextButton("DIFFICULTY", textButtonStyle);
+			settingsButtonDifficulty.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					game.setScreen(new DifficultyScreen(game));
+				}
+
+			});
+			settingsButtonDifficulty.pad(40);
+
+			settingsButtonHome = new TextButton("HOME", textButtonStyle);
+			settingsButtonHome.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					game.setScreen(new MainMenu(game));
+				}
+
+			});
+			settingsButtonHome.pad(40);
+
+			// i don't know how to literally resume, so for now this button starts
+			// a new spgame screen with the same game, difficulty, and progress as
+			// was taken in initially
+			settingsButtonResume = new TextButton("RESUME", textButtonStyle);
+			settingsButtonResume.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 0;
+					Gdx.input.setInputProcessor(multiInput);
+
+				}
+
+			});
+			settingsButtonResume.pad(40);
+
+			// creates heading
+			LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
+
+			heading = new Label("OPTIONS", headingStyle);
+			heading.setFontScale(4);
+
+			// puts stuff together
+			settingsTable.add(heading);
+			settingsTable.row();
+			settingsTable.add(settingsButtonDifficulty).fill();
+			settingsTable.row();
+			settingsTable.add(settingsButtonHome).fill();
+			settingsTable.row();
+			settingsTable.add(settingsButtonResume).fill();
+			settingsTable.debug();
+			settingsStage.addActor(settingsTable);
+			
+		}
+	
 
 	@Override
 	public void hide() {
