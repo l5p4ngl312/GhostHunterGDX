@@ -24,7 +24,7 @@ public class MainSettingsMenu implements Screen {
 	private Skin skin;
 	private Table table;
 	private TextButton buttonDifficulty, buttonHome, buttonPlay;
-	private BitmapFont font;
+	private BitmapFont font, headingFont;
 	private Label heading;
 	private TextButtonStyle textButtonStyle;
 
@@ -60,11 +60,13 @@ public class MainSettingsMenu implements Screen {
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// creating font
-		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
-				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
+		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),
+				Gdx.files.internal("Font/chillerfont_0.png"), false);
 		font.setColor(255, 255, 255, 1);
 		font.setScale(2);
-
+		headingFont = new BitmapFont(Gdx.files.internal("Font/chillerfontwhite.fnt"), Gdx.files.internal("Font/chillerfontwhite_0.png"), false);
+		headingFont.setColor(255,255,255,1);
+		
 		// creating buttons
 		textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.getDrawable("button.up");
@@ -117,7 +119,7 @@ public class MainSettingsMenu implements Screen {
 		buttonPlay.pad(40);
 
 		// creates heading
-		LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
+		LabelStyle headingStyle = new LabelStyle(headingFont, Color.WHITE);
 
 		heading = new Label("SETTINGS", headingStyle);
 		heading.setFontScale(4);

@@ -100,7 +100,7 @@ public class SPGame implements Screen {
 	// for settings button:
 	TextButton buttonOptions, settingsButtonDifficulty, settingsButtonHome, settingsButtonResume;
 	TextButtonStyle textButtonStyle;
-	BitmapFont font;
+	BitmapFont font, headingFont;
 	Skin skin;
 	TextureAtlas atlas;
 
@@ -389,8 +389,8 @@ public class SPGame implements Screen {
 		atlas = new TextureAtlas("ui/button.pack");
 		skin = new Skin(atlas);
 
-		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
-				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
+		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),
+				Gdx.files.internal("Font/chillerfont_0.png"), false);
 		font.setColor(255, 255, 255, 1);
 		font.setScale(2);
 
@@ -484,7 +484,11 @@ public class SPGame implements Screen {
 			settingsButtonResume.pad(40);
 
 			// creates heading
-			LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
+			headingFont = new BitmapFont(Gdx.files.internal("Font/chillerfontwhite.fnt"),
+					Gdx.files.internal("Font/chillerfontwhite_0.png"), false);
+			headingFont.setColor(255,255,255,1);
+			
+			LabelStyle headingStyle = new LabelStyle(headingFont, Color.WHITE);
 
 			heading = new Label("OPTIONS", headingStyle);
 			heading.setFontScale(4);
