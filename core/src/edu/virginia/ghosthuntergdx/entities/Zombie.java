@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import edu.virginia.ghosthuntergdx.Collider;
 import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
+import edu.virginia.ghosthuntergdx.items.Bullet;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 
@@ -26,16 +27,23 @@ public class Zombie extends Enemy implements Collider {
 		
 		mBody.setLinearDamping(linearDamping);
 		
+		health = 10;
 	}
 	 public void die(){
 		 if (health <= 0){
 			 this.remove();
+			 SPGame.destroyBody(this.mBody);
 		 }
 	 }
+	 
+	
 		
 	@Override 
 	public void act(float delta){
 		super.act(delta);
+		
+		
+		die();
 		
 		//moving the zombie towards the player
 		Vector2 playerPos = SPGame.getPlayer()
@@ -49,13 +57,18 @@ public class Zombie extends Enemy implements Collider {
 	}
 	@Override
 	public void OnCollisionBegin(Body other, Contact c) {
-		
-		
-		
+		if ( other.getUserData()!=null){
+			if(other.getUserData() instanceof Bullet){
+				Bullet b = (Bullet) other.getUserData();
+				this.health = health - b.damage;
+			}
+		}		
 	}
+		
+
+	
 	@Override
 	public void OnCollisionEnd(Body other, Contact c) {
-		// TODO Auto-generated method stub
 		
 	}
 }
