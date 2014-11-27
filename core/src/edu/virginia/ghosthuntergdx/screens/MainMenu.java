@@ -2,8 +2,10 @@ package edu.virginia.ghosthuntergdx.screens;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,16 +16,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 
 public class MainMenu implements Screen{
 
 	private Stage stage; //done
-	private TextureAtlas atlas; //done
+	private TextureAtlas atlas, backAtlas; //done
 	private Skin skin; //done
 	private Table table; //done
 	private TextButton buttonPlay, buttonExit, buttonSettings; //done
-	private BitmapFont white, black, chillerFont; //done
+	private BitmapFont redChiller, chillerFont; //done
 	private Label heading;
 	
 	GhostHunterGame game;
@@ -56,9 +60,13 @@ public class MainMenu implements Screen{
 		
 		stage = new Stage();
 		
+		Texture back = new Texture("img/background.png");
+		TextureRegion backg = new TextureRegion(back);
+		TextureRegionDrawable background = new TextureRegionDrawable(backg);
+		
 		Gdx.input.setInputProcessor(stage);
 		
-		atlas = new TextureAtlas("ui/button.pack");
+		atlas = new TextureAtlas("ui/redButtons.pack");
 		skin = new Skin(atlas);
 		
 		table = new Table(skin);
@@ -66,15 +74,15 @@ public class MainMenu implements Screen{
 		
 		
 		//creating fonts
-		white = new BitmapFont(Gdx.files.internal("Font/white.fnt"), false);
-		black = new BitmapFont(Gdx.files.internal("Font/black.fnt"), false);
+		redChiller = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"), false);
+		
 		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
 		
 		
 		//creating buttons
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.getDrawable("button.up");
-		textButtonStyle.down = skin.getDrawable("button.down");
+		textButtonStyle.up = skin.getDrawable("redButton.Up");
+		textButtonStyle.down = skin.getDrawable("redButton.Down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = chillerFont;
@@ -124,21 +132,21 @@ public class MainMenu implements Screen{
 		});
 		
 		//created heading
-		LabelStyle headingStyle = new LabelStyle(chillerFont, Color.WHITE);
+		LabelStyle headingStyle = new LabelStyle(redChiller, Color.WHITE);
 		
-		heading = new Label("Welcome To Ghost Hunter", headingStyle);
-		heading.setFontScale(Gdx.graphics.getDensity()*4);
+		heading = new Label("Ghost Hunter", headingStyle);
+		heading.setFontScale(9);
+		
 		
 		//putting stuff together
-		table.add(heading);
+		table.setBackground(background);
+		table.add(heading).expandX().colspan(2).spaceBottom(100);
 		table.row();
-		
-		table.add(buttonPlay).fill();
+		table.add(buttonPlay).expandX().width(130);
+		table.add(buttonSettings).expandX().width(130);
 		table.row();
-		table.add(buttonExit).fill();
-		table.row();
-		table.add(buttonSettings).fill();
-		table.debug();
+		table.add(buttonExit).center().expandX().colspan(2).width(130).spaceTop(70);
+		//table.debug();
 		stage.addActor(table);
 		
 		
