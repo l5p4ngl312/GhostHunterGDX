@@ -88,12 +88,23 @@ public class SPGame implements Screen {
 	int playerProgress = 1;
 	
 	//for game settings menu
-	int gamestate = 0;
+	int gamestate = 0; //gamestate: 0=gameplay, 1=options, 2=difficulty, 3=difficultyeasy, 4=difficultymedium, 5=difficultyhard
 	Stage settingsStage;
 	Table settingsTable;
 	TextureAtlas settingsAtlas;
 	Skin settingsSkin;
 	Label heading;
+	
+	//difficulty menu
+	Stage difficultyStage, difficultyEasyStage, difficultyMediumStage, difficultyHardStage;
+	Table difficultyTable;
+	TextureAtlas difficultyAtlas;
+	Skin difficultySkin;
+	Label difficultyHeading;
+	TextButton buttonEasy, buttonMedium, buttonHard;
+	
+	CharSequence easy, medium, hard;
+	Label easyMessage, mediumMessage, hardMessage;
 	
 	public static boolean debugPhysics = false;
 
@@ -189,9 +200,25 @@ public class SPGame implements Screen {
 		HUDstage.draw();
 
 	}
-		else{
+		else if (gamestate == 1){
 			settingsStage.act(delta);
 			settingsStage.draw();
+		}
+		else if (gamestate == 2){
+			difficultyStage.act(delta);
+			difficultyStage.draw();
+		}
+		else if (gamestate == 3){
+			difficultyEasyStage.act(delta);
+			difficultyEasyStage.draw();
+		}
+		else if (gamestate == 4){
+			difficultyMediumStage.act(delta);
+			difficultyMediumStage.draw();
+		}
+		else if (gamestate ==5){
+			difficultyHardStage.act(delta);
+			difficultyHardStage.draw();
 		}
 	}
 
@@ -386,7 +413,7 @@ public class SPGame implements Screen {
 		
 		// show settings button
 
-		atlas = new TextureAtlas("ui/button.pack");
+		atlas = new TextureAtlas("ui/redButtons.pack");
 		skin = new Skin(atlas);
 
 		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),
@@ -395,8 +422,8 @@ public class SPGame implements Screen {
 		font.setScale(2);
 
 		textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.getDrawable("button.up");
-		textButtonStyle.down = skin.getDrawable("button.down");
+		textButtonStyle.up = skin.getDrawable("redButton.Up");
+		textButtonStyle.down = skin.getDrawable("redButton.Down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = font;
@@ -430,7 +457,7 @@ public class SPGame implements Screen {
 
 			settingsStage = new Stage();
 
-			settingsAtlas = new TextureAtlas("ui/button.pack");
+			settingsAtlas = new TextureAtlas("ui/redButtons.pack");
 			settingsSkin = new Skin(settingsAtlas);
 
 			settingsTable = new Table(skin);
@@ -444,7 +471,9 @@ public class SPGame implements Screen {
 						Actor fromActor) {
 
 					super.enter(event, x, y, pointer, fromActor);
-					game.setScreen(new DifficultyScreen(game));
+					gamestate = 2;
+					Gdx.input.setInputProcessor(difficultyStage);
+					//clearStage(settingsStage);
 				}
 
 			});
@@ -464,9 +493,6 @@ public class SPGame implements Screen {
 			});
 			settingsButtonHome.pad(40);
 
-			// i don't know how to literally resume, so for now this button starts
-			// a new spgame screen with the same game, difficulty, and progress as
-			// was taken in initially
 			settingsButtonResume = new TextButton("RESUME", textButtonStyle);
 			settingsButtonResume.addListener(new InputListener() {
 
@@ -484,8 +510,8 @@ public class SPGame implements Screen {
 			settingsButtonResume.pad(40);
 
 			// creates heading
-			headingFont = new BitmapFont(Gdx.files.internal("Font/chillerfontwhite.fnt"),
-					Gdx.files.internal("Font/chillerfontwhite_0.png"), false);
+			headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
+					Gdx.files.internal("Font/redChiller_0.png"), false);
 			headingFont.setColor(255,255,255,1);
 			
 			LabelStyle headingStyle = new LabelStyle(headingFont, Color.WHITE);
@@ -503,6 +529,102 @@ public class SPGame implements Screen {
 			settingsTable.add(settingsButtonResume).fill();
 			settingsTable.debug();
 			settingsStage.addActor(settingsTable);
+			
+			
+			difficultyStage = new Stage();
+
+			difficultyAtlas = new TextureAtlas("ui/redButtons.pack");
+			difficultySkin = new Skin(difficultyAtlas);
+
+			difficultyTable = new Table(difficultySkin);
+			difficultyTable.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+			buttonEasy = new TextButton("EASY", textButtonStyle);
+			buttonEasy.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 3;
+					Gdx.input.setInputProcessor(difficultyEasyStage);
+				}
+
+			});
+			buttonEasy.pad(40);
+
+			buttonMedium = new TextButton("MEDIUM", textButtonStyle);
+			buttonMedium.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 4;
+					Gdx.input.setInputProcessor(difficultyMediumStage);
+
+				}
+			});
+			buttonMedium.pad(40);
+
+			buttonHard = new TextButton("HARD", textButtonStyle);
+			buttonHard.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 5;
+					Gdx.input.setInputProcessor(difficultyHardStage);
+
+				}
+			});
+			buttonHard.pad(40);
+
+			difficultyHeading = new Label("DIFFICULTY", headingStyle);
+			difficultyHeading.setFontScale(4);
+
+			// puts stuff together
+			difficultyTable.add(difficultyHeading);
+			difficultyTable.row();
+			difficultyTable.add(buttonEasy).fill();
+			difficultyTable.row();
+			difficultyTable.add(buttonMedium).fill();
+			difficultyTable.row();
+			difficultyTable.add(buttonHard).fill();
+			difficultyTable.debug();
+			difficultyStage.addActor(difficultyTable);
+			
+			settingsButtonResume.setX(Gdx.graphics.getWidth()/2 - settingsButtonResume.getWidth()/2);
+			settingsButtonResume.setY(Gdx.graphics.getHeight()/4);
+			
+			LabelStyle messageStyle = new LabelStyle(headingFont, Color.RED);
+			
+			easy = "DIFFICULTY IS NOW EASY";
+			easyMessage = new Label(easy, messageStyle);
+			medium = "DIFFICULTY IS NOW MEDIUM";
+			mediumMessage = new Label(medium, messageStyle);
+			hard = "DIFFICULTY IS NOW HARD";
+			hardMessage = new Label(hard, messageStyle);
+			
+			easyMessage.setX(Gdx.graphics.getWidth() - easyMessage.getWidth()/2);
+			easyMessage.setY(3*Gdx.graphics.getHeight()/4);
+			difficultyEasyStage.addActor(easyMessage);
+			difficultyEasyStage.addActor(settingsButtonResume);
+			
+			mediumMessage.setX(/*Gdx.graphics.getWidth()/2 - */mediumMessage.getWidth()/2);
+			mediumMessage.setY(3*Gdx.graphics.getHeight()/4);
+			difficultyMediumStage.addActor(mediumMessage);
+			difficultyMediumStage.addActor(settingsButtonResume);
+			
+			hardMessage.setX(Gdx.graphics.getWidth()/2 - hardMessage.getWidth()/2);
+			hardMessage.setY(3*Gdx.graphics.getHeight()/4);
+			difficultyHardStage.addActor(hardMessage);
+			difficultyHardStage.addActor(settingsButtonResume);
+			
 			
 		}
 	
@@ -608,6 +730,7 @@ public class SPGame implements Screen {
 		}
 		lightsToDeactivate.clear();
 	}
+	
 	private static void activateLights()
 	{
 		for(Light b :lightsToActivate)
@@ -650,4 +773,8 @@ public class SPGame implements Screen {
 	{
 		return groundBody;
 	}
+	
+//	public static void clearStage(Stage s){
+//		s.getRoot().clearChildren();
+//	}
 }
