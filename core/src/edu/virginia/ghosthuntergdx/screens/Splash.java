@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 public class Splash implements Screen {
 
 	private Texture texture = new Texture(
-			Gdx.files.internal("img/testlogo.jpg"));
+			Gdx.files.internal("img/logo.jpg"));
 	private Image splashImage = new Image(texture);
 	private Stage stage = new Stage();
 	private GhostHunterGame game;
@@ -51,10 +51,10 @@ public class Splash implements Screen {
 	public void show() {
 		// shows logo
 		splashImage.setX((Gdx.graphics.getWidth() / 2)
-				- (splashImage.getWidth()));
+				- (splashImage.getWidth()/2));
 		splashImage.setY((Gdx.graphics.getHeight() / 2)
-				- (splashImage.getHeight()));
-		splashImage.setScale(2);
+				- (splashImage.getHeight()/2));
+		splashImage.setScale(1);
 		stage.addActor(splashImage);
 
 		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
