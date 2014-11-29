@@ -53,7 +53,7 @@ public class MainSettingsMenu implements Screen {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
-		atlas = new TextureAtlas("ui/button.pack");
+		atlas = new TextureAtlas("ui/redButtons.pack");
 		skin = new Skin(atlas);
 
 		table = new Table(skin);
@@ -64,13 +64,13 @@ public class MainSettingsMenu implements Screen {
 				Gdx.files.internal("Font/chillerfont_0.png"), false);
 		font.setColor(255, 255, 255, 1);
 		font.setScale(2);
-		headingFont = new BitmapFont(Gdx.files.internal("Font/chillerfontwhite.fnt"), Gdx.files.internal("Font/chillerfontwhite_0.png"), false);
+		headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"), Gdx.files.internal("Font/redChiller_0.png"), false);
 		headingFont.setColor(255,255,255,1);
 		
 		// creating buttons
 		textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.getDrawable("button.up");
-		textButtonStyle.down = skin.getDrawable("button.down");
+		textButtonStyle.up = skin.getDrawable("redButton.Up");
+		textButtonStyle.down = skin.getDrawable("redButton.Down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = font;
