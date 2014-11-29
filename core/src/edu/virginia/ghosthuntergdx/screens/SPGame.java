@@ -101,7 +101,7 @@ public class SPGame implements Screen {
 	TextureAtlas difficultyAtlas;
 	Skin difficultySkin;
 	Label difficultyHeading;
-	TextButton buttonEasy, buttonMedium, buttonHard;
+	TextButton buttonEasy, buttonMedium, buttonHard, difficultyEasyButtonResume, difficultyMediumButtonResume, difficultyHardButtonResume;
 	
 	CharSequence easy, medium, hard;
 	Label easyMessage, mediumMessage, hardMessage;
@@ -111,7 +111,7 @@ public class SPGame implements Screen {
 	// for settings button:
 	TextButton buttonOptions, settingsButtonDifficulty, settingsButtonHome, settingsButtonResume;
 	TextButtonStyle textButtonStyle;
-	BitmapFont font, headingFont;
+	BitmapFont font, headingFont, messageFont;
 	Skin skin;
 	TextureAtlas atlas;
 
@@ -473,7 +473,7 @@ public class SPGame implements Screen {
 					super.enter(event, x, y, pointer, fromActor);
 					gamestate = 2;
 					Gdx.input.setInputProcessor(difficultyStage);
-					//clearStage(settingsStage);
+					clearStage(settingsStage);
 				}
 
 			});
@@ -532,6 +532,9 @@ public class SPGame implements Screen {
 			
 			
 			difficultyStage = new Stage();
+			difficultyEasyStage = new Stage();
+			difficultyMediumStage = new Stage();
+			difficultyHardStage = new Stage();
 
 			difficultyAtlas = new TextureAtlas("ui/redButtons.pack");
 			difficultySkin = new Skin(difficultyAtlas);
@@ -549,6 +552,7 @@ public class SPGame implements Screen {
 					super.enter(event, x, y, pointer, fromActor);
 					gamestate = 3;
 					Gdx.input.setInputProcessor(difficultyEasyStage);
+					clearStage(difficultyStage);
 				}
 
 			});
@@ -564,6 +568,7 @@ public class SPGame implements Screen {
 					super.enter(event, x, y, pointer, fromActor);
 					gamestate = 4;
 					Gdx.input.setInputProcessor(difficultyMediumStage);
+					clearStage(difficultyStage);
 
 				}
 			});
@@ -579,6 +584,7 @@ public class SPGame implements Screen {
 					super.enter(event, x, y, pointer, fromActor);
 					gamestate = 5;
 					Gdx.input.setInputProcessor(difficultyHardStage);
+					clearStage(difficultyStage);
 
 				}
 			});
@@ -598,10 +604,65 @@ public class SPGame implements Screen {
 			difficultyTable.debug();
 			difficultyStage.addActor(difficultyTable);
 			
-			settingsButtonResume.setX(Gdx.graphics.getWidth()/2 - settingsButtonResume.getWidth()/2);
-			settingsButtonResume.setY(Gdx.graphics.getHeight()/4);
+			messageFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
+					Gdx.files.internal("Font/redChiller_0.png"), false);
+			messageFont.setScale(4);
 			
-			LabelStyle messageStyle = new LabelStyle(headingFont, Color.RED);
+			LabelStyle messageStyle = new LabelStyle(messageFont, Color.RED);
+			
+			difficultyEasyButtonResume = new TextButton("RESUME", textButtonStyle);
+			difficultyEasyButtonResume.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 0;
+					Gdx.input.setInputProcessor(multiInput);
+
+				}
+			});
+			difficultyEasyButtonResume.pad(80);
+			
+			difficultyMediumButtonResume = new TextButton("RESUME", textButtonStyle);
+			difficultyMediumButtonResume.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 0;
+					Gdx.input.setInputProcessor(multiInput);
+
+				}
+			});
+			difficultyMediumButtonResume.pad(80);
+			
+			difficultyHardButtonResume = new TextButton("RESUME", textButtonStyle);
+			difficultyHardButtonResume.addListener(new InputListener() {
+
+				@Override
+				public void enter(InputEvent event, float x, float y, int pointer,
+						Actor fromActor) {
+
+					super.enter(event, x, y, pointer, fromActor);
+					gamestate = 0;
+					Gdx.input.setInputProcessor(multiInput);
+
+				}
+			});
+			difficultyHardButtonResume.pad(80);
+			
+			difficultyEasyButtonResume.setX(Gdx.graphics.getWidth()/2 - difficultyEasyButtonResume.getWidth()/2);
+			difficultyEasyButtonResume.setY(Gdx.graphics.getHeight()/4);
+			
+			difficultyMediumButtonResume.setX(Gdx.graphics.getWidth()/2 - difficultyMediumButtonResume.getWidth()/2);
+			difficultyMediumButtonResume.setY(Gdx.graphics.getHeight()/4);
+			
+			difficultyHardButtonResume.setX(Gdx.graphics.getWidth()/2 - difficultyHardButtonResume.getWidth()/2);
+			difficultyHardButtonResume.setY(Gdx.graphics.getHeight()/4);
 			
 			easy = "DIFFICULTY IS NOW EASY";
 			easyMessage = new Label(easy, messageStyle);
@@ -610,20 +671,20 @@ public class SPGame implements Screen {
 			hard = "DIFFICULTY IS NOW HARD";
 			hardMessage = new Label(hard, messageStyle);
 			
-			easyMessage.setX(Gdx.graphics.getWidth() - easyMessage.getWidth()/2);
-			easyMessage.setY(3*Gdx.graphics.getHeight()/4);
+			easyMessage.setX(Gdx.graphics.getWidth()/2 - easyMessage.getWidth()/2);
+			easyMessage.setY(3*Gdx.graphics.getHeight()/4 - easyMessage.getHeight());
 			difficultyEasyStage.addActor(easyMessage);
-			difficultyEasyStage.addActor(settingsButtonResume);
+			difficultyEasyStage.addActor(difficultyEasyButtonResume);
 			
-			mediumMessage.setX(/*Gdx.graphics.getWidth()/2 - */mediumMessage.getWidth()/2);
-			mediumMessage.setY(3*Gdx.graphics.getHeight()/4);
+			mediumMessage.setX(Gdx.graphics.getWidth()/2 - mediumMessage.getWidth()/2);
+			mediumMessage.setY(3*Gdx.graphics.getHeight()/4 - mediumMessage.getHeight());
 			difficultyMediumStage.addActor(mediumMessage);
-			difficultyMediumStage.addActor(settingsButtonResume);
+			difficultyMediumStage.addActor(difficultyMediumButtonResume);
 			
 			hardMessage.setX(Gdx.graphics.getWidth()/2 - hardMessage.getWidth()/2);
-			hardMessage.setY(3*Gdx.graphics.getHeight()/4);
+			hardMessage.setY(3*Gdx.graphics.getHeight()/4 - hardMessage.getHeight());
 			difficultyHardStage.addActor(hardMessage);
-			difficultyHardStage.addActor(settingsButtonResume);
+			difficultyHardStage.addActor(difficultyHardButtonResume);
 			
 			
 		}
@@ -774,7 +835,7 @@ public class SPGame implements Screen {
 		return groundBody;
 	}
 	
-//	public static void clearStage(Stage s){
-//		s.getRoot().clearChildren();
-//	}
+	public static void clearStage(Stage s){
+		s.getRoot().clearChildren();
+	}
 }

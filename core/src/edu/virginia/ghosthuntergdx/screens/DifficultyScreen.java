@@ -25,7 +25,7 @@ public class DifficultyScreen implements Screen {
 	private Skin skin;
 	private Table table;
 	private TextButton buttonEasy, buttonMedium, buttonHard;
-	private BitmapFont font;
+	private BitmapFont font, headingFont;
 	private Label heading;
 	private TextButtonStyle textButtonStyle;
 	private GhostHunterGame game;
@@ -53,22 +53,23 @@ public class DifficultyScreen implements Screen {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
-		atlas = new TextureAtlas("ui/button.pack");
+		atlas = new TextureAtlas("ui/redButtons.pack");
 		skin = new Skin(atlas);
 
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// creating font
-		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
-				Gdx.files.internal("Font/whiteimpact2_0.png"), false);
-		font.setColor(255, 255, 255, 1);
+		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),Gdx.files.internal("Font/chillerfont_0.png"),false);
 		font.setScale(2);
+		headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
+				Gdx.files.internal("Font/redChiller_0.png"), false);
+		headingFont.setScale(2);
 
 		// creating buttons
 		textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = skin.getDrawable("button.up");
-		textButtonStyle.down = skin.getDrawable("button.down");
+		textButtonStyle.up = skin.getDrawable("redButton.Up");
+		textButtonStyle.down = skin.getDrawable("redButton.Down");
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = font;
@@ -116,7 +117,7 @@ public class DifficultyScreen implements Screen {
 		buttonHard.pad(40);
 
 		// creates heading
-		LabelStyle headingStyle = new LabelStyle(font, Color.WHITE);
+		LabelStyle headingStyle = new LabelStyle(headingFont, Color.RED);
 		heading = new Label("DIFFICULTY", headingStyle);
 		heading.setFontScale(4);
 
