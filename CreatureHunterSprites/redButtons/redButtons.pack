@@ -1,0 +1,19 @@
+
+redButtons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+redButton.Down
+  rotate: false
+  xy: 0, 22
+  size: 53, 22
+  orig: 53, 22
+  offset: 0, 0
+  index: -1
+redButton.Up
+  rotate: false
+  xy: 0, 0
+  size: 53, 22
+  orig: 53, 22
+  offset: 0, 0
+  index: -1
