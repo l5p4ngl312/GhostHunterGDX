@@ -29,8 +29,9 @@ public class Bullet extends Actor implements Collider{
 	public Sprite bulletSprite;
 	
 	private static final float colorRate = 0.08f;
-	public Bullet(Vector2 pos, Vector2 velocity)
+	public Bullet(Vector2 pos, Vector2 velocity, float damage)
 	{
+		this.damage = damage;
 		SPGame.getProjectileGroup().addActor(this);
 		Texture t = TextureManager.bullet;
 		bulletSprite = new Sprite(t);

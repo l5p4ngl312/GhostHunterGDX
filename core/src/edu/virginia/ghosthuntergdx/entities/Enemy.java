@@ -14,10 +14,11 @@ public class Enemy extends PhysicsActor{
 	
 	Vector2 position;
 	Rectangle bounds;
-	double health;
+	double health = 100;
 	float speed;
 	float targetRot;
 	Vector2 moveDir = new Vector2(0,0);
+	public float angleOffset = 90;
 	public float rotSpeed = 900f;
 	
 	
@@ -38,9 +39,9 @@ public class Enemy extends PhysicsActor{
 		
 		//Set the enemies target rotation based on either his move direction 
 		targetRot = getSprite().getRotation();
-		if(mBody.getLinearVelocity().len() > 0)
+		if(moveDir.len() > 0)
 		{
-			targetRot = (float) Math.atan2(mBody.getLinearVelocity().y,mBody.getLinearVelocity().x)*MathUtils.radiansToDegrees + 90;
+			targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees + angleOffset;
 
 		}
 		//Rotate the enemy towards his target rotation along the shortest path

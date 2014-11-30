@@ -94,8 +94,9 @@ public abstract class Weapon extends Item{
 			}
 			SPGame.getUI().clipCount = ammoInClip;
 			SPGame.getUI().reserveCount = p.getAmmoCount(myAmmoType);
+			SoundManager.reload.play(0.3f);
 		}else{
-			SoundManager.pickup.play(0.3f);
+			SoundManager.dryFire.play(0.3f);
 		}
 	}
 	

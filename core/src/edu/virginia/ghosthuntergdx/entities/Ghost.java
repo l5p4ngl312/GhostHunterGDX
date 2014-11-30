@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
+import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
@@ -35,27 +36,38 @@ public class Ghost extends Enemy {
 		getSprite().setColor(new Color(1,1,1,targetAlpha));
 		}
 	
+	private float lastAlpha = 0.0f;
 	@Override
 	public void act(float delta){
 	super.act(delta);
 	
+	
 		for(Actor a : SPGame.getHUDStage().getActors())
 		{
+			boolean foundLight = false;
 			if(a instanceof Flashlight)
 			{
 				Flashlight f = (Flashlight)a;
 				if(f.playerLight.isActive())
 				{
+					foundLight = true;
 					if(f.playerLight.contains(getX(), getY()))
 					{
-						Gdx.app.debug("GHOST IN LIGHT", "Ghost in light");
 						targetAlpha = 0.5f;
 					}else{
 						targetAlpha = 0.0f;
 					}
 				}
 			}
+			if(!foundLight)
+				targetAlpha = 0.0f;
 		}
+		if(lastAlpha == 0.0f && targetAlpha != 0.0f)
+		{
+			SoundManager.ghostAlert.play(0.4f);
+		}
+		
+		lastAlpha = targetAlpha;
 	}
 	
 	@Override

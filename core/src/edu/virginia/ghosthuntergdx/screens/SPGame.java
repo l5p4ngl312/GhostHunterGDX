@@ -126,6 +126,10 @@ public class SPGame implements Screen {
 	
 	@Override
 	public void render(float delta) {
+		// Clear the screen
+		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
+		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		
 		if(gamestate == 0){
 		// Step through the Box2D physics simulation
 		world.step(1 / 45f, 6, 2);
@@ -134,9 +138,6 @@ public class SPGame implements Screen {
 		deactivateLights();
 		activateLights();
 		destroyBodies();
-		// Clear the screen
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
-		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 
 		// Center the main camera on the player's sprite and update it
 		Vector2 offsetVector = player.getForwardVector().scl(camForwardOffset);

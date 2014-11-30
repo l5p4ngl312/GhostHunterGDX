@@ -28,6 +28,8 @@ public class Pistol extends Weapon{
 	private float recoilVelocity = 0.9f;
 	private float bulletVelocity = 20f;
 	
+	public float damage = 10;
+	
 	public Pistol(Vector2 worldPos, int ammoInClip)
 	{
 		super(price,ammoType.PISTOL,index,fireAnimFrames,index);
@@ -54,7 +56,7 @@ public class Pistol extends Weapon{
 				pistolFlash.setSoft(true);
 				pistolFlash.setSoftnessLength(0.75f);
 			}
-			Bullet shot = new Bullet(p.getBody().getPosition().add(attackDir.scl(bulletOffset)),attackDir.scl(bulletVelocity));
+			Bullet shot = new Bullet(p.getBody().getPosition().add(attackDir.scl(bulletOffset)),attackDir.scl(bulletVelocity),damage);
 			lightLifeTime = 0;
 			SPGame.screenShake = true;
 			flashing = true;

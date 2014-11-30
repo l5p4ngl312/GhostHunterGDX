@@ -58,7 +58,7 @@ public class Flashlight extends Weapon{
 		{
 			for(Fixture f : b.getFixtureList())
 			{
-				if(f.getFilterData().categoryBits == Physics.OBSTACLE)
+				if(f.getFilterData().categoryBits == Physics.OBSTACLE || f.getFilterData().categoryBits == Physics.ENEMYBODY)
 				{
 					if(f.testPoint(lightPos))
 					{
