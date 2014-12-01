@@ -32,7 +32,50 @@ public class Enemy extends PhysicsActor{
 		
 	}
 	
+	protected void lookAtTarget(float delta)
+	{
+		//Set the enemies target rotation based on either his move direction 
+		targetRot = getSprite().getRotation();
+		if(moveDir.len() > 0)
+		{
+			targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees + angleOffset;
 
+		}
+		//Rotate the enemy towards his target rotation along the shortest path
+		if(targetRot > 360)
+			targetRot-=360;
+		if(rot > 360)
+			rot-=360;
+		
+		if(targetRot < 0)
+			targetRot+=360;
+		if(rot < 0)
+			rot+=360;
+		
+		if(Math.abs(targetRot - rot) > 180)
+		{
+			if(rot < targetRot)
+				rot+=360;
+			else
+				targetRot+=360;
+		}
+		
+		
+		if(Math.abs(targetRot - rot) > 0)
+		{
+			if(rot < targetRot)
+			{
+				rot+=rotSpeed*delta;
+				if(rot > targetRot)
+					rot = targetRot;
+			}else
+			{
+				rot-=rotSpeed*delta;
+				if(rot < targetRot)
+					rot = targetRot;
+			}
+		}
+	}
 
 	public void act(float delta){
 		super.act(delta);

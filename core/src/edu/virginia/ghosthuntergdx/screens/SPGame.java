@@ -68,8 +68,8 @@ public class SPGame implements Screen {
 
 	Vector2 playerStartPos = new Vector2(10, 5);
 	// ghost and zombie testing start position
-	Vector2 zombieStartPos;
-	Vector2 ghostStartPos;
+	Vector2 zombieStartPos = new Vector2(2,2);
+	Vector2 ghostStartPos = new Vector2(17,8);
 	OrthographicCamera camera;
 	static OrthographicCamera HUDcamera;
 
@@ -150,6 +150,8 @@ public class SPGame implements Screen {
 	private static Body groundBody;
 
 	private static GameUI ui;
+	
+	private static LevelDirector director;
 
 	@Override
 	public void render(float delta) {
@@ -302,10 +304,6 @@ public class SPGame implements Screen {
 		// Set the player's default start position
 		Vector2 startPos = playerStartPos;
 
-		// test ghost and zombie start position
-		Vector2 gstartPos = ghostStartPos;
-		Vector2 zstartPos = zombieStartPos;
-
 		// Try to find an object layer called PlayerSpawn
 		MapLayer spawnLayer = map.getLayers().get("PlayerSpawn");
 		if (spawnLayer != null) {
@@ -357,11 +355,6 @@ public class SPGame implements Screen {
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
-		// creating a test ghost and zombie
-		gstartPos = startPos.add(2, 2);
-		zstartPos = startPos.add(-2, -2);
-		Zombie zombie = new Zombie(gstartPos, player);
-		Ghost ghost = new Ghost(gstartPos, player);
 
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
@@ -409,13 +402,7 @@ public class SPGame implements Screen {
 
 		// Add the player to the entity group
 		entityGroup.addActor(player);
-		// Adding test enemies
-		entityGroup.addActor(zombie);
-		entityGroup.addActor(ghost);
 
-		LevelDirector director = new LevelDirector(difficultyLevel,
-				playerProgress, map);
-		level.addActor(director);
 
 		// Create a stage for hud elements
 		HUDstage = new Stage();
@@ -433,7 +420,9 @@ public class SPGame implements Screen {
 		HUDstage.addActor(input);
 		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), HUDcamera));
-
+		
+		director = new LevelDirector(difficultyLevel,map);
+		level.addActor(director);
 		// Create a box2D debug renderer for physics debugging
 		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
 
@@ -475,13 +464,6 @@ public class SPGame implements Screen {
 
 		ui = new GameUI();
 		HUDstage.addActor(ui);
-
-		Pistol testPistol = new Pistol(new Vector2(10, 5), 9);
-		Flashlight testLight = new Flashlight(new Vector2(10, 8f));
-		Ammo testAmmo = new Ammo(new Vector2(12, 6.5f), ammoType.PISTOL);
-		pickUpGroup.addActor(testLight);
-		pickUpGroup.addActor(testPistol);
-		pickUpGroup.addActor(testAmmo);
 
 		settingsStage = new Stage();
 
@@ -869,13 +851,22 @@ public class SPGame implements Screen {
 	public static Group getPickUpGroup() {
 		return pickUpGroup;
 	}
-
+	
+	public static Group getEntities() {
+		return entityGroup;
+	}
+	
 	public static Group getProjectileGroup() {
 		return projectileGroup;
 	}
 
 	public static Player getPlayer() {
 		return player;
+	}
+	
+	public static LevelDirector getDirector()
+	{
+		return director;
 	}
 
 	public static Body getGround() {

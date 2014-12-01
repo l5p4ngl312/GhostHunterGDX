@@ -20,19 +20,19 @@ import edu.virginia.ghosthuntergdx.screens.SPGame;
 public class Zombie extends Enemy implements Collider {
 
 	
-	float speed = 1f;
+	float speed = 1.5f;
 
 	private float linearDamping = 5.0f;
 	public static TextureRegion idle;
 	private Animation attack;
 	private Animation hit;
 	private float attackSpeed = 2.5f;
-	private float hitSpeed = 5f;
+	private float hitSpeed = 3.5f;
 	
 	private int[] attackFrames = {2,3,1};
 	private int[] hitFrames = {0,1};
 	
-	public Zombie(Vector2 position, Player player) {
+	public Zombie(Vector2 position) {
 		super(position, idle, idle.getRegionWidth(),(idle.getRegionHeight()/2));
 		getSprite().setSize(idle.getRegionWidth()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD, idle.getRegionHeight()/Consts.PIXEL_TO_METER*Consts.BOX_TO_WORLD);
 		getSprite().setOrigin(getSprite().getWidth()/2,getSprite().getHeight()-getSprite().getHeight()/4);
@@ -59,6 +59,7 @@ public class Zombie extends Enemy implements Collider {
 	 
 	private final float attackCooldown = 1.4f;
 	private float attackTimer = attackCooldown;
+	boolean aggravated = false;
 	@Override 
 	public void act(float delta){
 		super.act(delta);
@@ -71,8 +72,8 @@ public class Zombie extends Enemy implements Collider {
 		Vector2 dir = playerPos.sub(mBody.getPosition());
 		
 		float dist = dir.len();
-		if(dist<3){
-			
+		if(dist < 4 || aggravated){
+		aggravated = true;
 		dir.nor();
 		moveDir = dir;
 		lookAtTarget(delta);
@@ -84,59 +85,41 @@ public class Zombie extends Enemy implements Collider {
 			mBody.setLinearVelocity(dir.scl(speed));
 		}
 		
+		if(dist > 8f)
+		{
+			aggravated = false;
+		}
 		
 		}else{
-			moveDir = Vector2.Zero;
-			super.act(delta);
+			moveTimer += delta;
+			if(moveTimer > moveTime)
+			{
+				moveTime = (float)Math.random()*6f;
+				getNewMoveDir();
+			}
+			lookAtTarget(delta);
+			dir = moveDir.nor();
+			mBody.setLinearVelocity(dir.scl(speed));
 		}
 		
 		checkAttackHit();
+
 	}
 	
-	private void lookAtTarget(float delta)
+	float moveTime = (float)Math.random()*6f;
+	float moveTimer = 0;
+	private void getNewMoveDir()
 	{
-		//Set the enemies target rotation based on either his move direction 
-		targetRot = getSprite().getRotation();
-		if(moveDir.len() > 0)
+		moveTimer = 0;
+		if(!moveDir.equals(Vector2.Zero))
 		{
-			targetRot = (float) Math.atan2(moveDir.y,moveDir.x)*MathUtils.radiansToDegrees + angleOffset;
-
-		}
-		//Rotate the enemy towards his target rotation along the shortest path
-		if(targetRot > 360)
-			targetRot-=360;
-		if(rot > 360)
-			rot-=360;
-		
-		if(targetRot < 0)
-			targetRot+=360;
-		if(rot < 0)
-			rot+=360;
-		
-		if(Math.abs(targetRot - rot) > 180)
-		{
-			if(rot < targetRot)
-				rot+=360;
-			else
-				targetRot+=360;
-		}
-		
-		
-		if(Math.abs(targetRot - rot) > 0)
-		{
-			if(rot < targetRot)
-			{
-				rot+=rotSpeed*delta;
-				if(rot > targetRot)
-					rot = targetRot;
-			}else
-			{
-				rot-=rotSpeed*delta;
-				if(rot < targetRot)
-					rot = targetRot;
-			}
+			moveDir = Vector2.Zero;
+			moveTime = (float)Math.random()*3f;
+		}else{
+			moveDir = new Vector2((float)Math.random()*2-1,(float)Math.random()*2-1);
 		}
 	}
+	
 	
 	private void attack()
 	{
@@ -153,6 +136,8 @@ public class Zombie extends Enemy implements Collider {
 	boolean didDamage = false;
 	private void checkAttackHit()
 	{
+		if(currentAnim != null)
+		{
 		if(currentAnim.equals(attack))
 		{
 			if(animTime > 0.6f)
@@ -164,6 +149,7 @@ public class Zombie extends Enemy implements Collider {
 				}
 			}
 		}
+		}
 	}
 	
 	@Override
@@ -173,6 +159,25 @@ public class Zombie extends Enemy implements Collider {
 				Bullet b = (Bullet) other.getUserData();
 				this.health = health - b.damage;
 				SoundManager.zombieHit.play(0.3f);
+				aggravated = true;
+				boolean attacking  = false;
+				if(currentAnim != null)
+				{
+				if(currentAnim.equals(attack))
+				{
+					attacking = true;
+					if(currentAnim.getKeyFrameIndex(animTime)==2)
+					{
+						currentAnim = hit;
+						animTime = 0;
+					}
+				}
+				}
+				if(!attacking)
+				{
+				currentAnim = hit;
+				animTime = 0;
+				}
 			}
 		}		
 	}

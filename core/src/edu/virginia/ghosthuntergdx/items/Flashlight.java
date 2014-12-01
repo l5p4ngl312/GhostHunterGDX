@@ -41,7 +41,7 @@ public class Flashlight extends Weapon{
 		}
 	}
 	
-	boolean lightActive = false;
+	public boolean lightActive = false;
 	
 	@Override
 	public void act(float dt)
