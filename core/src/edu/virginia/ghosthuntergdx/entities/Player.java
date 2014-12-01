@@ -29,6 +29,7 @@ import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Item;
 import edu.virginia.ghosthuntergdx.items.Weapon;
 import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
+import edu.virginia.ghosthuntergdx.screens.GameOver;
 import edu.virginia.ghosthuntergdx.screens.MainMenu;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
@@ -273,7 +274,7 @@ public class Player extends PhysicsActor{
 		if(health < 0)
 		{
 			//Game over
-			SPGame.game.setScreen(new MainMenu(SPGame.game));
+			SPGame.game.setScreen(new GameOver(SPGame.game));
 		}
 	}
 

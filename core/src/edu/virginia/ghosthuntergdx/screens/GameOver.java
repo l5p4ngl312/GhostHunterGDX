@@ -71,6 +71,12 @@ public class GameOver implements Screen {
 
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		// creating fonts
+		redChiller = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
+				false);
+		
+		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
 
 		// creating buttons
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -80,12 +86,6 @@ public class GameOver implements Screen {
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = chillerFont;
 
-		// creating fonts
-		redChiller = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
-				false);
-
-		chillerFont = new BitmapFont(
-				Gdx.files.internal("Font/chillerfont.fnt"), false);
 
 		buttonExit = new TextButton("EXIT", textButtonStyle);
 		buttonExit.addListener(new InputListener() {
@@ -125,28 +125,28 @@ public class GameOver implements Screen {
 		
 		artifactsFound = 1; // SPGame.getPlayer().getArtifacs();
 		String aF = Double.toString(artifactsFound);
-		artifactsFoundH = new Label("Statistics" + aF, headingStyle);
+		artifactsFoundH = new Label("Artifacts Found : " + aF, headingStyle);
 		artifactsFoundH.setFontScale(2);
 		
 		ghostKills = 2; // SPGame.getPlayer().getGhostKills();
 		String gK = Double.toString(ghostKills);
-		ghostKillsH = new Label("Statistics" +gK, headingStyle);
+		ghostKillsH = new Label("Ghosts Killed :   " +gK, headingStyle);
 		ghostKillsH.setFontScale(2);
-		
+	
 		kills = 3; //SPGame.getPlayer().getKills();
 		String k = Double.toString(kills);
-		killsH = new Label("Statistics" + k, headingStyle);
+		killsH = new Label("Total Kills :     " + k, headingStyle);
 		killsH.setFontScale(2);
 
 		shotsFired = 4; //SPGame.getPlayer().getShotsFired();
 		String sF = Double.toString(shotsFired);
-		shotsFiredH = new Label("Statistics" +sF, headingStyle);
+		shotsFiredH = new Label("Shots Fired :     " +sF, headingStyle);
 		shotsFiredH.setFontScale(2);
 		
 		
 		zombieKills = 5; //SPGame.getPlayer().getZombieKills();
 		String zK = Double.toString(zombieKills);
-		zombieKillsH = new Label("Statistics" + zK , headingStyle);
+		zombieKillsH = new Label("Zombies Killed :  " + zK , headingStyle);
 		zombieKillsH.setFontScale(2);
 		
 		
@@ -159,9 +159,13 @@ public class GameOver implements Screen {
 		table.row();
 		table.add(shotsFiredH);
 		table.row();
+		table.add(killsH);
+		table.row();
 		table.add(zombieKillsH).spaceBottom(100);
+		table.row();
 		table.add(buttonMainMenu).expandX();
 		table.add(buttonExit).expandX();
+		table.debug();
 		stage.addActor(table);
 	}
 
