@@ -7,18 +7,22 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
+import edu.virginia.ghosthuntergdx.Collider;
 import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
+import edu.virginia.ghosthuntergdx.items.Bullet;
 import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
-public class Ghost extends Enemy {
+public class Ghost extends Enemy implements Collider {
 
 
 	private float linearDamping = 5.0f;
@@ -48,6 +52,8 @@ public class Ghost extends Enemy {
 		mBody.getFixtureList().get(0).setFilterData(ghostFilter);
 		getSprite().setColor(new Color(1,1,1,targetAlpha));
 		
+		health = 20;
+		
 		Array<TextureRegion> animRegions = new Array<TextureRegion>();
 		for(int i = 0; i < attackFrames.length; i++)
 			animRegions.add(TextureManager.ghost.getRegions().get(attackFrames[i]));
@@ -69,6 +75,8 @@ public class Ghost extends Enemy {
 	@Override
 	public void act(float delta){
 	
+	checkDeath();	
+		
 	alertTimer += delta;
 	boolean foundLight = false;
 		for(Actor a : SPGame.getHUDStage().getActors())
@@ -197,12 +205,44 @@ public class Ghost extends Enemy {
 		}
 	}
 	
+	public void checkDeath(){
+		 if (health <= 0){
+			 this.remove();
+			 
+			 double gKills = SPGame.getPlayer().getGhostKills();
+			 SPGame.getPlayer().setGhostKills(gKills + 1);
+			 
+			 double kills = SPGame.getPlayer().getKills();
+			 SPGame.getPlayer().setKills(kills + 1);
+			 
+			 
+			 SPGame.destroyBody(this.mBody);
+		 }
+	 }
+	
 	@Override
 	public void draw(Batch batch,float parentAlpha)
 	{
 		float myAlpha = getSprite().getColor().a;
 		getSprite().setAlpha(MathUtils.lerp(myAlpha, targetAlpha, alphaFadeSpeed));
 		super.draw(batch, parentAlpha);
+	}
+
+	@Override
+	public void OnCollisionBegin(Body other, Contact c) {
+		if ( other.getUserData()!=null){
+			if(other.getUserData() instanceof Bullet){
+				Bullet b = (Bullet) other.getUserData();
+				this.health = health - b.damage;
+				SoundManager.zombieHit.play(0.3f);
+			}
+		}
+	}
+
+	@Override
+	public void OnCollisionEnd(Body other, Contact c) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

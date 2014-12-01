@@ -53,6 +53,14 @@ public class Zombie extends Enemy implements Collider {
 	 public void checkDeath(){
 		 if (health <= 0){
 			 this.remove();
+			 
+			 double zKills = SPGame.getPlayer().getZombieKills();
+			 SPGame.getPlayer().setZombieKills(zKills + 1);
+			 
+			 double kills = SPGame.getPlayer().getKills();
+			 SPGame.getPlayer().setKills(kills + 1);
+			 
+			 
 			 SPGame.destroyBody(this.mBody);
 		 }
 	 }

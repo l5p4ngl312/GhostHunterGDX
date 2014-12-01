@@ -30,14 +30,20 @@ public class GameOver implements Screen {
 	private Table table;
 	private TextButton buttonMainMenu, buttonExit;
 	private BitmapFont redChiller, chillerFont;
-	private Label stats, killsH, zombieKillsH, ghostKillsH, shotsFiredH, artifactsFoundH;
-	public double kills, zombieKills, ghostKills, shotsFired, artifactsFound;
+	private Label stats, killsH, zombieKillsH, ghostKillsH, shotsFiredH, artifactsFoundH, scoreH;
+	public double kills, zombieKills, ghostKills, shotsFired, artifactsFound, score;
 
-	GhostHunterGame game;
+	GhostHunterGame game = new GhostHunterGame();
 
-	public GameOver(GhostHunterGame ghg) {
-
-		this.game = ghg;
+	public GameOver(GhostHunterGame ghg, Player p) {
+		
+		shotsFired = p.getShotsFired();
+		zombieKills = p.getZombieKills();
+		ghostKills = p.getGhostKills();
+		kills = p.getKills();
+		artifactsFound = p.getArtifactsFound();
+		score = zombieKills + ghostKills*3 + artifactsFound*2;
+		
 	}
 
 	@Override
@@ -123,45 +129,49 @@ public class GameOver implements Screen {
 		stats = new Label("Statistics", headingStyle);
 		stats.setFontScale(2);
 		
-		artifactsFound = 1; // SPGame.getPlayer().getArtifacs();
+		
 		String aF = Double.toString(artifactsFound);
 		artifactsFoundH = new Label("Artifacts Found : " + aF, headingStyle);
 		artifactsFoundH.setFontScale(2);
 		
-		ghostKills = 2; // SPGame.getPlayer().getGhostKills();
+		
 		String gK = Double.toString(ghostKills);
 		ghostKillsH = new Label("Ghosts Killed :   " +gK, headingStyle);
 		ghostKillsH.setFontScale(2);
 	
-		kills = 3; //SPGame.getPlayer().getKills();
+		
 		String k = Double.toString(kills);
 		killsH = new Label("Total Kills :     " + k, headingStyle);
 		killsH.setFontScale(2);
 
-		shotsFired = 4; //SPGame.getPlayer().getShotsFired();
+		
 		String sF = Double.toString(shotsFired);
 		shotsFiredH = new Label("Shots Fired :     " +sF, headingStyle);
 		shotsFiredH.setFontScale(2);
 		
 		
-		zombieKills = 5; //SPGame.getPlayer().getZombieKills();
 		String zK = Double.toString(zombieKills);
 		zombieKillsH = new Label("Zombies Killed :  " + zK , headingStyle);
 		zombieKillsH.setFontScale(2);
 		
+		String sc = Double.toString(score);
+		scoreH = new Label("Total Score :     " + sc , headingStyle);
+		scoreH.setFontScale(2);
 		
 		table.setBackground(background);
 		table.add(stats).colspan(2);
+		table.row();
+		table.add(shotsFiredH);
 		table.row();
 		table.add(artifactsFoundH);
 		table.row();
 		table.add(ghostKillsH);
 		table.row();
-		table.add(shotsFiredH);
+		table.add(zombieKillsH);
 		table.row();
 		table.add(killsH);
 		table.row();
-		table.add(zombieKillsH).spaceBottom(100);
+		table.add(scoreH).spaceBottom(100);;
 		table.row();
 		table.add(buttonMainMenu).expandX();
 		table.add(buttonExit).expandX();

@@ -59,6 +59,8 @@ public class Player extends PhysicsActor{
 	
 	public int[] ammoCount = new int[3];
 	
+	public double kills = 0, zombieKills = 0, ghostKills = 0, shotsFired = 0, artifactsFound = 0;
+	
 	
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
@@ -239,12 +241,14 @@ public class Player extends PhysicsActor{
 	
 	public void useAmmo(ammoType t, int count)
 	{
+		
 		if(t == ammoType.PISTOL)
 		{
 			ammoCount[0]-=count;
 		}else if(t == ammoType.SHOTGUN)
 		{
 			ammoCount[1]-=count;
+			
 		}else if(t == ammoType.AR)
 		{
 			ammoCount[2]-=count;
@@ -274,8 +278,40 @@ public class Player extends PhysicsActor{
 		if(health < 0)
 		{
 			//Game over
-			SPGame.game.setScreen(new GameOver(SPGame.game));
+			
+			SPGame.game.setScreen(new GameOver(SPGame.game, SPGame.getPlayer()));
+			
 		}
+	}
+	public double getKills() {
+		return kills;
+	}
+	public void setKills(double kills) {
+		this.kills = kills;
+	}
+	public double getZombieKills() {
+		return zombieKills;
+	}
+	public void setZombieKills(double zombieKills) {
+		this.zombieKills = zombieKills;
+	}
+	public double getGhostKills() {
+		return ghostKills;
+	}
+	public void setGhostKills(double ghostKills) {
+		this.ghostKills = ghostKills;
+	}
+	public double getShotsFired() {
+		return shotsFired;
+	}
+	public void setShotsFired(double shotsFired) {
+		this.shotsFired = shotsFired;
+	}
+	public double getArtifactsFound() {
+		return artifactsFound;
+	}
+	public void setArtifactsFound(double artifactsFound) {
+		this.artifactsFound = artifactsFound;
 	}
 
 }

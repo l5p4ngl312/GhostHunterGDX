@@ -68,6 +68,10 @@ public abstract class Weapon extends Item{
 			elapsedTime = 0;
 			p.setAnimTime(0);
 			ammoInClip--;
+			
+			// increasing the fire count
+			p.setShotsFired(p.getShotsFired() + 1);
+			
 			SPGame.getUI().clipCount = ammoInClip;
 			}
 			
