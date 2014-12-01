@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+import edu.virginia.ghosthuntergdx.entities.Ghost;
 import edu.virginia.ghosthuntergdx.entities.Player;
+import edu.virginia.ghosthuntergdx.entities.Zombie;
 
 public class TextureManager {
 
@@ -21,8 +23,8 @@ public class TextureManager {
 	public static Texture bullet;
 	public static Texture bulletImpact;
 	public static Texture itemSlot;
-	public static Texture ghost;
-	public static Texture zombie;
+	public static TextureAtlas ghost;
+	public static TextureAtlas zombie;
 	public static TextureRegion ghostR;
 	public static TextureRegion zombieR;
 	
@@ -45,11 +47,12 @@ public class TextureManager {
 		itemSlot = new Texture(Gdx.files.internal("ui/itemSlot.png"));
 //		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
 //		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
-		zombie = new Texture(Gdx.files.internal("data/zombie1.png"));
-		zombieR = new TextureRegion(zombie);
-		ghost = new Texture(Gdx.files.internal("data/ghost1.png"));
-		ghostR = new TextureRegion(ghost);
-
+		zombie = new TextureAtlas(Gdx.files.internal("data/zombieAtlas.atlas"));
+		ghost = new TextureAtlas(Gdx.files.internal("data/ghostAtlas.atlas"));
+		regions = zombie.getRegions();
+		Zombie.idle = (TextureRegion)regions.get(1);
+		regions = ghost.getRegions();
+		Ghost.idle = (TextureRegion)regions.get(1);
 		
 
 				

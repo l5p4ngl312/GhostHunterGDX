@@ -63,7 +63,7 @@ import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
 
 public class SPGame implements Screen {
 
-	GhostHunterGame game;
+	public static GhostHunterGame game;
 	static World world;
 
 	Vector2 playerStartPos = new Vector2(10, 5);

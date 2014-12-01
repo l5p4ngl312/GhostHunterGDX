@@ -1,0 +1,110 @@
+
+itemAtlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+00
+  rotate: false
+  xy: 1, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+01
+  rotate: false
+  xy: 82, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+02
+  rotate: false
+  xy: 163, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+03
+  rotate: false
+  xy: 244, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+04
+  rotate: false
+  xy: 325, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+05
+  rotate: false
+  xy: 406, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+06
+  rotate: false
+  xy: 487, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+07
+  rotate: false
+  xy: 568, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+08
+  rotate: false
+  xy: 649, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+09
+  rotate: false
+  xy: 730, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 811, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 892, 53
+  size: 79, 73
+  orig: 79, 73
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 973, 76
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+13
+  rotate: false
+  xy: 973, 24
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+14
+  rotate: false
+  xy: 1, 1
+  size: 65, 50
+  orig: 65, 50
+  offset: 0, 0
+  index: -1

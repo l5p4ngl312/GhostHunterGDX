@@ -102,6 +102,7 @@ public class MainMenu implements Screen{
 			
 		});
 		buttonExit.pad(20);
+		
 		buttonPlay = new TextButton("Play", textButtonStyle);
 		
 		buttonPlay.pad(20);

@@ -29,6 +29,7 @@ import edu.virginia.ghosthuntergdx.assets.TextureManager;
 import edu.virginia.ghosthuntergdx.items.Item;
 import edu.virginia.ghosthuntergdx.items.Weapon;
 import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
+import edu.virginia.ghosthuntergdx.screens.MainMenu;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
 public class Player extends PhysicsActor{
@@ -83,6 +84,7 @@ public class Player extends PhysicsActor{
 	public void act(float delta)
 	{
 		super.act(delta);
+		hitIndicatorTimer+=delta;
 		movePlayer(delta);
 		attackLogic(delta);
 	}
@@ -248,6 +250,30 @@ public class Player extends PhysicsActor{
 		}else if(t == ammoType.BOMB)
 		{
 			ammoCount[3]-=count;
+		}
+	}
+	
+	public void draw(Batch b, float parentAlpha)
+	{
+		super.draw(b, parentAlpha);
+		if(hitIndicatorTimer > hitIndicatorTime)
+		{
+		getSprite().setColor(Color.WHITE);
+		}
+	}
+	
+	public float health = 100;
+	float hitIndicatorTime = 0.5f;
+	float hitIndicatorTimer = 0;
+	public void Hurt(float damage)
+	{
+		getSprite().setColor(1f,0.7f,0.7f,1f);
+		health -= damage;
+		hitIndicatorTimer = 0;
+		if(health < 0)
+		{
+			//Game over
+			SPGame.game.setScreen(new MainMenu(SPGame.game));
 		}
 	}
 
