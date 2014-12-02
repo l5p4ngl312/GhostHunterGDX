@@ -290,7 +290,7 @@ public class Player extends PhysicsActor{
 		if(health < 0)
 		{
 			//Game over
-			
+			SPGame.screenShake = false;
 			SPGame.game.setScreen(new GameOver(SPGame.game, SPGame.getPlayer()));
 			
 		}

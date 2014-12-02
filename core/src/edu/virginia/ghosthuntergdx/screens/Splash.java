@@ -50,11 +50,12 @@ public class Splash implements Screen {
 	@Override
 	public void show() {
 		// shows logo
+		splashImage.setWidth(splashImage.getWidth()*2);
+		splashImage.setHeight(splashImage.getHeight()*2);
 		splashImage.setX((Gdx.graphics.getWidth() / 2)
 				- (splashImage.getWidth()/2));
 		splashImage.setY((Gdx.graphics.getHeight() / 2)
 				- (splashImage.getHeight()/2));
-		splashImage.setScale(1);
 		stage.addActor(splashImage);
 
 		font = new BitmapFont(Gdx.files.internal("Font/whiteimpact2.fnt"),
@@ -67,13 +68,13 @@ public class Splash implements Screen {
 		str1 = "CREATED BY ANTHONY BATRES, ALEXANDER MAZZA, DAVID RUBIN, LANE SPANGLER";
 		header = new Label(str1, style);
 		header.setX((Gdx.graphics.getWidth() / 2) - header.getWidth() / 2);
-		header.setY(3 * (Gdx.graphics.getHeight()) / 4);
+		header.setY((Gdx.graphics.getHeight())-Gdx.graphics.getHeight()/9);
 		stage.addActor(header);
 		
 		str2 = "UNIVERSITY OF VIRGINIA, CS 2110, FALL 2014";
 		footer = new Label(str2, style);
 		footer.setX((Gdx.graphics.getWidth() / 2) - footer.getWidth() / 2);
-		footer.setY(2*(Gdx.graphics.getHeight() )/ 9);
+		footer.setY((Gdx.graphics.getHeight() )/ 9);
 		stage.addActor(footer);
 
 	}

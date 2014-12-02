@@ -174,9 +174,8 @@ public class GameOver implements Screen {
 		table.row();
 		table.add(scoreH).spaceBottom(100);;
 		table.row();
-		table.add(buttonMainMenu).expandX();
-		table.add(buttonExit).expandX();
-		table.debug();
+		table.add(buttonMainMenu).expandX().width(330).expandY().height(130);
+		table.add(buttonExit).expandX().width(330).expandY().height(130);
 		stage.addActor(table);
 	}
 

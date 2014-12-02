@@ -60,11 +60,14 @@ public class Artifact extends Actor implements Collider{
 		if(detected)
 		{
 			getSprite().setColor(Color.RED);
+		}else{
+			getSprite().setColor(Color.WHITE);
 		}
 	}
 	
 	float despawnTimer = 0;
 	float despawnTime = 20f;
+	boolean destroyed = false;
 	@Override
 	public void act(float delta) {
 		super.act(delta);
@@ -91,8 +94,10 @@ public class Artifact extends Actor implements Collider{
 			if(other.getUserData() instanceof Bullet){
 				Bullet b = (Bullet) other.getUserData();
 				this.health = health - b.damage;
-				if(health <= 0)
+				if(health <= 0 && !destroyed)
 				{
+					detected = false;
+					destroyed = true;
 					if(associatedGhost != null)
 					{
 						associatedGhost.kill();

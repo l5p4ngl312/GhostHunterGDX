@@ -161,9 +161,9 @@ public class Zombie extends Enemy implements Collider {
 		{
 		if(currentAnim.equals(attack))
 		{
-			if(animTime > 0.6f)
+			if(animTime > 0.5f)
 			{
-				if((SPGame.getPlayer().mBody.getPosition().sub(mBody.getPosition())).len() <= 1.1f && !didDamage)
+				if((SPGame.getPlayer().mBody.getPosition().sub(mBody.getPosition())).len() <= 1.375f && !didDamage)
 				{
 				SPGame.getPlayer().Hurt(damage);
 				didDamage = true;

@@ -230,6 +230,7 @@ public class LevelDirector extends Actor{
 		if(t == ObjectType.Ammo)
 		{
 			Ammo a = new Ammo(spawnPos, ammoType.PISTOL);
+			a.count = (int)(Math.random()*8+1);
 			SPGame.getPickUpGroup().addActor(a);
 			return a;
 		}

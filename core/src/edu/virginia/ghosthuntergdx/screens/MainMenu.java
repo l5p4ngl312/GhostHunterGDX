@@ -77,7 +77,7 @@ public class MainMenu implements Screen{
 		redChiller = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"), false);
 		
 		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
-		
+		chillerFont.setScale(3);
 		
 		//creating buttons
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -143,10 +143,10 @@ public class MainMenu implements Screen{
 		table.setBackground(background);
 		table.add(heading).expandX().colspan(2).spaceBottom(100);
 		table.row();
-		table.add(buttonPlay).expandX().width(130);
-		table.add(buttonSettings).expandX().width(130);
+		table.add(buttonPlay).expandX().width(430).expandY().height(130);
+		table.add(buttonSettings).expandX().width(430).expandY().height(130);
 		table.row();
-		table.add(buttonExit).center().expandX().colspan(2).width(130).spaceTop(70);
+		table.add(buttonExit).center().expandX().colspan(2).width(430).expandY().height(130).spaceTop(70);
 		//table.debug();
 		stage.addActor(table);
 		

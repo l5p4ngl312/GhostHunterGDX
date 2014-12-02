@@ -265,23 +265,14 @@ public class SPGame implements Screen {
 			}
 			difficultyStage.draw();
 		} else if (gamestate == 3) {
-			batch.begin();
-			batch.draw(diffBack, 0, 0);
-			batch.end();
 //			this.mediumHardDispose();
 			difficultyEasyStage.act(delta);
 			difficultyEasyStage.draw();
 		} else if (gamestate == 4) {
-			batch.begin();
-			batch.draw(diffBack, 0, 0);
-			batch.end();
 //			this.easyHardDispose();
 			difficultyMediumStage.act(delta);
 			difficultyMediumStage.draw();
 		} else if (gamestate == 5) {
-			batch.begin();
-			batch.draw(diffBack, 0, 0);
-			batch.end();
 //			this.easyMediumDispose();
 			difficultyHardStage.act(delta);
 			difficultyHardStage.draw();
@@ -413,8 +404,9 @@ public class SPGame implements Screen {
 		aStyle.background = aSkin.getDrawable("aBack");
 
 		aPad = new Touchpad(10, aStyle);
+		aPad.setDeadzone(20);
 		aPad.setBounds(Gdx.graphics.getWidth() / 15,
-				Gdx.graphics.getHeight() / 15, 175, 175);
+				Gdx.graphics.getHeight() / 15, 250, 250);
 
 		// Create a group that all moving entities will be put in
 		entityGroup = new Group();
@@ -506,7 +498,12 @@ public class SPGame implements Screen {
 		settingsTable = new Table(skin);
 		settingsTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
-
+		
+		Table resumeTable = new Table(skin);
+		resumeTable.setBounds(0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
+		resumeTable.setBackground(diffBackground);
+		
 		settingsButtonDifficulty = new TextButton("DIFFICULTY", textButtonStyle);
 		settingsButtonDifficulty.addListener(new InputListener() {
 
@@ -573,7 +570,7 @@ public class SPGame implements Screen {
 		settingsTable.add(settingsButtonHome).fill();
 		settingsTable.row();
 		settingsTable.add(settingsButtonResume).fill();
-		settingsTable.debug();
+		settingsTable.setBackground(diffBackground);
 		settingsStage.addActor(settingsTable);
 
 		difficultyStage = new Stage();
@@ -646,7 +643,6 @@ public class SPGame implements Screen {
 		difficultyTable.add(buttonMedium).fill();
 		difficultyTable.row();
 		difficultyTable.add(buttonHard).fill();
-		difficultyTable.debug();
 		difficultyStage.addActor(difficultyTable);
 
 		messageFont = new BitmapFont(
@@ -730,13 +726,15 @@ public class SPGame implements Screen {
 				/ 2);
 		easyMessage.setY(3 * Gdx.graphics.getHeight() / 4
 				- easyMessage.getHeight());
+		difficultyEasyStage.addActor(resumeTable);
 		difficultyEasyStage.addActor(easyMessage);
 		difficultyEasyStage.addActor(difficultyEasyButtonResume);
-
+		
 		mediumMessage.setX(Gdx.graphics.getWidth() / 2
 				- mediumMessage.getWidth() / 2);
 		mediumMessage.setY(3 * Gdx.graphics.getHeight() / 4
 				- mediumMessage.getHeight());
+		difficultyMediumStage.addActor(resumeTable);
 		difficultyMediumStage.addActor(mediumMessage);
 		difficultyMediumStage.addActor(difficultyMediumButtonResume);
 
@@ -744,6 +742,7 @@ public class SPGame implements Screen {
 				/ 2);
 		hardMessage.setY(3 * Gdx.graphics.getHeight() / 4
 				- hardMessage.getHeight());
+		difficultyHardStage.addActor(resumeTable);
 		difficultyHardStage.addActor(hardMessage);
 		difficultyHardStage.addActor(difficultyHardButtonResume);
 		
