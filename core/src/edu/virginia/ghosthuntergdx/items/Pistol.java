@@ -59,11 +59,13 @@ public class Pistol extends Weapon{
 			Bullet shot = new Bullet(p.getBody().getPosition().add(attackDir.scl(bulletOffset)),attackDir.scl(bulletVelocity),damage);
 			lightLifeTime = 0;
 			SPGame.screenShake = true;
+			shaking = true;
 			flashing = true;
 		}
 	}
 
 	boolean flashing = false;
+	boolean shaking = false;
 	@Override
 	public void act(float dt)
 	{
@@ -80,9 +82,10 @@ public class Pistol extends Weapon{
 				flashing = false;
 				}
 			}
-			if(lightLifeTime > shakeTime && SPGame.screenShake)
+			if(lightLifeTime > shakeTime && shaking)
 			{
 			SPGame.screenShake = false;
+			shaking = false;
 			}
 	}
 }

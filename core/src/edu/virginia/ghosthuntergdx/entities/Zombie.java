@@ -21,7 +21,7 @@ import edu.virginia.ghosthuntergdx.screens.SPGame;
 public class Zombie extends Enemy implements Collider {
 
 	
-	float speed = 2f;
+	float speed = 1.8f;
 
 	private float linearDamping = 5.0f;
 	public static TextureRegion idle;
@@ -30,8 +30,8 @@ public class Zombie extends Enemy implements Collider {
 	private float attackSpeed = 2.5f;
 	private float hitSpeed = 3.5f;
 	
-	private int[] attackFrames = {2,3,4};
-	private int[] hitFrames = {1,4};
+	private int[] attackFrames = {3,4,2};
+	private int[] hitFrames = {1,2};
 	
 	public Zombie(Vector2 position) {
 		super(position, idle, idle.getRegionWidth(),(idle.getRegionHeight()/2));
@@ -105,7 +105,7 @@ public class Zombie extends Enemy implements Collider {
 			mBody.setLinearVelocity(dir.scl(speed));
 		}
 		
-		if(dist > 8f)
+		if(dist > 6.5f)
 		{
 			aggravated = false;
 		}

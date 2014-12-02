@@ -105,21 +105,21 @@ public class LevelDirector extends Actor{
 		switch(difficultyLevel)
 		{
 		case 1:
-			maxEnemies = 5*playerProgress;
-			decoyArtifacts = 1;
+			maxEnemies = 7*playerProgress;
+			decoyArtifacts = 2;
 			spawnTime = 15;
 			ammoSpawnTimeFactor = 90;
 			break;	
 		case 2:
-			maxEnemies = 7*playerProgress;
+			maxEnemies = 10*playerProgress;
 			spawnTime = 10;
-			decoyArtifacts = 2;
+			decoyArtifacts = 3;
 			ammoSpawnTimeFactor = 120;
 			break;	
 		case 3:
-			maxEnemies = 10*playerProgress;
+			maxEnemies = 12*playerProgress;
 			spawnTime = 5;
-			decoyArtifacts = 3;
+			decoyArtifacts = 5;
 			ammoSpawnTimeFactor = 240;
 		}
 	}
@@ -159,7 +159,7 @@ public class LevelDirector extends Actor{
 				enemyCount++;
 			}
 		}
-		if(enemyCount < playerProgress*difficultyLevel)
+		if(enemyCount < playerProgress)
 		{
 			spawnNewObject(ObjectType.Ghost);
 		}

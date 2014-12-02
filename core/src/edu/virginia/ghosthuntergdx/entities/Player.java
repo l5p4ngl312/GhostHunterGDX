@@ -61,7 +61,9 @@ public class Player extends PhysicsActor{
 	
 	public double kills = 0, zombieKills = 0, ghostKills = 0, shotsFired = 0, artifactsFound = 0;
 	
-	
+	private float hurtRumbleTime = 0.2f;
+	private float hurtRumbleTimer = hurtRumbleTime;
+	private boolean rumbling = false;
 	public Player(Vector2 position) {
 		super(position, idleFists,Physics.PLAYER,Physics.NO_GROUP,Physics.MASK_PLAYER,idleFists.getRegionWidth()/2,idleFists.getRegionHeight(),true);
 		
@@ -90,6 +92,13 @@ public class Player extends PhysicsActor{
 		hitIndicatorTimer+=delta;
 		movePlayer(delta);
 		attackLogic(delta);
+		
+		hurtRumbleTimer+=delta;
+		if(hurtRumbleTimer > hurtRumbleTime && rumbling)
+		{
+			SPGame.screenShake = false;
+			rumbling = false;
+		}
 	}
 	private float targetRot = rot;
 	
@@ -275,6 +284,9 @@ public class Player extends PhysicsActor{
 		getSprite().setColor(1f,0.7f,0.7f,1f);
 		health -= damage;
 		hitIndicatorTimer = 0;
+		hurtRumbleTimer = 0;
+		SPGame.screenShake = true;
+		rumbling = true;
 		if(health < 0)
 		{
 			//Game over

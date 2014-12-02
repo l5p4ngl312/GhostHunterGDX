@@ -53,7 +53,7 @@ public class TextureManager {
 		regions = zombie.getRegions();
 		Zombie.idle = (TextureRegion)regions.get(4);
 		regions = ghost.getRegions();
-		Ghost.idle = (TextureRegion)regions.get(1);
+		Ghost.idle = (TextureRegion)regions.get(2);
 		
 		artifact = new Texture(Gdx.files.internal("data/artifact1.png"));
 		destroyedArtifact = new Texture(Gdx.files.internal("data/artifact1d.png"));

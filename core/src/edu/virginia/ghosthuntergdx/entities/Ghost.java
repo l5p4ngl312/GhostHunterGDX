@@ -158,7 +158,7 @@ public class Ghost extends Enemy{
 				targetAlpha = 0.5f;
 			}
 		}else{
-			if(toPlayer.len() < 1 && !associatedArtifact.detected)
+			if(toPlayer.len() < 2.5f && !associatedArtifact.detected)
 			{
 				associatedArtifact.detected = true;
 				SPGame.displayString = "Artifact detected!";
@@ -201,7 +201,7 @@ public class Ghost extends Enemy{
 		{
 		if(currentAnim.equals(attack))
 		{
-			if(animTime > 0.6f)
+			if(animTime > 0.45f)
 			{
 				if((SPGame.getPlayer().mBody.getPosition().sub(mBody.getPosition())).len() <= 1.1f && !didDamage)
 				{
