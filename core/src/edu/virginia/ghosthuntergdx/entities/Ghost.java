@@ -18,11 +18,12 @@ import edu.virginia.ghosthuntergdx.Physics;
 import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.assets.SoundManager;
 import edu.virginia.ghosthuntergdx.assets.TextureManager;
+import edu.virginia.ghosthuntergdx.items.Artifact;
 import edu.virginia.ghosthuntergdx.items.Bullet;
 import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.screens.SPGame;
 
-public class Ghost extends Enemy implements Collider {
+public class Ghost extends Enemy{
 
 
 	private float linearDamping = 5.0f;
@@ -37,8 +38,11 @@ public class Ghost extends Enemy implements Collider {
 	
 	private int[] attackFrames = {2,3,1};
 	private int[] hitFrames = {0,1};
+	public Artifact associatedArtifact;
 	
-	float speed = 2.25f;
+	float speed = 2.35f;
+	
+	
 	
 	public Ghost(Vector2 position) {
 		super(position, idle,idle.getRegionWidth(),idle.getRegionHeight()/2);
@@ -74,8 +78,10 @@ public class Ghost extends Enemy implements Collider {
 	boolean frozen = false;
 	@Override
 	public void act(float delta){
-	
-	checkDeath();	
+
+	Vector2 playerPos = SPGame.getPlayer().mBody.getPosition();
+	Vector2 toPlayer = playerPos.sub(mBody.getPosition());	
+		
 		
 	alertTimer += delta;
 	boolean foundLight = false;
@@ -117,8 +123,8 @@ public class Ghost extends Enemy implements Collider {
 			super.act(delta);
 			if(attackTimer > attackTime)
 			{
-				Vector2 playerPos = SPGame.getPlayer().mBody.getPosition();
-				Vector2 toPlayer = playerPos.sub(mBody.getPosition());
+				playerPos = SPGame.getPlayer().mBody.getPosition();
+				toPlayer = playerPos.sub(mBody.getPosition());
 				moveDir = toPlayer;
 				lookAtTarget(delta);
 				if(toPlayer.len() <= 2)
@@ -150,6 +156,14 @@ public class Ghost extends Enemy implements Collider {
 			if(attacking)
 			{
 				targetAlpha = 0.5f;
+			}
+		}else{
+			if(toPlayer.len() < 1 && !associatedArtifact.detected)
+			{
+				associatedArtifact.detected = true;
+				SPGame.displayString = "Artifact detected!";
+				SPGame.displayKillMessage = true;
+				SPGame.getPlayer().setArtifactsFound(SPGame.getPlayer().artifactsFound+1);
 			}
 		}
 	}
@@ -204,8 +218,7 @@ public class Ghost extends Enemy implements Collider {
 		}
 	}
 	
-	public void checkDeath(){
-		 if (health <= 0){
+	public void kill(){
 			 this.remove();
 			 
 			 double gKills = SPGame.getPlayer().getGhostKills();
@@ -216,7 +229,10 @@ public class Ghost extends Enemy implements Collider {
 			 
 			 
 			 SPGame.destroyBody(this.mBody);
-		 }
+			 SPGame.displayString = "Ghost killed!";
+			 SPGame.displayKillMessage = true;
+			 SPGame.getDirector().playerProgressed();
+			 
 	 }
 	
 	@Override
@@ -227,22 +243,6 @@ public class Ghost extends Enemy implements Collider {
 		super.draw(batch, parentAlpha);
 	}
 
-	@Override
-	public void OnCollisionBegin(Body other, Contact c) {
-		if ( other.getUserData()!=null){
-			if(other.getUserData() instanceof Bullet){
-				Bullet b = (Bullet) other.getUserData();
-				this.health = health - b.damage;
-				SoundManager.zombieHit.play(0.3f);
-			}
-		}
-	}
-
-	@Override
-	public void OnCollisionEnd(Body other, Contact c) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 

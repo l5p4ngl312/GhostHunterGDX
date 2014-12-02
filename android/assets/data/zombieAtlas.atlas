@@ -3,30 +3,37 @@ zombieAtlas.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+05
+  rotate: false
+  xy: 1, 151
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 01
   rotate: false
-  xy: 1, 1
+  xy: 1, 76
   size: 53, 73
   orig: 53, 73
   offset: 0, 0
   index: -1
 02
   rotate: false
-  xy: 56, 1
+  xy: 1, 1
   size: 53, 73
   orig: 53, 73
   offset: 0, 0
   index: -1
 03
   rotate: false
-  xy: 111, 1
+  xy: 56, 76
   size: 53, 73
   orig: 53, 73
   offset: 0, 0
   index: -1
 04
   rotate: false
-  xy: 166, 1
+  xy: 56, 1
   size: 53, 73
   orig: 53, 73
   offset: 0, 0

@@ -18,6 +18,7 @@ import edu.virginia.ghosthuntergdx.assets.Consts;
 import edu.virginia.ghosthuntergdx.entities.Ghost;
 import edu.virginia.ghosthuntergdx.entities.Zombie;
 import edu.virginia.ghosthuntergdx.items.Ammo;
+import edu.virginia.ghosthuntergdx.items.Artifact;
 import edu.virginia.ghosthuntergdx.items.Flashlight;
 import edu.virginia.ghosthuntergdx.items.Pistol;
 import edu.virginia.ghosthuntergdx.items.Weapon.ammoType;
@@ -86,6 +87,9 @@ public class LevelDirector extends Actor{
 	float ammoSpawnTimer;
 	float ammoSpawnTimeFactor = 20;
 	float ammoSpawnTime = (float) (Math.random()*ammoSpawnTimeFactor);
+	
+	int decoyArtifacts;
+	
 	public void setDifficulty(int difficultyLevel)
 	{
 		this.difficultyLevel = difficultyLevel;
@@ -102,18 +106,21 @@ public class LevelDirector extends Actor{
 		{
 		case 1:
 			maxEnemies = 5*playerProgress;
+			decoyArtifacts = 1;
 			spawnTime = 15;
-			ammoSpawnTimeFactor = 20;
+			ammoSpawnTimeFactor = 90;
 			break;	
 		case 2:
 			maxEnemies = 7*playerProgress;
 			spawnTime = 10;
-			ammoSpawnTimeFactor = 30;
+			decoyArtifacts = 2;
+			ammoSpawnTimeFactor = 120;
 			break;	
 		case 3:
 			maxEnemies = 10*playerProgress;
 			spawnTime = 5;
-			ammoSpawnTimeFactor = 40;
+			decoyArtifacts = 3;
+			ammoSpawnTimeFactor = 240;
 		}
 	}
 	
@@ -156,9 +163,27 @@ public class LevelDirector extends Actor{
 		{
 			spawnNewObject(ObjectType.Ghost);
 		}
+		
+		enemyCount = 0;
+		for(Actor a : SPGame.getEntities().getChildren())
+		{
+			if(a instanceof Artifact)
+			{
+				Artifact art = (Artifact)a;
+				if(art.associatedGhost == null)
+				{
+				enemyCount++;
+				}
+			}
+		}
+		
+		if(enemyCount < decoyArtifacts)
+		{
+			spawnNewObject(ObjectType.Artifact);
+		}
 	}
 	
-	private enum ObjectType{Ghost,Zombie,Flashlight,Pistol,Ammo};
+	private enum ObjectType{Ghost,Zombie,Flashlight,Pistol,Ammo,Artifact};
 	
 	private Actor spawnNewObject(ObjectType t)
 	{
@@ -189,6 +214,9 @@ public class LevelDirector extends Actor{
 		{
 			Ghost g = new Ghost(spawnPos);
 			SPGame.getEntities().addActor(g);
+			Artifact a = (Artifact)spawnNewObject(ObjectType.Artifact);
+			a.associatedGhost = g;
+			g.associatedArtifact = a;
 			return g;
 		}
 		
@@ -218,6 +246,13 @@ public class LevelDirector extends Actor{
 			Pistol p = new Pistol(spawnPos,9);
 			SPGame.getPickUpGroup().addActor(p);
 			return p;
+		}
+		
+		if(t == ObjectType.Artifact)
+		{
+			Artifact a = new Artifact(spawnPos);
+			SPGame.getEntities().addActor(a);
+			return a;
 		}
 		
 		return null;

@@ -23,7 +23,7 @@ public class Physics {
 	   public final static short LIGHT = 1 << 4;
 	   public final static short SENSOR = 1 << 5;
 	   public final static short ENEMYATTACK = 1 << 6;
-	   public final static short GROUND = 1 << 7;
+	   public final static short ARTIFACT = 1 << 7;
 	   public final static short ENEMYBODY = 1 << 8;
 	   public final static short GHOST = 1 << 9;
 	   
@@ -31,12 +31,13 @@ public class Physics {
 	   public final static short NO_GROUP = 0;
 	   // masks
 	   public final static short MASK_LIGHTS = OBSTACLE | PICKUP | ENEMYBODY;
-	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER | ENEMYBODY | ENEMYATTACK;
+	   public final static short MASK_PLAYER = OBSTACLE | PICKUP | SENSOR | PLAYER | ENEMYBODY | ENEMYATTACK | ARTIFACT;
 	   public final static short MASK_PICKUP =  OBSTACLE;
-	   public final static short MASK_SENSOR = PLAYER | ENEMYBODY | OBSTACLE;
+	   public final static short MASK_SENSOR = PLAYER | ENEMYBODY | OBSTACLE | ARTIFACT;
 	   public final static short MASK_ENEMYATTACK =  PLAYER;
-	   public final static short MASK_ENEMYBODY = LIGHT | PLAYER | SENSOR | OBSTACLE;
-	   public final static short MASK_GHOST = OBSTACLE | SENSOR;
+	   public final static short MASK_ENEMYBODY = LIGHT | PLAYER | SENSOR | OBSTACLE | ENEMYBODY | ARTIFACT;
+	   public final static short MASK_GHOST = OBSTACLE | SENSOR | GHOST;
+	   public final static short MASK_ARTIFACT = PLAYER | SENSOR | ENEMYBODY;
 	//Creates a box physics body based on a sprite
 	public static Body createBoxBody( final BodyType pBodyType, final FixtureDef pFixtureDef, Sprite pSprite, boolean bullet) {
 

@@ -100,6 +100,8 @@ public class SPGame implements Screen {
 	TextureAtlas settingsAtlas;
 	Skin settingsSkin;
 	Label heading;
+	
+	Label ghostKill;
 
 	// difficulty menu
 	Stage difficultyStage, difficultyEasyStage, difficultyMediumStage,
@@ -153,6 +155,15 @@ public class SPGame implements Screen {
 	
 	private static LevelDirector director;
 
+	float difficultyDelay = 0.6f;
+	float difficultyTimer = 0;
+	
+	float killMessageAlpha = 0;
+	public static boolean displayKillMessage = false;
+	public static String displayString = "Ghost killed!";
+	float messageTimer = 0;
+	float messageTime = 1.0f;
+	
 	@Override
 	public void render(float delta) {
 		// Clear the screen
@@ -167,6 +178,24 @@ public class SPGame implements Screen {
 			deactivateLights();
 			activateLights();
 			destroyBodies();
+			
+			if(displayKillMessage)
+			{
+				ghostKill.setText(displayString);
+				ghostKill.setX(Gdx.graphics.getWidth()/2-ghostKill.getWidth()/2);
+				ghostKill.setY(Gdx.graphics.getHeight()/2-ghostKill.getHeight()/2);
+				killMessageAlpha = MathUtils.lerp(killMessageAlpha,1,0.1f);
+				ghostKill.setColor(1, 1, 1, killMessageAlpha);
+				messageTimer+=delta;
+				if(messageTimer > messageTime)
+				{
+					displayKillMessage = false;
+					messageTimer = 0;
+				}
+			}else{
+				killMessageAlpha = MathUtils.lerp(killMessageAlpha,0,0.1f);
+				ghostKill.setColor(1, 1, 1, killMessageAlpha);
+			}
 
 			// Center the main camera on the player's sprite and update it
 			Vector2 offsetVector = player.getForwardVector().scl(
@@ -229,7 +258,11 @@ public class SPGame implements Screen {
 			settingsStage.act(delta);
 			settingsStage.draw();
 		} else if (gamestate == 2) {
+			difficultyTimer+=delta;
+			if(difficultyTimer > difficultyDelay)
+			{
 			difficultyStage.act(delta);
+			}
 			difficultyStage.draw();
 		} else if (gamestate == 3) {
 			batch.begin();
@@ -320,26 +353,9 @@ public class SPGame implements Screen {
 			}
 		}
 
-		MapLayer groundLayer = map.getLayers().get("Ground");
-		for (MapObject o : groundLayer.getObjects()) {
-			if (o instanceof RectangleMapObject) {
-				RectangleMapObject r = (RectangleMapObject) o;
-				Shape shape = Physics.getRectangle(r);
-				BodyDef bd = new BodyDef();
-				bd.type = BodyType.StaticBody;
-				Body body = world.createBody(bd);
-				FixtureDef fDef = new FixtureDef();
-				fDef.shape = shape;
-				fDef.density = 1;
-				fDef.filter.categoryBits = Physics.GROUND;
-				fDef.filter.groupIndex = Physics.NO_GROUP;
-				fDef.filter.maskBits = Physics.NO_GROUP;
-				fDef.isSensor = true;
-				body.createFixture(fDef);
-				groundBody = body;
-			}
-		}
-
+		// Create a new player object a the spawn position
+		player = new Player(startPos);
+		
 		// Lighting
 		if (!debugPhysics) {
 			RayHandler.setGammaCorrection(true);
@@ -351,10 +367,27 @@ public class SPGame implements Screen {
 
 			Light.setContactFilter(Physics.LIGHT, Physics.LIGHT_GROUP,
 					Physics.MASK_LIGHTS);
+			
+			MapLayer lightLayer = map.getLayers().get("Lights");
+			if (lightLayer != null) {
+				for (MapObject o : lightLayer.getObjects()) {
+					// If there is an ellipse object in this object layer, spawn the
+					// player at its center
+					if (o instanceof EllipseMapObject) {
+						EllipseMapObject c = (EllipseMapObject) o;
+						startPos = new Vector2(c.getEllipse().x
+								/ Consts.BOX_TO_WORLD, c.getEllipse().y
+								/ Consts.BOX_TO_WORLD);
+						PointLight p = new PointLight(rayHandler,raysPerLight,new Color(1.0f,0.5f,0f,0.45f),9f,startPos.x,startPos.y);
+						p.setSoft(true);
+						p.setSoftnessLength(2f);
+					}
+				}
+			}
 		}
 
-		// Create a new player object a the spawn position
-		player = new Player(startPos);
+		
+		
 
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
@@ -483,6 +516,7 @@ public class SPGame implements Screen {
 
 				super.enter(event, x, y, pointer, fromActor);
 				gamestate = 2;
+				difficultyTimer = 0;
 				Gdx.input.setInputProcessor(difficultyStage);
 
 			}
@@ -631,6 +665,7 @@ public class SPGame implements Screen {
 
 				super.enter(event, x, y, pointer, fromActor);
 				difficultyLevel = 1;
+				director.setDifficulty(difficultyLevel);
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
@@ -647,6 +682,7 @@ public class SPGame implements Screen {
 
 				super.enter(event, x, y, pointer, fromActor);
 				difficultyLevel = 2;
+				director.setDifficulty(difficultyLevel);
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
@@ -663,6 +699,7 @@ public class SPGame implements Screen {
 
 				super.enter(event, x, y, pointer, fromActor);
 				difficultyLevel = 3;
+				director.setDifficulty(difficultyLevel);
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
@@ -709,6 +746,11 @@ public class SPGame implements Screen {
 				- hardMessage.getHeight());
 		difficultyHardStage.addActor(hardMessage);
 		difficultyHardStage.addActor(difficultyHardButtonResume);
+		
+		ghostKill = new Label("Ghost killed!",messageStyle);
+		ghostKill.setX(Gdx.graphics.getWidth()/2-ghostKill.getWidth()/2);
+		ghostKill.setY(Gdx.graphics.getHeight()/2-ghostKill.getHeight()/2);
+		HUDstage.addActor(ghostKill);
 
 	}
 

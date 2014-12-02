@@ -27,7 +27,8 @@ public class TextureManager {
 	public static TextureAtlas zombie;
 	public static TextureRegion ghostR;
 	public static TextureRegion zombieR;
-	
+	public static Texture artifact;
+	public static Texture destroyedArtifact;
 	
 	
 	public static final int playerIdleFrame = 2;
@@ -50,11 +51,12 @@ public class TextureManager {
 		zombie = new TextureAtlas(Gdx.files.internal("data/zombieAtlas.atlas"));
 		ghost = new TextureAtlas(Gdx.files.internal("data/ghostAtlas.atlas"));
 		regions = zombie.getRegions();
-		Zombie.idle = (TextureRegion)regions.get(1);
+		Zombie.idle = (TextureRegion)regions.get(4);
 		regions = ghost.getRegions();
 		Ghost.idle = (TextureRegion)regions.get(1);
 		
-
+		artifact = new Texture(Gdx.files.internal("data/artifact1.png"));
+		destroyedArtifact = new Texture(Gdx.files.internal("data/artifact1d.png"));
 				
 	}
 	
@@ -70,6 +72,9 @@ public class TextureManager {
 		bulletImpact.dispose();
 //		vampire.dispose();
 		ghost.dispose();
+		zombie.dispose();
+		artifact.dispose();
+		destroyedArtifact.dispose();
 //		warewolf.dispose();
 	}
 }
