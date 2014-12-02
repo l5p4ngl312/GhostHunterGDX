@@ -33,7 +33,7 @@ public class GameOver implements Screen {
 	private Label stats, killsH, zombieKillsH, ghostKillsH, shotsFiredH, artifactsFoundH, scoreH;
 	public double kills, zombieKills, ghostKills, shotsFired, artifactsFound, score;
 
-	GhostHunterGame game = new GhostHunterGame();
+	GhostHunterGame game;
 
 	public GameOver(GhostHunterGame ghg, Player p) {
 		
@@ -43,6 +43,7 @@ public class GameOver implements Screen {
 		kills = p.getKills();
 		artifactsFound = p.getArtifactsFound();
 		score = zombieKills + ghostKills*3 + artifactsFound*2;
+		game = ghg;
 		
 	}
 
