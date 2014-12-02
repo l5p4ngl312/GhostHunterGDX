@@ -630,6 +630,7 @@ public class SPGame implements Screen {
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
+				difficultyLevel = 1;
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
@@ -645,6 +646,7 @@ public class SPGame implements Screen {
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
+				difficultyLevel = 2;
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
@@ -660,6 +662,7 @@ public class SPGame implements Screen {
 					Actor fromActor) {
 
 				super.enter(event, x, y, pointer, fromActor);
+				difficultyLevel = 3;
 				gamestate = 0;
 				Gdx.input.setInputProcessor(multiInput);
 
