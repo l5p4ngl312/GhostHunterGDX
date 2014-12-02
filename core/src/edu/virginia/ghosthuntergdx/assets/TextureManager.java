@@ -1,3 +1,8 @@
+/**
+ * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
+ * @group T103-06
+ */
+
 package edu.virginia.ghosthuntergdx.assets;
 
 import com.badlogic.gdx.Gdx;
@@ -29,16 +34,14 @@ public class TextureManager {
 	public static TextureRegion zombieR;
 	public static Texture artifact;
 	public static Texture destroyedArtifact;
-	
-	
+
 	public static final int playerIdleFrame = 2;
-	
-	public static void LoadTextures()
-	{
+
+	public static void LoadTextures() {
 		player = new TextureAtlas(Gdx.files.internal("data/playerAtlas.pack"));
 		items = new TextureAtlas(Gdx.files.internal("data/itemAtlas.pack"));
 		Array<AtlasRegion> regions = player.getRegions();
-		Player.idleFists = (TextureRegion)regions.get(playerIdleFrame);
+		Player.idleFists = (TextureRegion) regions.get(playerIdleFrame);
 		mKnob = new Texture(Gdx.files.internal("data/mKnob.png"));
 		mBack = new Texture(Gdx.files.internal("data/mBack.png"));
 		aKnob = new Texture(Gdx.files.internal("data/aKnob.png"));
@@ -46,22 +49,22 @@ public class TextureManager {
 		bullet = new Texture(Gdx.files.internal("data/bullet.png"));
 		bulletImpact = new Texture(Gdx.files.internal("data/bulletImpact.png"));
 		itemSlot = new Texture(Gdx.files.internal("ui/itemSlot.png"));
-//		vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
-//		warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
+		// vampire = new Texture(Gdx.files.internal("data/vampire1.png"));
+		// warewolf = new Texture(Gdx.files.internal("data/warewolf.png"));
 		zombie = new TextureAtlas(Gdx.files.internal("data/zombieAtlas.atlas"));
 		ghost = new TextureAtlas(Gdx.files.internal("data/ghostAtlas.atlas"));
 		regions = zombie.getRegions();
-		Zombie.idle = (TextureRegion)regions.get(4);
+		Zombie.idle = (TextureRegion) regions.get(4);
 		regions = ghost.getRegions();
-		Ghost.idle = (TextureRegion)regions.get(2);
-		
+		Ghost.idle = (TextureRegion) regions.get(2);
+
 		artifact = new Texture(Gdx.files.internal("data/artifact1.png"));
-		destroyedArtifact = new Texture(Gdx.files.internal("data/artifact1d.png"));
-				
+		destroyedArtifact = new Texture(
+				Gdx.files.internal("data/artifact1d.png"));
+
 	}
-	
-	public static void DisposeTextures()
-	{
+
+	public static void DisposeTextures() {
 		player.dispose();
 		items.dispose();
 		mKnob.dispose();
@@ -70,11 +73,11 @@ public class TextureManager {
 		aBack.dispose();
 		bullet.dispose();
 		bulletImpact.dispose();
-//		vampire.dispose();
+		// vampire.dispose();
 		ghost.dispose();
 		zombie.dispose();
 		artifact.dispose();
 		destroyedArtifact.dispose();
-//		warewolf.dispose();
+		// warewolf.dispose();
 	}
 }

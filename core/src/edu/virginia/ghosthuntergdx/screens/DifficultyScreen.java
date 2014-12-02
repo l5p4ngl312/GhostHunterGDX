@@ -1,3 +1,8 @@
+/**
+ * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
+ * @group T103-06
+ */
+
 package edu.virginia.ghosthuntergdx.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -16,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-
 
 public class DifficultyScreen implements Screen {
 
@@ -60,7 +64,8 @@ public class DifficultyScreen implements Screen {
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// creating font
-		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),Gdx.files.internal("Font/chillerfont_0.png"),false);
+		font = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"),
+				Gdx.files.internal("Font/chillerfont_0.png"), false);
 		font.setScale(2);
 		headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
 				Gdx.files.internal("Font/redChiller_0.png"), false);

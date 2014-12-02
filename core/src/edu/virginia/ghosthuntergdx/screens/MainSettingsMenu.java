@@ -1,3 +1,8 @@
+/**
+ * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
+ * @group T103-06
+ */
+
 package edu.virginia.ghosthuntergdx.screens;
 
 import com.badlogic.gdx.*;
@@ -15,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-
 
 public class MainSettingsMenu implements Screen {
 
@@ -64,9 +68,10 @@ public class MainSettingsMenu implements Screen {
 				Gdx.files.internal("Font/chillerfont_0.png"), false);
 		font.setColor(255, 255, 255, 1);
 		font.setScale(2);
-		headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"), Gdx.files.internal("Font/redChiller_0.png"), false);
-		headingFont.setColor(255,255,255,1);
-		
+		headingFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
+				Gdx.files.internal("Font/redChiller_0.png"), false);
+		headingFont.setColor(255, 255, 255, 1);
+
 		// creating buttons
 		textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.getDrawable("redButton.Up");

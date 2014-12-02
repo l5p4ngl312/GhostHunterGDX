@@ -1,3 +1,8 @@
+/**
+ * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
+ * @group T103-06
+ */
+
 package edu.virginia.ghosthuntergdx.screens;
 
 import java.util.ArrayList;
@@ -68,8 +73,8 @@ public class SPGame implements Screen {
 
 	Vector2 playerStartPos = new Vector2(10, 5);
 	// ghost and zombie testing start position
-	Vector2 zombieStartPos = new Vector2(2,2);
-	Vector2 ghostStartPos = new Vector2(17,8);
+	Vector2 zombieStartPos = new Vector2(2, 2);
+	Vector2 ghostStartPos = new Vector2(17, 8);
 	OrthographicCamera camera;
 	static OrthographicCamera HUDcamera;
 
@@ -100,7 +105,7 @@ public class SPGame implements Screen {
 	TextureAtlas settingsAtlas;
 	Skin settingsSkin;
 	Label heading;
-	
+
 	Label ghostKill;
 
 	// difficulty menu
@@ -120,9 +125,9 @@ public class SPGame implements Screen {
 	Texture diffBack = new Texture("img/background.png");
 	TextureRegion diffBackg = new TextureRegion(diffBack);
 	TextureRegionDrawable diffBackground = new TextureRegionDrawable(diffBackg);
-	
+
 	SpriteBatch batch = new SpriteBatch();
-	
+
 	public static boolean debugPhysics = false;
 
 	// for settings button:
@@ -152,24 +157,24 @@ public class SPGame implements Screen {
 	private static Body groundBody;
 
 	private static GameUI ui;
-	
+
 	private static LevelDirector director;
 
 	float difficultyDelay = 0.6f;
 	float difficultyTimer = 0;
-	
+
 	float killMessageAlpha = 0;
 	public static boolean displayKillMessage = false;
 	public static String displayString = "Ghost killed!";
 	float messageTimer = 0;
 	float messageTime = 1.0f;
-	
+
 	@Override
 	public void render(float delta) {
 		// Clear the screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, delta);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-		
+
 		if (gamestate == 0) {
 			// Step through the Box2D physics simulation
 			world.step(1 / 45f, 6, 2);
@@ -178,22 +183,22 @@ public class SPGame implements Screen {
 			deactivateLights();
 			activateLights();
 			destroyBodies();
-			
-			if(displayKillMessage)
-			{
+
+			if (displayKillMessage) {
 				ghostKill.setText(displayString);
-				ghostKill.setX(Gdx.graphics.getWidth()/2-ghostKill.getWidth()/2);
-				ghostKill.setY(Gdx.graphics.getHeight()/2-ghostKill.getHeight()/2);
-				killMessageAlpha = MathUtils.lerp(killMessageAlpha,1,0.1f);
+				ghostKill.setX(Gdx.graphics.getWidth() / 2
+						- ghostKill.getWidth() / 2);
+				ghostKill.setY(Gdx.graphics.getHeight() / 2
+						- ghostKill.getHeight() / 2);
+				killMessageAlpha = MathUtils.lerp(killMessageAlpha, 1, 0.1f);
 				ghostKill.setColor(1, 1, 1, killMessageAlpha);
-				messageTimer+=delta;
-				if(messageTimer > messageTime)
-				{
+				messageTimer += delta;
+				if (messageTimer > messageTime) {
 					displayKillMessage = false;
 					messageTimer = 0;
 				}
-			}else{
-				killMessageAlpha = MathUtils.lerp(killMessageAlpha,0,0.1f);
+			} else {
+				killMessageAlpha = MathUtils.lerp(killMessageAlpha, 0, 0.1f);
 				ghostKill.setColor(1, 1, 1, killMessageAlpha);
 			}
 
@@ -258,22 +263,21 @@ public class SPGame implements Screen {
 			settingsStage.act(delta);
 			settingsStage.draw();
 		} else if (gamestate == 2) {
-			difficultyTimer+=delta;
-			if(difficultyTimer > difficultyDelay)
-			{
-			difficultyStage.act(delta);
+			difficultyTimer += delta;
+			if (difficultyTimer > difficultyDelay) {
+				difficultyStage.act(delta);
 			}
 			difficultyStage.draw();
 		} else if (gamestate == 3) {
-//			this.mediumHardDispose();
+			// this.mediumHardDispose();
 			difficultyEasyStage.act(delta);
 			difficultyEasyStage.draw();
 		} else if (gamestate == 4) {
-//			this.easyHardDispose();
+			// this.easyHardDispose();
 			difficultyMediumStage.act(delta);
 			difficultyMediumStage.draw();
 		} else if (gamestate == 5) {
-//			this.easyMediumDispose();
+			// this.easyMediumDispose();
 			difficultyHardStage.act(delta);
 			difficultyHardStage.draw();
 		}
@@ -346,7 +350,7 @@ public class SPGame implements Screen {
 
 		// Create a new player object a the spawn position
 		player = new Player(startPos);
-		
+
 		// Lighting
 		if (!debugPhysics) {
 			RayHandler.setGammaCorrection(true);
@@ -358,27 +362,27 @@ public class SPGame implements Screen {
 
 			Light.setContactFilter(Physics.LIGHT, Physics.LIGHT_GROUP,
 					Physics.MASK_LIGHTS);
-			
+
 			MapLayer lightLayer = map.getLayers().get("Lights");
 			if (lightLayer != null) {
 				for (MapObject o : lightLayer.getObjects()) {
-					// If there is an ellipse object in this object layer, spawn the
+					// If there is an ellipse object in this object layer, spawn
+					// the
 					// player at its center
 					if (o instanceof EllipseMapObject) {
 						EllipseMapObject c = (EllipseMapObject) o;
 						startPos = new Vector2(c.getEllipse().x
 								/ Consts.BOX_TO_WORLD, c.getEllipse().y
 								/ Consts.BOX_TO_WORLD);
-						PointLight p = new PointLight(rayHandler,raysPerLight,new Color(1.0f,0.5f,0f,0.45f),9f,startPos.x,startPos.y);
+						PointLight p = new PointLight(rayHandler, raysPerLight,
+								new Color(1.0f, 0.5f, 0f, 0.45f), 9f,
+								startPos.x, startPos.y);
 						p.setSoft(true);
 						p.setSoftnessLength(2f);
 					}
 				}
 			}
 		}
-
-		
-		
 
 		// Create the movement stick on the right side of the screen
 		Skin mSkin = new Skin();
@@ -428,7 +432,6 @@ public class SPGame implements Screen {
 		// Add the player to the entity group
 		entityGroup.addActor(player);
 
-
 		// Create a stage for hud elements
 		HUDstage = new Stage();
 		// Set libGDX to check for input from the virtual sticks and game
@@ -445,8 +448,8 @@ public class SPGame implements Screen {
 		HUDstage.addActor(input);
 		HUDstage.setViewport(new ExtendViewport(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), HUDcamera));
-		
-		director = new LevelDirector(difficultyLevel,map);
+
+		director = new LevelDirector(difficultyLevel, map);
 		level.addActor(director);
 		// Create a box2D debug renderer for physics debugging
 		debugger = new Box2DDebugRenderer(true, true, true, true, true, true);
@@ -498,12 +501,12 @@ public class SPGame implements Screen {
 		settingsTable = new Table(skin);
 		settingsTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
-		
+
 		Table resumeTable = new Table(skin);
 		resumeTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 		resumeTable.setBackground(diffBackground);
-		
+
 		settingsButtonDifficulty = new TextButton("DIFFICULTY", textButtonStyle);
 		settingsButtonDifficulty.addListener(new InputListener() {
 
@@ -585,7 +588,7 @@ public class SPGame implements Screen {
 		difficultyTable.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 		difficultyTable.setBackground(diffBackground);
-		
+
 		buttonEasy = new TextButton("EASY", textButtonStyle);
 		buttonEasy.addListener(new InputListener() {
 
@@ -645,8 +648,7 @@ public class SPGame implements Screen {
 		difficultyTable.add(buttonHard).fill();
 		difficultyStage.addActor(difficultyTable);
 
-		messageFont = new BitmapFont(
-				Gdx.files.internal("Font/redChiller.fnt"),
+		messageFont = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
 				Gdx.files.internal("Font/redChiller_0.png"), false);
 		messageFont.setScale(4);
 
@@ -729,7 +731,7 @@ public class SPGame implements Screen {
 		difficultyEasyStage.addActor(resumeTable);
 		difficultyEasyStage.addActor(easyMessage);
 		difficultyEasyStage.addActor(difficultyEasyButtonResume);
-		
+
 		mediumMessage.setX(Gdx.graphics.getWidth() / 2
 				- mediumMessage.getWidth() / 2);
 		mediumMessage.setY(3 * Gdx.graphics.getHeight() / 4
@@ -745,10 +747,11 @@ public class SPGame implements Screen {
 		difficultyHardStage.addActor(resumeTable);
 		difficultyHardStage.addActor(hardMessage);
 		difficultyHardStage.addActor(difficultyHardButtonResume);
-		
-		ghostKill = new Label("Ghost killed!",messageStyle);
-		ghostKill.setX(Gdx.graphics.getWidth()/2-ghostKill.getWidth()/2);
-		ghostKill.setY(Gdx.graphics.getHeight()/2-ghostKill.getHeight()/2);
+
+		ghostKill = new Label("Ghost killed!", messageStyle);
+		ghostKill.setX(Gdx.graphics.getWidth() / 2 - ghostKill.getWidth() / 2);
+		ghostKill
+				.setY(Gdx.graphics.getHeight() / 2 - ghostKill.getHeight() / 2);
 		HUDstage.addActor(ghostKill);
 
 	}
@@ -770,22 +773,22 @@ public class SPGame implements Screen {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public void easyMediumDispose(){
+
+	public void easyMediumDispose() {
 		easyMessage.remove();
 		difficultyEasyButtonResume.remove();
 		mediumMessage.remove();
 		difficultyMediumButtonResume.remove();
 	}
-	
-	public void mediumHardDispose(){
+
+	public void mediumHardDispose() {
 		mediumMessage.remove();
 		difficultyMediumButtonResume.remove();
 		hardMessage.remove();
 		difficultyHardButtonResume.remove();
 	}
-	
-	public void easyHardDispose(){
+
+	public void easyHardDispose() {
 		easyMessage.remove();
 		difficultyEasyButtonResume.remove();
 		hardMessage.remove();
@@ -895,11 +898,11 @@ public class SPGame implements Screen {
 	public static Group getPickUpGroup() {
 		return pickUpGroup;
 	}
-	
+
 	public static Group getEntities() {
 		return entityGroup;
 	}
-	
+
 	public static Group getProjectileGroup() {
 		return projectileGroup;
 	}
@@ -907,9 +910,8 @@ public class SPGame implements Screen {
 	public static Player getPlayer() {
 		return player;
 	}
-	
-	public static LevelDirector getDirector()
-	{
+
+	public static LevelDirector getDirector() {
 		return director;
 	}
 

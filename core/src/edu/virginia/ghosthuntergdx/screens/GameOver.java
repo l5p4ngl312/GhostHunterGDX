@@ -1,3 +1,8 @@
+/**
+ * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
+ * @group T103-06
+ */
+
 package edu.virginia.ghosthuntergdx.screens;
 
 import com.badlogic.gdx.Gdx;
@@ -30,21 +35,23 @@ public class GameOver implements Screen {
 	private Table table;
 	private TextButton buttonMainMenu, buttonExit;
 	private BitmapFont redChiller, chillerFont;
-	private Label stats, killsH, zombieKillsH, ghostKillsH, shotsFiredH, artifactsFoundH, scoreH;
-	public double kills, zombieKills, ghostKills, shotsFired, artifactsFound, score;
+	private Label stats, killsH, zombieKillsH, ghostKillsH, shotsFiredH,
+			artifactsFoundH, scoreH;
+	public double kills, zombieKills, ghostKills, shotsFired, artifactsFound,
+			score;
 
 	GhostHunterGame game;
 
 	public GameOver(GhostHunterGame ghg, Player p) {
-		
+
 		shotsFired = p.getShotsFired();
 		zombieKills = p.getZombieKills();
 		ghostKills = p.getGhostKills();
 		kills = p.getKills();
 		artifactsFound = p.getArtifactsFound();
-		score = zombieKills + ghostKills*3 + artifactsFound*2;
+		score = zombieKills + ghostKills * 3 + artifactsFound * 2;
 		game = ghg;
-		
+
 	}
 
 	@Override
@@ -78,12 +85,13 @@ public class GameOver implements Screen {
 
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
+
 		// creating fonts
 		redChiller = new BitmapFont(Gdx.files.internal("Font/redChiller.fnt"),
 				false);
-		
-		chillerFont = new BitmapFont(Gdx.files.internal("Font/chillerfont.fnt"), false);
+
+		chillerFont = new BitmapFont(
+				Gdx.files.internal("Font/chillerfont.fnt"), false);
 
 		// creating buttons
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
@@ -92,7 +100,6 @@ public class GameOver implements Screen {
 		textButtonStyle.pressedOffsetX = 1;
 		textButtonStyle.pressedOffsetY = -1;
 		textButtonStyle.font = chillerFont;
-
 
 		buttonExit = new TextButton("EXIT", textButtonStyle);
 		buttonExit.addListener(new InputListener() {
@@ -124,41 +131,36 @@ public class GameOver implements Screen {
 
 		});
 
-		// created headings for all the statistics 
+		// created headings for all the statistics
 		LabelStyle headingStyle = new LabelStyle(redChiller, Color.WHITE);
 
 		stats = new Label("Statistics", headingStyle);
 		stats.setFontScale(2);
-		
-		
+
 		String aF = Double.toString(artifactsFound);
 		artifactsFoundH = new Label("Artifacts Found : " + aF, headingStyle);
 		artifactsFoundH.setFontScale(2);
-		
-		
+
 		String gK = Double.toString(ghostKills);
-		ghostKillsH = new Label("Ghosts Killed :   " +gK, headingStyle);
+		ghostKillsH = new Label("Ghosts Killed :   " + gK, headingStyle);
 		ghostKillsH.setFontScale(2);
-	
-		
+
 		String k = Double.toString(kills);
 		killsH = new Label("Total Kills :     " + k, headingStyle);
 		killsH.setFontScale(2);
 
-		
 		String sF = Double.toString(shotsFired);
-		shotsFiredH = new Label("Shots Fired :     " +sF, headingStyle);
+		shotsFiredH = new Label("Shots Fired :     " + sF, headingStyle);
 		shotsFiredH.setFontScale(2);
-		
-		
+
 		String zK = Double.toString(zombieKills);
-		zombieKillsH = new Label("Zombies Killed :  " + zK , headingStyle);
+		zombieKillsH = new Label("Zombies Killed :  " + zK, headingStyle);
 		zombieKillsH.setFontScale(2);
-		
+
 		String sc = Double.toString(score);
-		scoreH = new Label("Total Score :     " + sc , headingStyle);
+		scoreH = new Label("Total Score :     " + sc, headingStyle);
 		scoreH.setFontScale(2);
-		
+
 		table.setBackground(background);
 		table.add(stats).colspan(2);
 		table.row();
@@ -172,7 +174,8 @@ public class GameOver implements Screen {
 		table.row();
 		table.add(killsH);
 		table.row();
-		table.add(scoreH).spaceBottom(100);;
+		table.add(scoreH).spaceBottom(100);
+		;
 		table.row();
 		table.add(buttonMainMenu).expandX().width(330).expandY().height(130);
 		table.add(buttonExit).expandX().width(330).expandY().height(130);
