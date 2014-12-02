@@ -83,6 +83,9 @@ public class LevelDirector extends Actor{
 	float spawnTime;
 	float spawnTimer = 0;
 	
+	float ammoSpawnTimer;
+	float ammoSpawnTimeFactor = 20;
+	float ammoSpawnTime = (float) (Math.random()*ammoSpawnTimeFactor);
 	public void setDifficulty(int difficultyLevel)
 	{
 		this.difficultyLevel = difficultyLevel;
@@ -100,14 +103,17 @@ public class LevelDirector extends Actor{
 		case 1:
 			maxEnemies = 5*playerProgress;
 			spawnTime = 15;
+			ammoSpawnTimeFactor = 20;
 			break;	
 		case 2:
 			maxEnemies = 7*playerProgress;
 			spawnTime = 10;
+			ammoSpawnTimeFactor = 30;
 			break;	
 		case 3:
 			maxEnemies = 10*playerProgress;
 			spawnTime = 5;
+			ammoSpawnTimeFactor = 40;
 		}
 	}
 	
@@ -115,7 +121,7 @@ public class LevelDirector extends Actor{
 	public void act(float delta)
 	{
 		spawnTimer += delta;
-		
+		ammoSpawnTimer+=delta;
 		int enemyCount = 0;
 		for(Actor a : SPGame.getEntities().getChildren())
 		{
@@ -131,6 +137,13 @@ public class LevelDirector extends Actor{
 			spawnTimer = 0;
 		}
 		
+		if(ammoSpawnTimer > ammoSpawnTime)
+		{
+			spawnNewObject(ObjectType.Ammo);
+			ammoSpawnTimer = 0;
+			ammoSpawnTime = (float)Math.random()*ammoSpawnTimeFactor;
+		}
+		
 		enemyCount = 0;
 		for(Actor a : SPGame.getEntities().getChildren())
 		{
@@ -139,7 +152,6 @@ public class LevelDirector extends Actor{
 				enemyCount++;
 			}
 		}
-		Gdx.app.debug("Ghost count", enemyCount+"");
 		if(enemyCount < playerProgress*difficultyLevel)
 		{
 			spawnNewObject(ObjectType.Ghost);

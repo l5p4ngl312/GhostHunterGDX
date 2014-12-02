@@ -83,7 +83,6 @@ public class Ghost extends Enemy implements Collider {
 		{
 			if(a instanceof Flashlight)
 			{
-				Gdx.app.debug("flashlight", "flashlight find");
 				Flashlight f = (Flashlight)a;
 				if(f.lightActive)
 				{
