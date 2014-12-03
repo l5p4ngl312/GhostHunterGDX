@@ -1,6 +1,7 @@
 /**
  * @author Anthony Batres (alb3ee), Alexander Mazza (am7kg), David Rubin (dar3ey), Lane Spangler (las4vc)
  * @group T103-06
+ * @source created with LibGDX
  */
 
 package edu.virginia.ghosthuntergdx.screens;
